@@ -56,7 +56,7 @@ services:
     image: node:18.2.0
     container_name: esgi-assos_node
     working_dir: /var/www/
-    command: /bin/sh -c "yarn install && yarn dev"
+    command: /bin/bash -c "yarn && yarn dev"
     ports:
       - 8080:8080
     volumes:

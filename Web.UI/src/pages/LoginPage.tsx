@@ -16,6 +16,8 @@ const LoginPage = () => {
 
     const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
         console.log(data);
+        localStorage.setItem('token', 'token');
+        navigate('/FirstPage');
     };
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
