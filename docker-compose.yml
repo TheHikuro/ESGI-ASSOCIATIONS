@@ -1,0 +1,63 @@
+version: '3.5'
+
+services:
+  # Backend service
+  mariadb:
+    image: mariadb:10.7.1
+    container_name: esgi-assos_mariadb
+    environment:
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+      
+  phpmyadmin:
+    image: phpmyadmin:5.1.1
+    container_name: esgi-assos_phpmyadmin
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 9000:80
+
+  php-fpm:
+    image: php:8.0.13-apache-buster
+    build: .docker/build/php-fpm
+    container_name: esgi-assos_php-fpm
+    working_dir: /var/www/
+    ports:
+      - 3000:80
+    volumes:
+      - ./Web.API/:/var/www/
+      - .docker/conf/php-fpm/apache2.conf:/etc/apache2/apache2.conf
+      - .docker/conf/php-fpm/sites-enabled/:/etc/apache2/sites-enabled
+
+  composer:
+    image: composer:2
+    container_name: esgi-assos_composer
+    command: composer install
+    depends_on:
+      - php-fpm
+    volumes: 
+      - ./Web.API/:/app
+
+  mailcatcher:
+    image: jderusse/mailcatcher:latest
+    container_name: esgi-assos_mailcatcher
+    ports:
+      - "3025:80"
+  # Frontend service
+  node:
+    image: node:18.2.0
+    container_name: esgi-assos_node
+    working_dir: /var/www/
+    command: /bin/bash -c "yarn install && npm run dev"
+    ports:
+      - 8080:8080
+    volumes:
+      - ./Web.UI/:/var/www/
