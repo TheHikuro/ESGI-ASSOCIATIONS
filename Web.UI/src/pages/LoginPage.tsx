@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Input } from "../components/Input";
 // use React-Hook-Form and tailwindcss
@@ -44,6 +44,9 @@ const LoginPage = () => {
                 <div className="flex items-center justify-center">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">GO</button>
                 </div>
+                <Link to={'/register'} className="text-center text-gray-500 text-xs mt-5">
+                    Vous n'avez pas de compte ?
+                </Link>
             </form>
         </div>
     )
