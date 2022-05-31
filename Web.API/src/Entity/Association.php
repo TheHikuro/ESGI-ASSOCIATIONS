@@ -36,18 +36,19 @@ class Association
     #[Groups(["association:read", "association:write"])]
     private $description;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[Groups(["association:read", "association:write"])]
-    private $members;
-
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Event::class, orphanRemoval: true)]
     #[Groups(["association:read", "association:write"])]
     private $event;
 
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[Groups(["association:read", "association:write"])]
+    private $members;
+
     public function __construct()
     {
         $this->event = new ArrayCollection();
-        $this->createdAt = new \DateTime('now');
+        $this->members = new ArrayCollection();
+        $this->createdAt = new \DatetimeImmutable('now');
     }
 
     public function getId(): ?int
@@ -63,6 +64,7 @@ class Association
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
+        $this->members[] = $owner;
 
         return $this;
     }
@@ -103,18 +105,6 @@ class Association
         return $this;
     }
 
-    public function getMembers(): ?User
-    {
-        return $this->members;
-    }
-
-    public function setMembers(?User $members): self
-    {
-        $this->members = $members;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Event>
      */
@@ -141,6 +131,30 @@ class Association
                 $event->setAssociation(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(User $member): self
+    {
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+        }
+
+        return $this;
+    }
+
+    public function removeMember(User $member): self
+    {
+        $this->members->removeElement($member);
 
         return $this;
     }
