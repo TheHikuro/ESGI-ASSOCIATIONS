@@ -37,13 +37,18 @@ export default function VerticalLinearStepper() {
     };
 
     const handleClear = (name: string) => { setValues({ ...values, [name]: '' }) }
+    const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleNext();
+        }
+    }
 
     const steps = [
         {
             label: "Verification d'email",
             description: <>
                 <div className='flex items-center'>
-                    <SoloInput name='Email' type='email' onChange={handleChange('email')} value={values.email} required />
+                    <SoloInput name='Email' type='email' onChange={handleChange('email')} value={values.email} handlePressEnter={handlePressEnter} />
                     <Button className='h-12' variant='contained' color='primary' onClick={() => handleClear('email')}> Clear </Button>
                 </div>
                 {error && <Typography variant='caption' color='error'>{error}</Typography>}
