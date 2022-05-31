@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { CodeInputs, SoloInput } from './Input';
 import { Link } from 'react-router-dom';
+import LoginPage from '../pages/LoginPage';
 
 export default function VerticalLinearStepper() {
     const [activeStep, setActiveStep] = React.useState(0);
@@ -43,6 +44,17 @@ export default function VerticalLinearStepper() {
         }
     }
 
+    const checkIfVericationCodeIsCorrect = (token: any) => {
+        if (token === '123456') {
+            setActiveStep(prevActiveStep => prevActiveStep + 1)
+        } else {
+            setError('Verification code is incorrect')
+            setTimeout(() => {
+                setError('')
+            }, 5000)
+        }
+    }
+
     const steps = [
         {
             label: "Verification d'email",
@@ -58,17 +70,18 @@ export default function VerticalLinearStepper() {
             label: 'Code de confirmation de votre email',
             description: <>
                 <div className='flex items-center'>
-                    <CodeInputs length={6} loading={false} onComplete={() => { }} />
+                    <CodeInputs length={6} loading={false} onComplete={(code: string) => checkIfVericationCodeIsCorrect(code)} />
                 </div>
                 {error && <Typography variant='caption' color='error'>{error}</Typography>}
             </>
         },
         {
             label: 'Rejoindre une association',
-            description: `Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.`,
+            description: <>
+                <div className='flex h-80 relative bg-slate-400 rounded-md overflow-scroll flex-col p-5'>
+
+                </div>
+            </>,
         },
     ];
 
@@ -115,7 +128,7 @@ export default function VerticalLinearStepper() {
                                             >
                                                 {index === steps.length - 1 ? 'Finish' : 'Continue'}
                                             </Button><Button
-                                                disabled={index === 0}
+                                                disabled={index !== 0}
                                                 onClick={handleBack}
                                                 sx={{ mt: 1, mr: 1 }}
                                             >

@@ -78,7 +78,7 @@ export const CodeInputs = ({ length, loading, onComplete }: ICodeInputProps) => 
             inputs.current[slot + 1]!?.focus()
         }
         if (slot === length - 1) {
-            // On complete
+            onComplete(''.concat(...code))
         }
         if (newCode.every(num => num !== "")) {
             onComplete(newCode.join(""))

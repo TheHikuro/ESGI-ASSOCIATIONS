@@ -1,18 +1,22 @@
 import { Button } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import React from "react"
 import VerticalLinearStepper from "../components/Stepper"
+import { useAuthContext } from "../utils/context/AuthContext"
 
 const FirstConnectionPage = () => {
-    const navigate = useNavigate()
-    const handleLogout = () => {
-        localStorage.removeItem('token')
-        navigate('/login')
-    }
+    const { logout, isConnected } = useAuthContext()
+
+    React.useEffect(() => {
+        if (!isConnected) {
+            logout()
+        }
+    }, [isConnected])
+
     return (
         <>
             <div className="h-screen w-full bg-gray-700 flex flex-col">
                 <Button
-                    onClick={handleLogout}
+                    onClick={logout}
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20"
                     variant="contained"
                 >
