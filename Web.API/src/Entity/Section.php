@@ -34,7 +34,7 @@ class Section
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new \DatetimeImmutable('now');
     }
 
     public function getId(): ?int

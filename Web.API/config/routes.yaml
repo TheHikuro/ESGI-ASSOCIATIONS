@@ -1,3 +1,4 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+# config/routes.yaml
+authentication_token:
+    path: /api/login_check
+    methods: ['POST']

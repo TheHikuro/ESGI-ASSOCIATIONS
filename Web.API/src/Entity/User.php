@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(attributes: ["normalization_context" => ["groups" => ["user:read"]], "denormalization_context" => ["groups" => ["user:write"]]])]
@@ -79,14 +80,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["user:read"])]
     private $haveRecoverToken;
 
+    #[SerializedName("password")]
     #[Groups(["user:write"])]
     private $plainPassword;
 
     public function __construct()
     {
         $this->associations = new ArrayCollection();
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->confirmationToken = rtrim(strtr(base64_encode(random_bytes(150)), '+/', '-_'), '=');
+        $this->isActivated = false;
+        $this->haveRecoverToken = false;
+        $this->roles[] = 'ROLE_USER';
     }
 
     public function getId(): ?int
@@ -167,7 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     public function getFirstname(): ?string
