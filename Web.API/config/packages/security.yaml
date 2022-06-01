@@ -24,23 +24,25 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        # login:
-        #     pattern: ^/api/
-        #     lazy: true
-        #     provider: app_user_provider
-        #     custom_authenticator: App\Security\LoginAuthenticator
-        #     logout:
-        #         path: app_logout
-        #         target: app_login
-        api:
+        login_api:
             pattern: ^/api/
+            request_matcher: App\Security\RequestMatcher\ApiLoginRequestMatcher
             stateless: true
             jwt: ~
-
+        login:
+            pattern: ^/api/
+            lazy: true
+            custom_authenticator: App\Security\LoginAuthenticator
+            logout:
+                path: app_logout
+                target: app_login
+            remember_me:
+                secret:   '%kernel.secret%' # required
+                lifetime: 604800 # 1 week in seconds
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
-        - { path: ^/api/, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
