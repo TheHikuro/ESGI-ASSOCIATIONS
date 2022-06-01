@@ -65,7 +65,7 @@ const RegisterPage = () => {
                                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                         Section
                                     </label>
-                                    <Dropdown name={input.label} formcontrol={register(input.formControlName)} value={input.options} />
+                                    <Dropdown name={input.label} formcontrol={register(input.formControlName)} value={input.options} key={index} />
                                 </div>
                             </>
                         ) : (

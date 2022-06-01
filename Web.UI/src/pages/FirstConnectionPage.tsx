@@ -2,9 +2,18 @@ import { Button } from "@mui/material"
 import React from "react"
 import VerticalLinearStepper from "../components/Stepper"
 import { useAuthContext } from "../utils/context/AuthContext"
+import { types } from "../utils/context/reducers/user"
+import { useStoreContext } from "../utils/context/ReduxContext"
 
 const FirstConnectionPage = () => {
     const { logout, isConnected } = useAuthContext()
+    const { state, dispatch } = useStoreContext()
+
+    React.useEffect(() => {
+        if (isConnected) {
+            dispatch({ type: types.GET_USER_REQUEST })
+        }
+    }, [isConnected])
 
     React.useEffect(() => {
         if (!isConnected) {

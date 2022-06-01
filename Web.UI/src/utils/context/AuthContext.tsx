@@ -15,7 +15,6 @@ const AuthProvider = ({ children }: any) => {
     //const [isAdmin, setIsAdmin] = useState(false)
 
     const updateIsConnected = useCallback((newIsConnected: boolean) => {
-        // set in local storage
         localStorage.setItem("token", newIsConnected ? "true" : "")
         setIsConnected(newIsConnected)
     }, [])

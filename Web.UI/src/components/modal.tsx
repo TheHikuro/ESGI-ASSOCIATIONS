@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useCallback, useState, useReducer } from "react";
 import { XIcon } from "@heroicons/react/outline";
 //import { Button } from "../button";
-import { reducer, initialState, ActionType } from "./reducer/Reducer";
+import { modalReducer, modalIS, ActionType } from "../utils/context/reducers/modal";
 
 const ModalContext = createContext({
     openModal: () => { },
@@ -15,7 +15,7 @@ const ModalContext = createContext({
 });
 
 export const ModalProvider = ({ children }: any) => {
-    const [store, dispatch] = useReducer(reducer, initialState);
+    const [store, dispatch] = useReducer(modalReducer, modalIS);
 
     const updateModalTitle = useCallback((newModalTitle: any) => {
         dispatch({ type: ActionType.UpdateTitle, title: newModalTitle });

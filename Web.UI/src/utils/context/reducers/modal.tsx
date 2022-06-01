@@ -1,5 +1,5 @@
 export enum ActionType {
-    Open, 
+    Open,
     Close,
     YesNo,
     UpdateContent,
@@ -8,7 +8,7 @@ export enum ActionType {
     NoAction
 }
 
-export const initialState = {
+export const modalIS = {
     open: false,
     title: "",
     content: <></>,
@@ -17,7 +17,7 @@ export const initialState = {
     yesNo: false
 };
 
-export const reducer = (state: any, action: any) => {
+export const modalReducer = (state: any, action: any) => {
     switch (action.type) {
         case ActionType.Open:
             return {

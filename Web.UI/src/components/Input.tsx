@@ -14,11 +14,12 @@ interface IInputProps {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
     handlePressEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    _key?: number
 }
 
-export const Input = ({ name, type, formcontrol }: IInputProps) => {
+export const Input = ({ name, type, formcontrol, _key }: IInputProps) => {
     return (
-        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' {...(formcontrol)} />
+        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' {...(formcontrol)} key={_key} />
     )
 }
 
@@ -28,7 +29,7 @@ export const SoloInput = ({ name, type, onChange, value, required, handlePressEn
     )
 }
 
-export const Dropdown = ({ name, formcontrol, arr }: IInputProps) => {
+export const Dropdown = ({ name, formcontrol, arr, _key }: IInputProps) => {
     const [section, setSection] = React.useState('');
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -47,6 +48,7 @@ export const Dropdown = ({ name, formcontrol, arr }: IInputProps) => {
                         onChange={handleChange}
                         {...(formcontrol)}
                         className='bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full h-12'
+                        key={_key}
                     >
                         {arr?.map((item: any, index: number) => {
                             return <MenuItem value={item} key={index}>{item}</MenuItem>
