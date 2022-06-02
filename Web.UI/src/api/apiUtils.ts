@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3000/';
+const API_URL = 'http://localhost:3000/api';
 
 const getBearer = () => {
     const token = localStorage.getItem('token');
@@ -12,10 +12,13 @@ export const getAxiosInstance = () => {
 
     instance.interceptors.request.use(
         (request: any) => {
-            request.headers = {
-                Authorization: `Bearer ${getBearer()}`,
-                'Access-Control-Expose-Headers': 'Content-Disposition',
-            };
+            if (request.url.indexOf('/login') === -1) {
+                request.headers = {
+                    ...request.headers,
+                    Authorization: `Bearer ${getBearer()}`,
+                    //Accept: 'application/json',
+                };
+            }
 
             return request;
         },

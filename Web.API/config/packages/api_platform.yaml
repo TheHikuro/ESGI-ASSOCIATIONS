@@ -1,11 +1,13 @@
 api_platform:
-    title: 'Symfony ESGI Association REST API'
-    version: '1.0.0'
+    title: "Symfony ESGI Association REST API"
+    version: "1.0.0"
     mapping:
-        paths: ['%kernel.project_dir%/src/Entity']
+        paths: ["%kernel.project_dir%/src/Entity"]
     patch_formats:
-        json: ['application/merge-patch+json']
+        json: ["application/merge-patch+json"]
     swagger:
         versions: [3]
     eager_loading:
         force_eager: false
+    defaults:
+        pagination_client_items_per_page: true

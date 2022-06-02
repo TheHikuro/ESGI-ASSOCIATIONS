@@ -4,10 +4,10 @@ import { modalReducer, modalIS } from "./reducers/modal";
 
 const StoreContext = React.createContext({
     state: {},
-    dispatch: ({}) => { }
+    dispatch: ({ }) => { }
 })
 
-const combinedReducer = (reducerDict: any) => {
+const combinedReducer = (reducerDict: { [key: string]: any }) => {
     return function (state: any = {}, action: any) {
         return Object.keys(reducerDict).reduce((stateGlobal, curr) => {
             let slice = reducerDict[curr](state[curr], action);

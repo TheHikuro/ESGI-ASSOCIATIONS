@@ -128,7 +128,7 @@ export default function VerticalLinearStepper() {
                                             >
                                                 {index === steps.length - 1 ? 'Finish' : 'Continue'}
                                             </Button><Button
-                                                disabled={index !== 0}
+                                                disabled={index !== steps.length - 2}
                                                 onClick={handleBack}
                                                 sx={{ mt: 1, mr: 1 }}
                                             >
