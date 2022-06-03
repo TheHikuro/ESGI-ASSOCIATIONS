@@ -143,8 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(identifier: true)]
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get", "item:get", "validate_account"])]
+    #[Groups(["collection:get", "item:get"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
