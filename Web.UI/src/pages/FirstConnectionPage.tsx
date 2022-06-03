@@ -16,7 +16,6 @@ const FirstConnectionPage = () => {
 
     React.useEffect(() => {
         if (isAuthenticated) {
-            console.log("isAuthenticated")
             getUsersActions(dispatch)
         }
     }, [isAuthenticated])

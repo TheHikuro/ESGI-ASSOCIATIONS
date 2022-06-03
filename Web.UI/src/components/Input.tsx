@@ -32,8 +32,8 @@ export const SoloInput = ({ name, type, onChange, value, required, handlePressEn
 export const Dropdown = ({ name, formcontrol, arr, _key }: IInputProps) => {
     const [section, setSection] = React.useState('');
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setSection(event.target.value as string);
+    const handleChange = (event: any) => {
+        setSection(event.target.dataset.value);
     };
     return (
         <>
@@ -45,13 +45,13 @@ export const Dropdown = ({ name, formcontrol, arr, _key }: IInputProps) => {
                         id="selectRegister"
                         value={section}
                         label="Section"
-                        onChange={handleChange}
+                        onClick={handleChange}
                         {...(formcontrol)}
                         className='bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full h-12'
                         key={_key}
                     >
                         {arr?.map((item: any, index: number) => {
-                            return <MenuItem value={item} key={index}>{item}</MenuItem>
+                            return <MenuItem value={item.value} key={index}>{item.label}</MenuItem>
                         })}
                     </Select>
                 </FormControl>

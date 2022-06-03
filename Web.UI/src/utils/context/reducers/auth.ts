@@ -67,7 +67,6 @@ export const authReducer = (state = {}, action: authActionTypes) => {
                 ...state,
                 isLoading: false,
                 isAuthenticated: false,
-                token: '',
             };
         case authTypes.REGISTER_FAILURE:
             return {
