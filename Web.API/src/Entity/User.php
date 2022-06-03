@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -31,11 +30,11 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                                 "required" => ["email", "firstName", "lastName", "section", "password"],
                                 "properties" => [
                                     "email" => ["type" => "string"],
-                                    "firstName" => ["type" => "string"],
-                                    "lastName" => ["type" => "string"],
+                                    "firstname" => ["type" => "string"],
+                                    "lastname" => ["type" => "string"],
                                     "username" => ["type" => "string"],
                                     "section" => ["type" => "string"],
-                                    "password" => ["type" => "string"],
+                                    "plainPassword" => ["type" => "string"],
                                 ],
                             ],
                         ],
@@ -205,7 +204,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["collection:get", "item:get"])]
     private $haveRecoverToken;
 
-    #[SerializedName("password")]
     #[Groups(["collection:post", "item:put"])]
     private $plainPassword;
 
