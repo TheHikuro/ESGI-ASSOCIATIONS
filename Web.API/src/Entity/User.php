@@ -98,7 +98,19 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
             "defaults" => [
                 "_api_receive" => false
             ],
-            "controller" => ConfirmationEmailController::class
+            "controller" => ConfirmationEmailController::class,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ],
         "validate_account" => [
             "method" => "post",
