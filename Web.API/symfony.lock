@@ -91,6 +91,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.2"
     },
+    "egulias/email-validator": {
+        "version": "3.2"
+    },
     "fig/link-util": {
         "version": "1.2.0"
     },
@@ -165,6 +168,9 @@
     },
     "stella-maris/clock": {
         "version": "0.1.4"
+    },
+    "swiftmailer/swiftmailer": {
+        "version": "v6.3.0"
     },
     "symfony/asset": {
         "version": "v5.4.7"
@@ -272,6 +278,9 @@
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.25.0"
     },
+    "symfony/polyfill-intl-idn": {
+        "version": "v1.25.0"
+    },
     "symfony/polyfill-intl-normalizer": {
         "version": "v1.25.0"
     },
@@ -350,6 +359,20 @@
     },
     "symfony/string": {
         "version": "v5.4.9"
+    },
+    "symfony/swiftmailer-bundle": {
+        "version": "3.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.5",
+            "ref": "f0b2fccdca2dfd97dc2fd5ad216d5e27c4f895ac"
+        },
+        "files": [
+            "./config/packages/dev/swiftmailer.yaml",
+            "./config/packages/swiftmailer.yaml",
+            "./config/packages/test/swiftmailer.yaml"
+        ]
     },
     "symfony/translation-contracts": {
         "version": "v2.5.1"

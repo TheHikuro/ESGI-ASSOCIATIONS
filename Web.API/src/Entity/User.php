@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Controller\User\ConfirmationEmailController;
+use App\Controller\User\ValidateAccountController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,82 +17,191 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(attributes: ["normalization_context" => ["groups" => ["user:read"]], "denormalization_context" => ["groups" => ["user:write"]]])]
+#[ApiResource(
+    collectionOperations: [
+        "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
+        "post" => [
+            "normalization_context" => ["groups" => ["collection:post"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "required" => ["email", "firstName", "lastName", "section", "password"],
+                                "properties" => [
+                                    "email" => ["type" => "string"],
+                                    "firstName" => ["type" => "string"],
+                                    "lastName" => ["type" => "string"],
+                                    "username" => ["type" => "string"],
+                                    "section" => ["type" => "string"],
+                                    "password" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    itemOperations: [
+        "get" => ["normalization_context" => ["groups" => ["item:get"]]],
+        "put" => [
+            "normalization_context" => ["groups" => ["item:put"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "email" => ["type" => "string"],
+                                    "roles" => ["type" => "array", "items" => ["type" => "string"]],
+                                    "firstname" => ["type" => "string"],
+                                    "lastname" => ["type" => "string"],
+                                    "username" => ["type" => "string"],
+                                    "avatar" => ["type" => "string"],
+                                    "description" => ["type" => "string"],
+                                    "section" => ["type" => "string"],
+                                    "associations" => ["type" => "array", "items" => ["type" => "string"]],
+                                    "password" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        "patch" => [
+            "normalization_context" => ["groups" => ["item:patch"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "roles" => ["type" => "array", "items" => ["type" => "string"]],
+                                    "associations" => ["type" => "array", "items" => ["type" => "string"]],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        "delete",
+        "send_confirmation_email" => [
+            "method" => "post",
+            "path" => "users/{id}/send_confirmation_email",
+            "output" => false,
+            "defaults" => [
+                "_api_receive" => false
+            ],
+            "controller" => ConfirmationEmailController::class
+        ],
+        "validate_account" => [
+            "method" => "post",
+            "path" => "users/{id}/validate_account",
+            "output" => false,
+            "defaults" => [
+                "_api_receive" => false
+            ],
+            "controller" => ValidateAccountController::class,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "confirmationCode" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["user:read"])]
+    #[ApiProperty(identifier: true)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get", "item:get", "validate_account"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["collection:get", "item:get", "item:put", "item:patch"])]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $username;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["collection:get", "item:get", "item:put"])]
     private $avatar;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["collection:get", "item:get", "item:put"])]
     private $description;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(["user:read"])]
+    #[Groups(["collection:get", "item:get"])]
     private $createdAt;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $confirmationToken;
+    private $confirmationCode;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $recoveryToken;
 
     #[ORM\ManyToOne(targetEntity: Section::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["user:read", "user:write"])]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $section;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Association::class)]
-    #[Groups(["user:read", "user:write"])]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get", "item:get", "item:put", "item:patch"])]
     private $associations;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(["user:read"])]
     private $isActivated;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(["user:read"])]
+    #[Groups(["collection:get", "item:get"])]
     private $haveRecoverToken;
 
     #[SerializedName("password")]
-    #[Groups(["user:write"])]
+    #[Groups(["collection:post", "item:put"])]
     private $plainPassword;
 
     public function __construct()
     {
         $this->associations = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable('now');
-        $this->confirmationToken = rtrim(strtr(base64_encode(random_bytes(150)), '+/', '-_'), '=');
         $this->isActivated = false;
         $this->haveRecoverToken = false;
         $this->roles[] = 'ROLE_USER';
@@ -247,14 +360,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getConfirmationToken(): ?string
+    public function getConfirmationCode(): ?string
     {
-        return $this->confirmationToken;
+        return $this->confirmationCode;
     }
 
-    public function setConfirmationToken(?string $confirmationToken): self
+    public function setConfirmationCode(?string $confirmationCode): self
     {
-        $this->confirmationToken = $confirmationToken;
+        $this->confirmationCode = $confirmationCode;
 
         return $this;
     }
@@ -313,14 +426,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsActivated(): ?bool
+    #[Groups(["collection:get", "item:get"])]
+    public function isActivated(): ?bool
     {
         return $this->isActivated;
     }
 
-    public function setIsActivated(bool $isActivated): self
+    public function activate(): self
     {
-        $this->isActivated = $isActivated;
+        $this->isActivated = true;
+        $this->confirmationCode = null;
 
         return $this;
     }

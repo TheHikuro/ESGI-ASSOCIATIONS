@@ -8,38 +8,87 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
-#[ApiResource(attributes: ["normalization_context" => ["groups" => ["event:read"]], "denormalization_context" => ["groups" => ["event:write"]]])]
+#[ApiResource(
+    collectionOperations: [
+        "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
+        "post" => [
+            "normalization_context" => ["groups" => ["collection:post"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "required" => true,
+                                "properties" => [
+                                    "dateInterval" => ["type" => "string"],
+                                    "description" => ["type" => "string"],
+                                    "name" => ["type" => "string"],
+                                    "association" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    itemOperations: [
+        "get" => ["normalization_context" => ["groups" => ["item:get"]]],
+        "put" => [
+            "normalization_context" => ["groups" => ["item:put"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "dateInterval" => ["type" => "string"],
+                                    "active" => ["type" => "boolean"],
+                                    "description" => ["type" => "string"],
+                                    "name" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        "delete",
+    ],
+)]
 class Event
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["event:read"])]
+    #[Groups(["collection:get", "item:get"])]
     private $id;
 
     #[ORM\Column(type: 'dateinterval')]
-    #[Groups(["event:read"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $dateInterval;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(["event:read", "event:write"])]
+    #[Groups(["collection:get", "item:get", "item:put"])]
     private $active;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["event:read", "event:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["event:read", "event:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $name;
 
     #[ORM\ManyToOne(targetEntity: Association::class, inversedBy: 'event')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["event:read"])]
+    #[Groups(["collection:get", "collection:post", "item:get"])]
     private $association;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(["event:read"])]
+    #[Groups(["collection:get", "item:get"])]
     private $createdAt;
 
     public function __construct()
