@@ -2,8 +2,10 @@ import React from "react"
 import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Dropdown, Input } from "../components/Input";
+import { authRegisterRequest } from "../utils/context/actions/auth";
+import { useStoreContext } from "../utils/context/StoreContext";
 
-interface IRegisterForm {
+export interface IRegisterForm {
     firstName: string;
     lastName: string;
     email: string;
@@ -32,11 +34,14 @@ const InputsAreaRegister = ({ _label, formControlName, _key, type }: IRegisterPa
 
 const RegisterPage = () => {
     const [error, setError] = React.useState('');
+    const navigate = useNavigate();
+
+    const { dispatch } = useStoreContext();
 
     const { handleSubmit, register } = useForm<IRegisterForm>();
 
     const onSubmit: SubmitHandler<IRegisterForm> = async (data) => {
-        console.log('data', data);
+        authRegisterRequest(dispatch, navigate, data);
     }
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,12 +50,17 @@ const RegisterPage = () => {
     }
 
     const inputsArea = [
-        { label: 'Prénom', formControlName: 'firstName' },
-        { label: 'Nom', formControlName: 'lastName' },
+        { label: 'Prénom', formControlName: 'firstname' },
+        { label: 'Nom', formControlName: 'lastname' },
         { label: 'Email', formControlName: 'email' },
-        { label: 'Mot de passe', formControlName: 'password', type: 'password' },
+        { label: 'Mot de passe', formControlName: 'plainPassword', type: 'password' },
         { label: 'Pseudo', formControlName: 'username' },
-        { label: 'Section', formControlName: 'section', options: ['IW1', 'IW2', 'IW3'] },
+        {
+            label: 'Section', formControlName: 'section', options: [{
+                label: 'IW3',
+                value: 'api/sections/1'
+            }]
+        },
     ]
 
     return (
@@ -65,7 +75,7 @@ const RegisterPage = () => {
                                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                         Section
                                     </label>
-                                    <Dropdown name={input.label} formcontrol={register(input.formControlName)} value={input.options} />
+                                    <Dropdown name={input.label} formcontrol={register(input.formControlName)} arr={input.options} key={index} />
                                 </div>
                             </>
                         ) : (

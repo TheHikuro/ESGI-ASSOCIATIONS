@@ -2,20 +2,33 @@ import React from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Input } from "../components/Input";
+import { useStoreContext } from "../utils/context/StoreContext";
+import { authLoginRequest } from "../utils/context/actions/auth";
 // use React-Hook-Form and tailwindcss
 interface ILoginForm {
-    username: string;
+    email: string;
     password: string;
 }
 
 const LoginPage = () => {
     const [error, setError] = React.useState('');
     const navigate = useNavigate();
-
+    const { state: {
+        auth: {
+            isAuthenticated
+        }
+    }, dispatch } = useStoreContext();
     const { register, handleSubmit } = useForm<ILoginForm>();
 
+    React.useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/FirstPage');
+        }
+    }, [isAuthenticated]);
+
     const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
-        console.log(data);
+        authLoginRequest(dispatch, navigate, data);
+        navigate('/FirstPage');
     };
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,10 +42,10 @@ const LoginPage = () => {
                 <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold mb-2">Login</h1>
                 <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3 mb-6 md:mb-0">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-Username">
-                            Username
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-Email">
+                            Email
                         </label>
-                        <Input type="text" formcontrol={register('username')} name='Username' />
+                        <Input type="text" formcontrol={register('email')} name='Email' />
                     </div>
                     <div className="w-full px-3 mb-6 md:mb-0">
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">

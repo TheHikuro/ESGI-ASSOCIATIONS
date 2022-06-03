@@ -1,11 +1,19 @@
 import './index.css'
 import PublicRoute from './routes/public'
 import PrivateRoute from './routes/private'
+import React from 'react'
+import { useStoreContext } from './utils/context/StoreContext'
 
 function App() {
-  const isConnected = localStorage.getItem('token')
+
+  const { state: {
+    auth: {
+      isAuthenticated
+    }
+  } } = useStoreContext()
+
   return (
-    isConnected ? <PrivateRoute /> : <PublicRoute />
+    isAuthenticated ? <PrivateRoute /> : <PublicRoute />
   )
 }
 
