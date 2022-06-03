@@ -10,43 +10,110 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
-#[ApiResource(attributes: ["normalization_context" => ["groups" => ["association:read"]], "denormalization_context" => ["groups" => ["association:write"]]])]
+#[ApiResource(
+    collectionOperations: [
+        "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
+        "post" => [
+            "normalization_context" => ["groups" => ["collection:post"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "required" => true,
+                                "properties" => [
+                                    "owner" => ["type" => "string"],
+                                    "name" => ["type" => "string"],
+                                    "description" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+    itemOperations: [
+        "get" => ["normalization_context" => ["groups" => ["item:get"]]],
+        "put" => [
+            "normalization_context" => ["groups" => ["item:put"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "owner" => ["type" => "string"],
+                                    "name" => ["type" => "string"],
+                                    "description" => ["type" => "string"],
+                                    "events" => ["type" => "array", "items" => ["type" => "string"]],
+                                    "members" => ["type" => "array", "items" => ["type" => "string"]],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        "patch" => [
+            "normalization_context" => ["groups" => ["item:patch"]],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "events" => ["type" => "array", "items" => ["type" => "string"]],
+                                    "members" => ["type" => "array", "items" => ["type" => "string"]],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        "delete",
+    ],
+)]
 class Association
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["association:read"])]
+    #[Groups(["collection:get", "item:get"])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'associations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["association:read", "association:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $owner;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["association:read", "association:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $name;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(["association:read"])]
+    #[Groups(["collection:get", "item:get"])]
     private $createdAt;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["association:read", "association:write"])]
+    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $description;
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Event::class, orphanRemoval: true)]
-    #[Groups(["association:read", "association:write"])]
-    private $event;
+    #[Groups(["collection:get", "item:get", "item:put", "item:patch"])]
+    private $events;
 
     #[ORM\ManyToMany(targetEntity: User::class)]
-    #[Groups(["association:read", "association:write"])]
+    #[Groups(["collection:get", "item:get", "item:put", "item:patch"])]
     private $members;
 
     public function __construct()
     {
-        $this->event = new ArrayCollection();
+        $this->events = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->createdAt = new \DatetimeImmutable('now');
     }
@@ -64,7 +131,6 @@ class Association
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
-        $this->members[] = $owner;
 
         return $this;
     }
@@ -108,15 +174,15 @@ class Association
     /**
      * @return Collection<int, Event>
      */
-    public function getEvent(): Collection
+    public function getEvents(): Collection
     {
-        return $this->event;
+        return $this->events;
     }
 
     public function addEvent(Event $event): self
     {
-        if (!$this->event->contains($event)) {
-            $this->event[] = $event;
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
             $event->setAssociation($this);
         }
 
@@ -125,7 +191,7 @@ class Association
 
     public function removeEvent(Event $event): self
     {
-        if ($this->event->removeElement($event)) {
+        if ($this->events->removeElement($event)) {
             // set the owning side to null (unless already changed)
             if ($event->getAssociation() === $this) {
                 $event->setAssociation(null);
