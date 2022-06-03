@@ -40,6 +40,8 @@ security:
                 secret:   '%kernel.secret%' # required
                 lifetime: 604800 # 1 week in seconds
     access_control:
+        - { path: ^/api/sections$, roles: PUBLIC_ACCESS, method: GET }
+        - { path: ^/api/users$, roles: PUBLIC_ACCESS, method: POST }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
