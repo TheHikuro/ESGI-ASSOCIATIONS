@@ -1,9 +1,16 @@
 import React from "react"
 import { userReducer, userIS } from "./reducers/user";
 import { modalReducer, modalIS } from "./reducers/modal";
+import { authIS, authReducer } from "./reducers/auth";
+
+const initialState = {
+    user: userIS,
+    modal: modalIS,
+    auth: authIS
+}
 
 const StoreContext = React.createContext({
-    state: {},
+    state: initialState,
     dispatch: ({ }) => { }
 })
 
@@ -18,15 +25,11 @@ const combinedReducer = (reducerDict: { [key: string]: any }) => {
 
 const reducer = combinedReducer({
     user: userReducer,
-    modal: modalReducer
+    modal: modalReducer,
+    auth: authReducer
 })
 
-const initialState = {
-    user: userIS,
-    modal: modalIS
-}
-
-export const StoreProvider = ({ children }: any) => {
+export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
     const [state, dispatch] = React.useReducer(reducer, initialState);
     return (
         <StoreContext.Provider value={{ state, dispatch }}>

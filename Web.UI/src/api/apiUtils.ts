@@ -12,7 +12,7 @@ export const getAxiosInstance = () => {
 
     instance.interceptors.request.use(
         (request: any) => {
-            if (request.url.indexOf('/login') === -1) {
+            if (request.url.indexOf('/login_check') === -1) {
                 request.headers = {
                     ...request.headers,
                     Authorization: `Bearer ${getBearer()}`,

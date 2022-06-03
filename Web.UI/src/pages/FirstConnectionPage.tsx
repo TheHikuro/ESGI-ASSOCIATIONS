@@ -1,32 +1,41 @@
 import { Button } from "@mui/material"
-import React from "react"
+import React, { useCallback } from "react"
 import VerticalLinearStepper from "../components/Stepper"
 import { getUsersActions } from "../utils/context/actions/user"
-import { useAuthContext } from "../utils/context/AuthContext"
 import { useStoreContext } from "../utils/context/StoreContext"
+import { authLogoutRequest } from "../utils/context/actions/auth"
+import { useNavigate } from "react-router-dom"
 
 const FirstConnectionPage = () => {
-    const { logout, isConnected } = useAuthContext()
-    const { dispatch } = useStoreContext()
+    const navigate = useNavigate()
+    const { dispatch, state: {
+        auth: {
+            isAuthenticated
+        }
+    } } = useStoreContext()
 
     React.useEffect(() => {
-        if (isConnected) {
-            console.log("isConnected")
+        if (isAuthenticated) {
+            console.log("isAuthenticated")
             getUsersActions(dispatch)
         }
-    }, [isConnected])
+    }, [isAuthenticated])
 
     React.useEffect(() => {
-        if (!isConnected) {
-            logout()
+        if (!isAuthenticated) {
+            authLogoutRequest(dispatch, navigate)
         }
-    }, [isConnected])
+    }, [isAuthenticated])
+
+    const handleLogout = useCallback(() => {
+        authLogoutRequest(dispatch, navigate)
+    }, [dispatch, navigate])
 
     return (
         <>
             <div className="h-screen w-full bg-gray-700 flex flex-col">
                 <Button
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-20"
                     variant="contained"
                 >

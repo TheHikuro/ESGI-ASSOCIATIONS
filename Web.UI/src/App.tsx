@@ -2,14 +2,18 @@ import './index.css'
 import PublicRoute from './routes/public'
 import PrivateRoute from './routes/private'
 import React from 'react'
-import { useAuthContext } from './utils/context/AuthContext'
+import { useStoreContext } from './utils/context/StoreContext'
 
 function App() {
 
-  const { isConnected } = useAuthContext()
+  const { state: {
+    auth: {
+      isAuthenticated
+    }
+  } } = useStoreContext()
 
   return (
-    isConnected ? <PrivateRoute /> : <PublicRoute />
+    isAuthenticated ? <PrivateRoute /> : <PublicRoute />
   )
 }
 
