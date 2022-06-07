@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Input } from "../components/Input";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { authLoginRequest } from "../utils/context/actions/auth";
-// use React-Hook-Form and tailwindcss
-interface ILoginForm {
+export interface ILoginForm {
     email: string;
     password: string;
 }
@@ -13,22 +12,11 @@ interface ILoginForm {
 const LoginPage = () => {
     const [error, setError] = React.useState('');
     const navigate = useNavigate();
-    const { state: {
-        auth: {
-            isAuthenticated
-        }
-    }, dispatch } = useStoreContext();
     const { register, handleSubmit } = useForm<ILoginForm>();
-
-    React.useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/FirstPage');
-        }
-    }, [isAuthenticated]);
+    const { dispatch } = useStoreContext();
 
     const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
         authLoginRequest(dispatch, navigate, data);
-        navigate('/FirstPage');
     };
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
