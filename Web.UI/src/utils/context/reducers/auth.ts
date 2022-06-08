@@ -1,3 +1,4 @@
+import React from "react";
 import { authActionTypes } from "../actions/auth";
 
 export const authTypes = {
@@ -13,7 +14,7 @@ export const authTypes = {
 }
 
 export const authIS = {
-    isAuthenticated: false,
+    isAuthenticated: localStorage.getItem("token") ? true : false,
     isLoading: false,
     error: null,
     token: localStorage.getItem("token") || '',

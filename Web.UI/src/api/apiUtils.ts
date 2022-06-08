@@ -12,13 +12,13 @@ export const getAxiosInstance = () => {
 
     instance.interceptors.request.use(
         (request: any) => {
-            if (request.url.includes('login_check') || request.url.includes('users')) {
+            if (request.url.includes('login_check')) {
                 return request;
             } else {
                 request.headers = {
                     ...request.headers,
                     Authorization: `Bearer ${getBearer()}`,
-                    //Accept: 'application/json',
+                    Accept: 'application/ld+json',
                 };
             }
 

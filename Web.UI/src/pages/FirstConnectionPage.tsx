@@ -20,12 +20,6 @@ const FirstConnectionPage = () => {
         }
     }, [isAuthenticated])
 
-    React.useEffect(() => {
-        if (!isAuthenticated) {
-            authLogoutRequest(dispatch, navigate)
-        }
-    }, [isAuthenticated])
-
     const handleLogout = useCallback(() => {
         authLogoutRequest(dispatch, navigate)
     }, [dispatch, navigate])

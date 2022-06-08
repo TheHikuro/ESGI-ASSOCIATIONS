@@ -1,19 +1,16 @@
 import './index.css'
-import PublicRoute from './routes/public'
-import PrivateRoute from './routes/private'
-import React from 'react'
-import { useStoreContext } from './utils/context/StoreContext'
+import Loader from './components/Loader'
+import MyRoutes from './routes/routes'
 
 function App() {
 
-  const { state: {
-    auth: {
-      isAuthenticated
-    }
-  } } = useStoreContext()
-
   return (
-    isAuthenticated ? <PrivateRoute /> : <PublicRoute />
+    <>
+      <Loader>
+        <MyRoutes />
+      </Loader>
+    </>
+
   )
 }
 

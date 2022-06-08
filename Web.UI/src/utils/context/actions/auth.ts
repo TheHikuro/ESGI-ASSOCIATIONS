@@ -2,15 +2,19 @@ import { authTypes } from "../reducers/auth";
 import { checkLogin, registerAction } from "../../../api/login.axios.api";
 import { NavigateFunction } from "react-router-dom";
 import { IRegisterForm } from "../../../pages/RegisterPage";
+import { ILoginForm } from "../../../pages/LoginPage";
+import { startLoader, endLoader } from "../actions/loader";
 export interface authActionTypes {
     type: string;
     payload?: any
 }
 
-export const authLoginRequest = async (dispatch: Function, navigate: NavigateFunction, payload: { email: string, password: string }) => {
+export const authLoginRequest = async (dispatch: Function, navigate: NavigateFunction, payload: ILoginForm) => {
     dispatch({
         type: authTypes.LOGIN_REQUEST,
     });
+
+    startLoader(dispatch);
 
     try {
         const response = await checkLogin(payload);
@@ -19,6 +23,8 @@ export const authLoginRequest = async (dispatch: Function, navigate: NavigateFun
             type: authTypes.LOGIN_SUCCESS,
             payload: response.token,
         });
+
+        endLoader(dispatch);
 
         localStorage.setItem("token", response.token);
         navigate("/FirstPage");
