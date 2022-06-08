@@ -3,15 +3,11 @@ import React from "react";
 import { UserActionTypes } from "../actions/user";
 
 export const userIS = {
-    user: {
-        id: '',
-        name: '',
-        email: '',
-        role: '',
-        token: '',
-    },
-    isAuthenticated: false,
-    isLoading: false,
+    id: 0,
+    name: '',
+    email: '',
+    role: '',
+    token: '',
     error: null,
 };
 
@@ -19,8 +15,8 @@ export const userIS = {
 export const types = {
     CREATE_USER_REQUEST: 'CREATE_USER_REQUEST',
     CREATE_USER_SUCCESS: 'CREATE_USER_SUCCESS',
-    GET_USER_REQUEST: 'GET_USER_REQUEST',
-    GET_USER_SUCCESS: 'GET_USER_SUCCESS',
+    GET_MY_USER_REQUEST: 'GET_MY_USER_REQUEST',
+    GET_MY_USER_SUCCESS: 'GET_MY_USER_SUCCESS',
 }
 
 // create reducer
@@ -29,27 +25,21 @@ export const userReducer = (state = userIS, action: UserActionTypes) => {
         case types.CREATE_USER_REQUEST:
             return {
                 ...state,
-                isLoading: true,
             };
         case types.CREATE_USER_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
-                user: action.payload,
-                isAuthenticated: true,
+                ...action.payload,
             };
-        case types.GET_USER_REQUEST:
+        case types.GET_MY_USER_REQUEST:
             return {
                 ...state,
-                isLoading: true,
-            };
-        case types.GET_USER_SUCCESS:
+            }
+        case types.GET_MY_USER_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
-                user: action.payload,
-                isAuthenticated: true,
-            };
+                ...action.payload,
+            }
         default:
             return state;
     }

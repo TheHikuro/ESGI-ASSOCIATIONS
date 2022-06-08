@@ -15,7 +15,7 @@ const LoginPage = () => {
     const { register, handleSubmit } = useForm<ILoginForm>();
     const { dispatch } = useStoreContext();
 
-    const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
+    const onSubmit: SubmitHandler<ILoginForm> = async (data: any) => {
         authLoginRequest(dispatch, navigate, data);
     };
 

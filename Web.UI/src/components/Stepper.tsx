@@ -9,12 +9,14 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { CodeInputs, SoloInput } from './Input';
 import { Link } from 'react-router-dom';
-import LoginPage from '../pages/LoginPage';
+import { checkEmail, confirmTokenSentByEmail } from '../api/login.axios.api';
+import { AxiosError } from 'axios';
 
-export default function VerticalLinearStepper() {
+export default function VerticalLinearStepper(user_values: { e_mail: string, userId: number }) {
+
     const [activeStep, setActiveStep] = React.useState(0);
     const [error, setError] = React.useState('');
-    const [values, setValues]: any = React.useState({ email: '', confirmToken: '' })
+    const [values, setValues]: any = React.useState({ email: user_values.e_mail, confirmToken: '' })
     const [disabled, setDisabled] = React.useState(true);
 
     React.useEffect(() => {
@@ -29,30 +31,44 @@ export default function VerticalLinearStepper() {
     }, [values, activeStep])
 
     const handleNext = () => { setActiveStep(prevActiveStep => prevActiveStep + 1) }
-
     const handleBack = () => { setActiveStep((prevActiveStep) => prevActiveStep - 1) };
+    const handleClear = (name: string) => { setValues({ ...values, [name]: '' }) }
 
     const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setError('')
         setValues({ ...values, [name]: event.target.value });
     };
 
-    const handleClear = (name: string) => { setValues({ ...values, [name]: '' }) }
     const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleNext();
         }
     }
 
-    const checkIfVericationCodeIsCorrect = (token: any) => {
-        if (token === '123456') {
-            setActiveStep(prevActiveStep => prevActiveStep + 1)
-        } else {
+    const sendEmail = async () => {
+        try {
+            await checkEmail(user_values.userId)
+            handleNext();
+        }
+        catch (error: any) {
+            setError(error.response.data["hydra:description"]);
+        }
+    }
+
+    const checkIfVericationCodeIsCorrect = async (token: string) => {
+        const jsonToken = JSON.stringify({ confirmationCode: token });
+        const response = await confirmTokenSentByEmail(user_values.userId, jsonToken);
+
+        if (response.status === 204) {
+            handleNext();
+        }
+        else {
             setError('Verification code is incorrect')
             setTimeout(() => {
                 setError('')
             }, 5000)
         }
+
     }
 
     const steps = [
@@ -122,7 +138,7 @@ export default function VerticalLinearStepper() {
                                         <div>
                                             <Button
                                                 variant="contained"
-                                                onClick={handleNext}
+                                                onClick={index === 0 ? sendEmail : handleNext} // remettre send mail
                                                 sx={{ mt: 1, mr: 1 }}
                                                 disabled={disabled}
                                             >

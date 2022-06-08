@@ -15,47 +15,43 @@ export const authTypes = {
 
 export const authIS = {
     isAuthenticated: localStorage.getItem("token") ? true : false,
-    isLoading: false,
     error: null,
     token: localStorage.getItem("token") || '',
+    activated: false,
 }
 
 export const authReducer = (state = {}, action: authActionTypes) => {
+
     switch (action.type) {
         case authTypes.LOGIN_REQUEST:
             return {
                 ...state,
-                isLoading: true,
             };
         case authTypes.LOGIN_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
                 isAuthenticated: true,
-                token: action.payload,
+                token: action.payload?.token,
+                activated: action.payload?.activated,
             };
         case authTypes.LOGIN_FAILURE:
             return {
                 ...state,
-                isLoading: false,
                 error: action.payload,
             };
         case authTypes.LOGOUT_REQUEST:
             return {
                 ...state,
-                isLoading: true,
             };
         case authTypes.LOGOUT_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
                 isAuthenticated: false,
                 token: '',
             };
         case authTypes.LOGOUT_FAILURE:
             return {
                 ...state,
-                isLoading: false,
                 error: action.payload,
             };
         case authTypes.REGISTER_REQUEST:
@@ -66,13 +62,11 @@ export const authReducer = (state = {}, action: authActionTypes) => {
         case authTypes.REGISTER_SUCCESS:
             return {
                 ...state,
-                isLoading: false,
                 isAuthenticated: false,
             };
         case authTypes.REGISTER_FAILURE:
             return {
                 ...state,
-                isLoading: false,
                 error: action.payload,
             };
         default:
