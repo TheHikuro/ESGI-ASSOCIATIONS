@@ -6,10 +6,14 @@ import { ILoginForm } from "../../../pages/LoginPage";
 import { startLoader, endLoader } from "../actions/loader";
 export interface authActionTypes {
     type: string;
-    payload?: any
+    payload?: {
+        token?: string;
+        activated?: boolean;
+        associationsCount?: number;
+    }
 }
 
-export const authLoginRequest = async (dispatch: Function, navigate: NavigateFunction, payload: ILoginForm) => {
+export const authLoginRequest = async (dispatch: Function, navigate: NavigateFunction, payload: authActionTypes) => {
     dispatch({
         type: authTypes.LOGIN_REQUEST,
     });
@@ -21,7 +25,7 @@ export const authLoginRequest = async (dispatch: Function, navigate: NavigateFun
 
         dispatch({
             type: authTypes.LOGIN_SUCCESS,
-            payload: response.token,
+            payload: response,
         });
 
         endLoader(dispatch);

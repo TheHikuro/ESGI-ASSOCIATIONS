@@ -1,7 +1,7 @@
 import { Button } from "@mui/material"
 import React, { useCallback } from "react"
 import VerticalLinearStepper from "../components/Stepper"
-import { getUsersActions } from "../utils/context/actions/user"
+import { getMyUserActions } from "../utils/context/actions/user"
 import { useStoreContext } from "../utils/context/StoreContext"
 import { authLogoutRequest } from "../utils/context/actions/auth"
 import { useNavigate } from "react-router-dom"
@@ -10,13 +10,15 @@ const FirstConnectionPage = () => {
     const navigate = useNavigate()
     const { dispatch, state: {
         auth: {
-            isAuthenticated
-        }
+            isAuthenticated,
+            activated,
+        },
+        user: { email, id }
     } } = useStoreContext()
 
     React.useEffect(() => {
         if (isAuthenticated) {
-            getUsersActions(dispatch)
+            getMyUserActions(dispatch)
         }
     }, [isAuthenticated])
 
@@ -37,7 +39,7 @@ const FirstConnectionPage = () => {
                 <div className="h-full w-full flex justify-center items-center">
                     <div className="w-7/12 h-5/6 bg-white rounded-md shadow-md p-5">
                         <div className="h-full w-full">
-                            <VerticalLinearStepper />
+                            <VerticalLinearStepper e_mail={email} userId={id} />
                         </div>
                     </div>
                 </div>
