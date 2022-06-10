@@ -9,6 +9,7 @@ export interface authActionTypes {
     payload?: {
         token?: string;
         activated?: boolean;
+        associationsCount?: number;
     }
 }
 
