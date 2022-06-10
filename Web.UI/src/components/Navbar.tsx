@@ -3,6 +3,7 @@ import { Link, Path, useNavigate } from "react-router-dom"
 import { authLogoutRequest } from "../utils/context/actions/auth"
 import { useStoreContext } from "../utils/context/StoreContext"
 import Logo from '../assets/img/ESGI-logo.png'
+import { AdjustmentsIcon, CalendarIcon, HomeIcon, TemplateIcon, UserGroupIcon, UserIcon } from "@heroicons/react/outline"
 
 interface NavbarProps {
     children: React.ReactNode
@@ -11,9 +12,9 @@ interface NavbarProps {
 
 const NavItem = ({ arr }: any) => {
     return (
-        <Link to={arr.link} className="text-white flex justify-between p-3 m-2 rounded-sm bg-slate-800 hover:bg-white group shadow-md w-full">
+        <Link to={arr.link} className="text-white flex justify-start items-center p-3 m-2 rounded-sm bg-slate-800 hover:bg-white group shadow-md w-full">
             {arr.icon}
-            <span className="text-white group-hover:text-slate-700">{arr.name}</span>
+            <span className="text-white group-hover:text-slate-700 ml-4">{arr.name}</span>
         </Link>
     )
 }
@@ -24,12 +25,12 @@ const Navbar = ({ children, location }: NavbarProps) => {
     const { dispatch } = useStoreContext()
     const navigate = useNavigate()
     const elements = [
-        { name: 'Home', link: '/Home', icon: '', display: true },
-        { name: 'Profile', link: '/Profile', icon: '', display: true },
-        { name: 'Associations', link: '/Associations', icon: '', display: true },
-        { name: 'Calendrier', link: '/Calendrier', icon: '', display: true },
-        { name: 'Gestion Assosications', link: '/Gestion-Associations', icon: '', display: isAdmin },
-        { name: 'Adminstration', link: '/Administration', icon: '', display: isSuperAdmin },
+        { name: 'Home', link: '/Home', icon: <HomeIcon className="h-7 w-7 group-hover:text-black" />, display: true },
+        { name: 'Profile', link: '/Profile', icon: <UserIcon className="h-7 w-7 group-hover:text-black" />, display: true },
+        { name: 'Associations', link: '/Associations', icon: <UserGroupIcon className="h-7 w-7 group-hover:text-black" />, display: true },
+        { name: 'Calendrier', link: '/Calendrier', icon: <CalendarIcon className="h-7 w-7 group-hover:text-black" />, display: true },
+        { name: 'Gestion Assosications', link: '/Gestion-Associations', icon: <TemplateIcon className="h-7 w-7 group-hover:text-black" />, display: isAdmin },
+        { name: 'Adminstration', link: '/Administration', icon: <AdjustmentsIcon className="h-7 w-7 group-hover:text-black" />, display: isSuperAdmin },
     ]
 
     const [display, setDisplay] = React.useState(false)
