@@ -23,6 +23,7 @@ class AuthenticationSuccessListener
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'roles' => $user->getRoles(),
+            'associationsCount' => $user->getAssociations()->count(),
             'activated' => $user->isActivated(),
             'token' => $event->getData()['token'],
         ]);
