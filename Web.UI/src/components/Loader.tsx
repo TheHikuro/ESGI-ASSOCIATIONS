@@ -1,4 +1,5 @@
 import React from "react"
+import GooeyLoader1 from "react-loaders-kit/lib/gooey1/GooeyLoader1"
 import { useStoreContext } from "../utils/context/StoreContext"
 
 const Loader = ({ children }: { children: any }) => {
@@ -9,10 +10,11 @@ const Loader = ({ children }: { children: any }) => {
         }
     } } = useStoreContext()
 
+    // make loader visible only when loading with background transparent using tailwindcss
     if (isLoading) {
         return (
-            <div className="loader">
-                <h1 className="text-xl font-bold">Loading...</h1>
+            <div className="w-full h-screen flex justify-center items-center bg-gray-50">
+                <GooeyLoader1 loading={isLoading} size={100} />
             </div>
         )
     }

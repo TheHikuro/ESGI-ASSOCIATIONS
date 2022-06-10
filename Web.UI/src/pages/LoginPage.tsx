@@ -25,7 +25,7 @@ const LoginPage = () => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-[url('./assets/img/bg-login.jpeg')] bg-cover">
+        <div className="flex flex-col items-center justify-center h-screen bg-[url('./assets/img/bg-login.jpeg')] bg-cover w-full">
             <form onSubmit={handleFormSubmit} className="w-full max-w-sm shadow-xl p-5 rounded-md flex justify-center items-center flex-col z-50 bg-white">
                 <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold mb-2">Login</h1>
                 <div className="flex flex-wrap -mx-3 mb-6">

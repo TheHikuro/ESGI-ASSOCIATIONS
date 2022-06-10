@@ -1,8 +1,13 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import AdminPage from "../pages/AdminPage";
+import AssosPage from "../pages/AssosPage";
+import CalendarPage from "../pages/CalendarPage";
 import FirstConnectionPage from "../pages/FirstConnectionPage";
+import GestionPage from "../pages/GestionPage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
+import ProfilePage from "../pages/ProfilePage";
 import RegisterPage from "../pages/RegisterPage";
 import { useStoreContext } from "../utils/context/StoreContext";
 
@@ -43,7 +48,11 @@ const MyRoutes = () => {
             <Route path='*' element={<Navigate to='/login' />} />
             <Route path="/FirstPage" element={<OnlyWhen condition={!isActivated} otherwise="/Home"><FirstConnectionPage /></OnlyWhen>} />
             <Route path="/Home" element={<OnlyWhen condition={isAuthenticated} otherwise="/login"><HomePage /></OnlyWhen>} />
-
+            <Route path="/Profile" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ProfilePage /></OnlyWhen>} />
+            <Route path="/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AssosPage /></OnlyWhen>} />
+            <Route path="/Calendrier" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><CalendarPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><GestionPage /></OnlyWhen>} />
+            <Route path="/Administration" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AdminPage /></OnlyWhen>} />
         </Routes>
     )
 }
