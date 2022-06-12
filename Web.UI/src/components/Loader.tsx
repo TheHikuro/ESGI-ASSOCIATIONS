@@ -14,7 +14,7 @@ const Loader = ({ children }: { children: any }) => {
     if (isLoading) {
         return (
             <div className="w-full h-screen flex justify-center items-center bg-gray-50">
-                <GooeyLoader1 loading={isLoading} size={100} />
+                <GooeyLoader1 loading={isLoading} size={100} pause={false} />
             </div>
         )
     }

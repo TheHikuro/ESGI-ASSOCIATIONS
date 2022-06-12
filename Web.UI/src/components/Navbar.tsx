@@ -11,6 +11,7 @@ interface NavbarProps {
 }
 
 const NavItem = ({ arr }: any) => {
+    // Keep white on active
     return (
         <Link to={arr.link} className="text-white flex justify-start items-center p-3 m-2 rounded-sm bg-slate-800 hover:bg-white group shadow-md w-full">
             {arr.icon}

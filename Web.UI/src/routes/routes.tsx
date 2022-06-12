@@ -31,19 +31,17 @@ const MyRoutes = () => {
         }
     } } = useStoreContext();
 
-    const [isActivated, setIsActivated] = React.useState(false);
+    const [isActivated, setIsActivated] = React.useState(activated);
 
     React.useEffect(() => {
-        // console.log("count", associationsCount);
-        if (isAuthenticated && activated) {
+        if (isAuthenticated && !activated) {
             setIsActivated(true);
         }
-    }, [isAuthenticated, activated])
-
+    }, [isAuthenticated, activated]);
 
     return (
         <Routes>
-            <Route path="/login" element={<OnlyWhen condition={!isAuthenticated} otherwise="/FirstPage"><LoginPage /></OnlyWhen>} />
+            <Route path="/login" element={<OnlyWhen condition={!isAuthenticated} otherwise="/Home"><LoginPage /></OnlyWhen>} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path='*' element={<Navigate to='/login' />} />
             <Route path="/FirstPage" element={<OnlyWhen condition={!isActivated} otherwise="/Home"><FirstConnectionPage /></OnlyWhen>} />
