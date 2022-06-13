@@ -2,7 +2,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
 
 interface TableProps {
-    data: any[];
+    data: any;
     header: GridColDef[];
     pageSize?: number;
     rowsPerPageOptions?: number[];
