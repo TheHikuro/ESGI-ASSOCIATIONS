@@ -11,11 +11,11 @@ interface NavbarProps {
 }
 
 const NavItem = ({ arr }: any) => {
-    // Keep white on active
+    const active = location.pathname === arr.link
     return (
-        <Link to={arr.link} className="text-white flex justify-start items-center p-3 m-2 rounded-sm bg-slate-800 hover:bg-white group shadow-md w-full">
-            {arr.icon}
-            <span className="text-white group-hover:text-slate-700 ml-4">{arr.name}</span>
+        <Link to={arr.link} className={`${active ? 'bg-white' : 'bg-slate-800'} flex justify-start items-center p-3 m-2 rounded-sm hover:bg-white group shadow-md w-full`}>
+            <span className={`${active ? 'text-black' : 'text-white'}`}>{arr.icon}</span>
+            <span className={`${active ? 'text-slate-700' : 'text-white'} group-hover:text-slate-700 ml-4`}>{arr.name}</span>
         </Link>
     )
 }
@@ -47,6 +47,9 @@ const Navbar = ({ children, location }: NavbarProps) => {
             case '/register':
                 setDisplay(false)
                 break;
+            case '/Administration/Users':
+                setDisplay(false)
+                break;
             default:
                 setDisplay(true)
                 break;
@@ -55,7 +58,7 @@ const Navbar = ({ children, location }: NavbarProps) => {
 
     return (
         <>
-            <div className='flex'>
+            <div className='flex w-full'>
                 {!display ? ('') : (
                     <div className="w-56 relative h-screen bg-gray-700 flex flex-col items-center justify-between">
                         <div className="my-3 flex items-center flex-col h-1/6">

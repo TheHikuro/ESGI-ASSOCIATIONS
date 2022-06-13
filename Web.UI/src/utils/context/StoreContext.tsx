@@ -6,7 +6,6 @@ import loaderReducer, { loaderIS } from "./reducers/loading";
 
 const initialState = {
     user: userIS,
-    modal: modalIS,
     auth: authIS,
     loader: loaderIS
 }
@@ -27,7 +26,6 @@ const combinedReducer = (reducerDict: { [key: string]: any }) => {
 
 const reducer = combinedReducer({
     user: userReducer,
-    modal: modalReducer,
     auth: authReducer,
     loader: loaderReducer
 })

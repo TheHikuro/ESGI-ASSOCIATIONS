@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import AdminPage from "../pages/AdminPage";
+import AdminPage from "../pages/Admin/AdminPage";
+import UserAdminPage from "../pages/Admin/UserAdminPage";
 import AssosPage from "../pages/AssosPage";
 import CalendarPage from "../pages/CalendarPage";
 import FirstConnectionPage from "../pages/FirstConnectionPage";
@@ -51,6 +52,7 @@ const MyRoutes = () => {
             <Route path="/Calendrier" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><CalendarPage /></OnlyWhen>} />
             <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><GestionPage /></OnlyWhen>} />
             <Route path="/Administration" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Users" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><UserAdminPage /></OnlyWhen>} />
         </Routes>
     )
 }
