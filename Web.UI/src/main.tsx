@@ -8,10 +8,10 @@ import { StoreProvider } from './utils/context/StoreContext'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Router>
-      <StoreProvider>
+    <StoreProvider>
+      <Router>
         <App />
-      </StoreProvider>
-    </Router>
+      </Router>
+    </StoreProvider>
   </React.StrictMode>
 )
