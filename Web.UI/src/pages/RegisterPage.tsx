@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Dropdown, Input } from "../components/Input";
 import { authRegisterRequest } from "../utils/context/actions/auth";
 import { useStoreContext } from "../utils/context/StoreContext";
+import { getAllSections } from "../utils/context/actions/section";
 
 export interface IRegisterForm {
     firstName: string;
@@ -36,7 +37,14 @@ const RegisterPage = () => {
     const [error, setError] = React.useState('');
     const navigate = useNavigate();
 
-    const { dispatch } = useStoreContext();
+    const { dispatch, state: { section: { label, value } } } = useStoreContext();
+
+    React.useEffect(() => {
+        getAllSections(dispatch);
+    }, [label, value]);
+
+    console.log(label, value);
+
 
     const { handleSubmit, register } = useForm<IRegisterForm>();
 
