@@ -1,8 +1,17 @@
 import { SectionActionTypes } from "../actions/section";
 
-export const sectionIS = {
-    label: '',
-    value: ''
+export interface SectionDetails {
+    id: number;
+    name: string;
+    slug: string;
+}
+
+export interface SectionState {
+    sectionList: SectionDetails[] | null;
+}
+
+export const sectionIS: SectionState = {
+    sectionList: [],
 }
 
 export const sectionTypes = {
@@ -25,7 +34,7 @@ export const sectionReducer = (state = sectionIS, action: SectionActionTypes) =>
         case sectionTypes.GET_SECTIONS_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                sectionList: action.payload,
             };
         case sectionTypes.CREATE_SECTION_REQUEST:
             return {
@@ -34,7 +43,7 @@ export const sectionReducer = (state = sectionIS, action: SectionActionTypes) =>
         case sectionTypes.CREATE_SECTION_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                sectionList: action.payload,
             };
         case sectionTypes.DELETE_SECTION_REQUEST:
             return {
@@ -43,7 +52,7 @@ export const sectionReducer = (state = sectionIS, action: SectionActionTypes) =>
         case sectionTypes.DELETE_SECTION_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                sectionList: action.payload,
             };
         case sectionTypes.UPDATE_SECTION_REQUEST:
             return {
@@ -52,7 +61,7 @@ export const sectionReducer = (state = sectionIS, action: SectionActionTypes) =>
         case sectionTypes.UPDATE_SECTION_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                sectionList: action.payload,
             };
         default:
             return state;

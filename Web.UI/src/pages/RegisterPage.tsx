@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { Link, useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Dropdown, Input } from "../components/Input";
@@ -16,19 +16,19 @@ export interface IRegisterForm {
 }
 
 interface IRegisterPageProps {
-    _label: string;
+    label: string;
     formControlName: any
-    _key?: number;
+    key?: number;
     type?: string;
 }
 
-const InputsAreaRegister = ({ _label, formControlName, _key, type }: IRegisterPageProps) => {
+const InputsAreaRegister = ({ label, formControlName, key, type }: IRegisterPageProps) => {
     return (
-        <div className="w-full px-3 mb-6 md:mb-0" key={_key}>
+        <div className="w-full px-3 mb-6 md:mb-0" key={key}>
             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
-                {_label}
+                {label}
             </label>
-            <Input type={type ? 'password' : 'text'} formcontrol={formControlName} name={_label} />
+            <Input type={type ? 'password' : 'text'} formcontrol={formControlName} name={label} />
         </div>
     )
 }
@@ -37,14 +37,15 @@ const RegisterPage = () => {
     const [error, setError] = React.useState('');
     const navigate = useNavigate();
 
-    const { dispatch, state: { section: { label, value } } } = useStoreContext();
+    const { dispatch, state: { section: { sectionList } } } = useStoreContext();
 
     React.useEffect(() => {
-        getAllSections(dispatch);
-    }, [label, value]);
+        if (sectionList?.length === 0) {
+            getAllSections(dispatch)
+        }
+    }, [sectionList]);
 
-    console.log(label, value);
-
+    console.log('sections', sectionList);
 
     const { handleSubmit, register } = useForm<IRegisterForm>();
 
@@ -64,10 +65,13 @@ const RegisterPage = () => {
         { label: 'Mot de passe', formControlName: 'plainPassword', type: 'password' },
         { label: 'Pseudo', formControlName: 'username' },
         {
-            label: 'Section', formControlName: 'section', options: [{
-                label: 'IW3',
-                value: 'api/sections/1'
-            }]
+            label: 'Section', formControlName: 'section', options: sectionList?.map((section: { id: number; name: string; }) => {
+                return {
+                    value: `/api/sections/${section.id}`,
+                    label: section.name
+                }
+            }
+            )
         },
     ]
 
@@ -78,16 +82,16 @@ const RegisterPage = () => {
                 <div className="grid grid-cols-2 grid-rows-3 -mx-3 mb-6 w-full">
                     {inputsArea.map((input: any, index: number) => {
                         return input.options ? (
-                            <>
-                                <div className="w-full px-3 mb-6 md:mb-0" key={index}>
+                            <Fragment key={index}>
+                                <div className="w-full px-3 mb-6 md:mb-0">
                                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                         Section
                                     </label>
                                     <Dropdown name={input.label} formcontrol={register(input.formControlName)} arr={input.options} key={index} />
                                 </div>
-                            </>
+                            </Fragment>
                         ) : (
-                            <InputsAreaRegister _label={input.label} formControlName={register(input.formControlName)} _key={index} type={input.type} />
+                            <InputsAreaRegister label={input.label} formControlName={register(input.formControlName)} key={index} type={input.type} />
                         )
                     })}
                 </div>

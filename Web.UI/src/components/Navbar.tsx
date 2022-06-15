@@ -34,27 +34,30 @@ const Navbar = ({ children, location }: NavbarProps) => {
         { name: 'Adminstration', link: '/Administration', icon: <AdjustmentsIcon className="h-7 w-7 group-hover:text-black" />, display: isSuperAdmin },
     ]
 
-    const [display, setDisplay] = React.useState(false)
+    const [display, setDisplay] = React.useState(true)
+
+    const whenPatternMatches = (string: string, patterns: Array<[RegExp, Function]>) => {
+        const foundPattern = patterns.find(([pattern]) => pattern.exec(string));
+
+        if (foundPattern) {
+            const [, effect] = foundPattern;
+            effect();
+        }
+    }
 
     React.useEffect(() => {
-        switch (location.pathname) {
-            case '/FirstPage':
-                setDisplay(false)
-                break;
-            case '/login':
-                setDisplay(false)
-                break;
-            case '/register':
-                setDisplay(false)
-                break;
-            case '/Administration/Users':
-                setDisplay(false)
-                break;
-            default:
-                setDisplay(true)
-                break;
+        whenPatternMatches(location.pathname, [
+            [/^\/Administration\/.*$/, () => setDisplay(false)],
+            [/^\/login\/?$/, () => setDisplay(false)],
+            [/^\/register\/?$/, () => setDisplay(false)],
+            [/^\/FirstPage\/?$/, () => setDisplay(false)],
+        ])
+
+        return () => {
+            setDisplay(true)
         }
-    }, [location])
+    }, [location.pathname])
+
 
     return (
         <>

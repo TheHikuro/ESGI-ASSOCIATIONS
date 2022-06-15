@@ -8,7 +8,6 @@ const getBearer = () => {
 }
 
 export const getAxiosInstanceWithoutAuth = () => {
-    console.log('getAxiosInstanceWithoutAuth');
     const axiosInstance = axios.create({
         baseURL: API_URL,
     });
@@ -17,7 +16,6 @@ export const getAxiosInstanceWithoutAuth = () => {
 }
 
 export const getAxiosInstance = () => {
-    console.log('getAxiosInstance');
     const instance = axios.create({ baseURL: API_URL });
 
     instance.interceptors.request.use(
