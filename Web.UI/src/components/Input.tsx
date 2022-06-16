@@ -17,9 +17,9 @@ interface IInputProps {
     _key?: number
 }
 
-export const Input = ({ name, type, formcontrol, _key }: IInputProps) => {
+export const Input = ({ name, type, formcontrol, _key, value }: IInputProps) => {
     return (
-        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' {...(formcontrol)} key={_key} />
+        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' {...(formcontrol)} key={_key} defaultValue={value} />
     )
 }
 

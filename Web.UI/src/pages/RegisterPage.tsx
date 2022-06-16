@@ -45,8 +45,6 @@ const RegisterPage = () => {
         }
     }, [sectionList]);
 
-    console.log('sections', sectionList);
-
     const { handleSubmit, register } = useForm<IRegisterForm>();
 
     const onSubmit: SubmitHandler<IRegisterForm> = async (data) => {
