@@ -29,7 +29,7 @@ export const SoloInput = ({ name, type, onChange, value, required, handlePressEn
     )
 }
 
-export const Dropdown = ({ name, formcontrol, arr, _key }: IInputProps) => {
+export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) => {
     const [section, setSection] = React.useState('');
 
     const handleChange = (event: any) => {
@@ -44,6 +44,7 @@ export const Dropdown = ({ name, formcontrol, arr, _key }: IInputProps) => {
                         labelId="select-section"
                         id="selectRegister"
                         value={section}
+                        defaultValue={value}
                         label="Section"
                         onClick={handleChange}
                         {...(formcontrol)}
