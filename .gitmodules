@@ -1,0 +1,3 @@
+[submodule "elastic"]
+	path = Web.ELASTIC
+	url = git@github.com:deviantony/docker-elk.git
