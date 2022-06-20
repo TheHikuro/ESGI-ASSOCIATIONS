@@ -13,7 +13,7 @@ export const getMyUser = async () => {
     return response.data;
 }
 
-export const updateUser = async (user: UsersDetails) => {
-    const response = await instance.put(`/users/${user.id}`, user);
+export const updateUser = async (user: UsersDetails, userID: number) => {
+    const response = await instance.put(`/users/${userID}`, user);
     return response.data;
 }

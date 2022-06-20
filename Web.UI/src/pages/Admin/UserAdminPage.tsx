@@ -73,13 +73,12 @@ const UserAdminPage = () => {
             <Fragment>
                 <FormComponents
                     values={[
-                        // { label: 'idUser', defaultValue: data.id, type: 'hidden', display: false, formControlName: "id" },
                         { label: "Prenom", formControlName: "firstname", type: "text", defaultValue: data.firstname },
                         { label: "Nom", formControlName: "lastname", type: "text", defaultValue: data.lastname },
                         { label: "Pseudo", formControlName: "username", type: "text", defaultValue: data.username },
                         { label: "Email", formControlName: "email", type: "text", defaultValue: data.email },
                         {
-                            label: "Section", formControlName: "section", type: "text", defaultValue: data.section.name, dropdown: true, options: sectionList?.map((section: { id: number; name: string; }) => {
+                            label: "Section", formControlName: "section", type: "text", defaultValue: data.section, dropdown: true, options: sectionList?.map((section: { id: number; name: string; }) => {
                                 return {
                                     value: `/api/sections/${section.id}`,
                                     label: section.name
@@ -89,6 +88,7 @@ const UserAdminPage = () => {
                         { label: "Roles", formControlName: "roles", type: "text", defaultValue: data.roles?.map((role: string) => { return role.concat("") }) },
                     ]}
                     submitButtonText="Modifier"
+                    id={data.id}
                 />
             </Fragment>
         )

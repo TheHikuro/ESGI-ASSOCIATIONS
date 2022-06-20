@@ -15,6 +15,7 @@ interface IInputProps {
     required?: boolean;
     handlePressEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     _key?: number
+    update?: boolean
 }
 
 export const Input = ({ name, type, formcontrol, _key, value }: IInputProps) => {
@@ -29,12 +30,18 @@ export const SoloInput = ({ name, type, onChange, value, required, handlePressEn
     )
 }
 
-export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) => {
+export const Dropdown = ({ name, formcontrol, arr, _key, value, update }: IInputProps) => {
     const [section, setSection] = React.useState('');
+    const [sectionObject, setSectionObject] = React.useState();
 
     const handleChange = (event: any) => {
-        setSection(event.target.dataset.value);
+        if (update) {
+            setSectionObject(event.target.dataset.value);
+        } else {
+            setSection(event.target.dataset.value);
+        }
     };
+
     return (
         <>
             <Box>
@@ -43,7 +50,7 @@ export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) =
                     <Select
                         labelId="select-section"
                         id="selectRegister"
-                        value={section}
+                        value={update ? sectionObject : section}
                         defaultValue={value}
                         label="Section"
                         onClick={handleChange}
@@ -52,7 +59,7 @@ export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) =
                         key={_key}
                     >
                         {arr?.map((item: any, index: number) => {
-                            return <MenuItem value={item.value} key={index}>{item.label}</MenuItem>
+                            return <MenuItem value={update ? item : item.value} key={index}>{item.label}</MenuItem>
                         })}
                     </Select>
                 </FormControl>

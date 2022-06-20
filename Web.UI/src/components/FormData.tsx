@@ -12,32 +12,32 @@ interface IFormDataProps {
     values: any[]
     title?: string
     submitButtonText?: string
+    id?: number
 }
 
 export function FormComponents(props: IFormDataProps) {
-    const { values, title, submitButtonText } = props;
+    const { values, title, submitButtonText, id } = props;
     const { handleSubmit, register } = useForm<IFormData<any>>();
     const { dispatch } = useStoreContext()
 
     const onSubmit: SubmitHandler<IFormData<any>> = async (data: any) => {
-
+        const updatedValues: any = {}
         const prevValues = values.reduce((acc, value) => {
             acc[value.formControlName] = value.defaultValue;
             return acc;
         }, {})
 
-        const newValues = Object.keys(data).reduce((acc, key) => {
+        console.log(prevValues);
+
+        for (const key in data) {
             if (data[key] !== prevValues[key]) {
-                acc[key] = data[key];
+                updatedValues[key] = data[key];
             }
-            return acc;
-        }, {
-            [values[0].formControlName]: values[0].defaultValue
-        })
+        }
 
-        console.log(newValues);
+        console.log(updatedValues);
 
-        //updateUserActions(dispatch, data)
+        //id && updateUserActions(dispatch, data, id)
     }
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,27 +64,22 @@ export function FormComponents(props: IFormDataProps) {
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                     Section
                                 </label>
-                                <Dropdown name={value.label} formcontrol={register(value.formControlName)} arr={value.options.value} value={value.defaultValue} key={key} />
+                                <Dropdown name={value.label} formcontrol={register(value.formControlName)} arr={value.options} value={value.defaultValue} key={key} update />
                             </div>
                         </Fragment>
                     ) : (
-                        value.display === false ? (
-                            <div className="hidden ">
-                                <Input formcontrol={register(value.formControlName)} value={value.defaultValue} key={key} />
+                        <Fragment>
+                            <div className="w-full px-3 mb-6 md:mb-0" key={key}>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
+                                    {value.label}
+                                </label>
+                                <Input type={value.type} formcontrol={register(value.formControlName)} name={value.label} value={value.defaultValue} />
                             </div>
-                        ) : (
-                            <>
-                                <div className="w-full px-3 mb-6 md:mb-0" key={key}>
-                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
-                                        {value.label}
-                                    </label>
-                                    <Input type={value.type} formcontrol={register(value.formControlName)} name={value.label} value={value.defaultValue} />
-                                </div>
-                            </>
-                        )
+                        </Fragment>
                     )
-                }
-                )}
+
+                })}
+
             </div>
             <div className={`${grid ? '' : 'mt-5'}`}>
                 <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">

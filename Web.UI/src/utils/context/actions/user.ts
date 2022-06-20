@@ -27,14 +27,14 @@ export const getMyUserActions = async (dispatch: Function) => {
     }
 }
 
-export const updateUserActions = async (dispatch: Function, user: UsersDetails) => {
+export const updateUserActions = async (dispatch: Function, user: UsersDetails, userID: number) => {
 
     dispatch({
         type: types.UPDATE_USER_REQUEST,
     });
 
     try {
-        const response = await updateUser(user);
+        const response = await updateUser(user, userID);
         dispatch({
             type: types.UPDATE_USER_SUCCESS,
             payload: response,
