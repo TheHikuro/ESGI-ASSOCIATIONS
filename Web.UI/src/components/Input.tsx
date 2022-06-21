@@ -5,6 +5,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { CheckIcon } from "@heroicons/react/outline";
+import { Roles } from "../utils/helpers/enums";
 interface IInputProps {
     name?: string;
     type?: string;
@@ -118,5 +120,49 @@ export const CodeInputs = ({ length, loading, onComplete }: ICodeInputProps) => 
                 </div>
             </div>
         </>
+    )
+}
+
+export const LabelComposant = ({ formcontrol, arr }: IInputProps) => {
+    const arrOfRoles = [Roles.ADMIN, Roles.USER]
+    const [initialValues, setInitialValues] = React.useState(
+        arrOfRoles?.map((item: any) => {
+            return {
+                isChecked: false,
+                value: item
+            }
+        })
+    )
+    console.log(initialValues);
+
+    const handleCheck = (id: number) => {
+        setInitialValues(
+            initialValues.map((role: any, index: number) => {
+                if (index === id) {
+                    return {
+                        ...role,
+                        isChecked: !role.isChecked
+                    }
+                }
+                return role
+            })
+        )
+    }
+
+    // create input for register react hook form to send initialValues.value
+    return (
+        <div>
+            {initialValues.map((item: any, index: number) => {
+                return (
+                    <div className={`w-fit bg-slate-300 rounded-full py-1 px-2 hover:cursor-pointer`} key={index}>
+                        <div className="flex items-center justify-between" id={item.value} onClick={() => handleCheck(index)} data-value={item.value} defaultValue={item.value}>
+                            <div>{item.isChecked ? <CheckIcon className="h-5 w-5 text-green-500" /> : ''}</div>
+                            <input type="checkbox" className="hidden" id={item.value} {...(formcontrol)} defaultChecked={item.isChecked} value={item.value} />
+                            <div className="text-sm text-gray-700">{item.value}</div>
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
     )
 }

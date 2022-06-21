@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { updateUserActions } from "../utils/context/actions/user";
 import { UsersDetails } from "../utils/context/reducers/admin";
 import { useStoreContext } from "../utils/context/StoreContext";
-import { Dropdown, Input } from "./Input";
+import { Dropdown, Input, LabelComposant } from "./Input";
 
 interface IFormData<T> {
     [key: string]: T;
@@ -33,7 +33,10 @@ export function FormComponents(props: IFormDataProps) {
             }
         }
 
-        id && updateUserActions(dispatch, updatedValues, id)
+        console.log(updatedValues);
+
+
+        //id && updateUserActions(dispatch, updatedValues, id)
     }
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,7 +72,11 @@ export function FormComponents(props: IFormDataProps) {
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                     {value.label}
                                 </label>
-                                <Input type={value.type} formcontrol={register(value.formControlName)} name={value.label} value={value.defaultValue} />
+                                {value.isArray ? (
+                                    <LabelComposant formcontrol={register(value.formControlName)} arr={value.defaultValue} />
+                                ) : (
+                                    <Input type={value.type} formcontrol={register(value.formControlName)} name={value.label} value={value.defaultValue} />
+                                )}
                             </div>
                         </Fragment>
                     )
