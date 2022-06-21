@@ -123,17 +123,16 @@ export const CodeInputs = ({ length, loading, onComplete }: ICodeInputProps) => 
     )
 }
 
-export const LabelComposant = ({ formcontrol, arr }: IInputProps) => {
+export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
     const arrOfRoles = [Roles.ADMIN, Roles.USER]
     const [initialValues, setInitialValues] = React.useState(
         arrOfRoles?.map((item: any) => {
             return {
-                isChecked: false,
+                isChecked: JSON.parse(value).includes(item),
                 value: item
             }
         })
     )
-    console.log(initialValues);
 
     const handleCheck = (id: number) => {
         setInitialValues(
@@ -155,9 +154,9 @@ export const LabelComposant = ({ formcontrol, arr }: IInputProps) => {
             {initialValues.map((item: any, index: number) => {
                 return (
                     <div className={`w-fit bg-slate-300 rounded-full py-1 px-2 hover:cursor-pointer`} key={index}>
-                        <div className="flex items-center justify-between" id={item.value} onClick={() => handleCheck(index)} data-value={item.value} defaultValue={item.value}>
+                        <div className="flex items-center justify-between" onClick={() => handleCheck(index)} {...(formcontrol)}>
                             <div>{item.isChecked ? <CheckIcon className="h-5 w-5 text-green-500" /> : ''}</div>
-                            <input type="checkbox" className="hidden" id={item.value} {...(formcontrol)} defaultChecked={item.isChecked} value={item.value} />
+                            <input type="checkbox" className="hidden" id={item.value} defaultChecked={item.isChecked} value={item.value} />
                             <div className="text-sm text-gray-700">{item.value}</div>
                         </div>
                     </div>
