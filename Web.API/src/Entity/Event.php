@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\EventRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['item:get']],
     collectionOperations: [
         "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
         "post" => [
@@ -34,7 +37,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     itemOperations: [
-        "get" => ["normalization_context" => ["groups" => ["item:get"]]],
+        "get",
         "put" => [
             "normalization_context" => ["groups" => ["item:put"]],
             "openapi_context" => [
@@ -63,32 +66,25 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["collection:get", "item:get"])]
     private $id;
 
     #[ORM\Column(type: 'dateinterval')]
-    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $dateInterval;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(["collection:get", "item:get", "item:put"])]
     private $active;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $name;
 
     #[ORM\ManyToOne(targetEntity: Association::class, inversedBy: 'event')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["collection:get", "collection:post", "item:get"])]
     private $association;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(["collection:get", "item:get"])]
     private $createdAt;
 
     public function __construct()
@@ -96,16 +92,23 @@ class Event
         $this->createdAt = new \DatetimeImmutable('now');
     }
 
+    #[ApiProperty(identifier: true)]
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName("id")]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName("dateInterval")]
     public function getDateInterval(): ?\DateInterval
     {
         return $this->dateInterval;
     }
 
+    #[Groups(["collection:post", "item:put"])]
+    #[SerializedName("dateInterval")]
     public function setDateInterval(\DateInterval $dateInterval): self
     {
         $this->dateInterval = $dateInterval;
@@ -113,11 +116,15 @@ class Event
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName("active")]
     public function isActive(): ?bool
     {
         return $this->active;
     }
 
+    #[Groups(["item:put"])]
+    #[SerializedName("active")]
     public function setActive(bool $active): self
     {
         $this->active = $active;
@@ -125,11 +132,15 @@ class Event
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName("description")]
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    #[Groups(["collection:post", "item:put"])]
+    #[SerializedName("description")]
     public function setDescription(?string $description): self
     {
         $this->description = $description;
@@ -137,11 +148,15 @@ class Event
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName("name")]
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    #[Groups(["collection:post", "item:put"])]
+    #[SerializedName("name")]
     public function setName(?string $name): self
     {
         $this->name = $name;
@@ -149,11 +164,15 @@ class Event
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName("association")]
     public function getAssociation(): ?Association
     {
         return $this->association;
     }
 
+    #[Groups(["collection:post"])]
+    #[SerializedName("association")]
     public function setAssociation(?Association $association): self
     {
         $this->association = $association;
@@ -161,15 +180,10 @@ class Event
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName("createdAt")]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 }
