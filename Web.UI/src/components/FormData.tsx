@@ -27,17 +27,13 @@ export function FormComponents(props: IFormDataProps) {
             return acc;
         }, {})
 
-        console.log(prevValues);
-
         for (const key in data) {
             if (data[key] !== prevValues[key]) {
                 updatedValues[key] = data[key];
             }
         }
 
-        console.log(updatedValues);
-
-        //id && updateUserActions(dispatch, data, id)
+        id && updateUserActions(dispatch, updatedValues, id)
     }
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,7 +60,7 @@ export function FormComponents(props: IFormDataProps) {
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                     Section
                                 </label>
-                                <Dropdown name={value.label} formcontrol={register(value.formControlName)} arr={value.options} value={value.defaultValue} key={key} update />
+                                <Dropdown name={value.label} formcontrol={register(value.formControlName)} arr={value.options} value={value.defaultValue} key={key} />
                             </div>
                         </Fragment>
                     ) : (

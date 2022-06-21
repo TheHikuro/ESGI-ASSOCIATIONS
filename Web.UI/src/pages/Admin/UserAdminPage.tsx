@@ -78,14 +78,14 @@ const UserAdminPage = () => {
                         { label: "Pseudo", formControlName: "username", type: "text", defaultValue: data.username },
                         { label: "Email", formControlName: "email", type: "text", defaultValue: data.email },
                         {
-                            label: "Section", formControlName: "section", type: "text", defaultValue: data.section, dropdown: true, options: sectionList?.map((section: { id: number; name: string; }) => {
+                            label: "Section", formControlName: "section", type: "text", defaultValue: `/api/sections/${data.section.id}`, dropdown: true, options: sectionList?.map((section: { id: number; name: string; }) => {
                                 return {
                                     value: `/api/sections/${section.id}`,
                                     label: section.name
                                 }
                             })
                         },
-                        { label: "Roles", formControlName: "roles", type: "text", defaultValue: data.roles?.map((role: string) => { return role.concat("") }) },
+                        { label: "Roles", formControlName: "roles", type: "text", defaultValue: data.roles.toString(), isArray: true },
                     ]}
                     submitButtonText="Modifier"
                     id={data.id}

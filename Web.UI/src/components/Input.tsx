@@ -15,7 +15,6 @@ interface IInputProps {
     required?: boolean;
     handlePressEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     _key?: number
-    update?: boolean
 }
 
 export const Input = ({ name, type, formcontrol, _key, value }: IInputProps) => {
@@ -30,18 +29,12 @@ export const SoloInput = ({ name, type, onChange, value, required, handlePressEn
     )
 }
 
-export const Dropdown = ({ name, formcontrol, arr, _key, value, update }: IInputProps) => {
-    const [section, setSection] = React.useState('');
-    const [sectionObject, setSectionObject] = React.useState();
+export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) => {
+    const [section, setSection] = React.useState(value);
 
     const handleChange = (event: any) => {
-        if (update) {
-            setSectionObject(event.target.dataset.value);
-        } else {
-            setSection(event.target.dataset.value);
-        }
+        setSection(event.target.dataset.value);
     };
-
     return (
         <>
             <Box>
@@ -50,8 +43,7 @@ export const Dropdown = ({ name, formcontrol, arr, _key, value, update }: IInput
                     <Select
                         labelId="select-section"
                         id="selectRegister"
-                        value={update ? sectionObject : section}
-                        defaultValue={value}
+                        value={section}
                         label="Section"
                         onClick={handleChange}
                         {...(formcontrol)}
@@ -59,7 +51,7 @@ export const Dropdown = ({ name, formcontrol, arr, _key, value, update }: IInput
                         key={_key}
                     >
                         {arr?.map((item: any, index: number) => {
-                            return <MenuItem value={update ? item : item.value} key={index}>{item.label}</MenuItem>
+                            return <MenuItem value={item.value} defaultValue={item.value} key={index}>{item.label}</MenuItem>
                         })}
                     </Select>
                 </FormControl>
