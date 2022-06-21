@@ -60,7 +60,7 @@ const RegisterPage = () => {
         { label: 'Prénom', formControlName: 'firstname' },
         { label: 'Nom', formControlName: 'lastname' },
         { label: 'Email', formControlName: 'email' },
-        { label: 'Mot de passe', formControlName: 'plainPassword', type: 'password' },
+        { label: 'Mot de passe', formControlName: 'password', type: 'password' },
         { label: 'Pseudo', formControlName: 'username' },
         {
             label: 'Section', formControlName: 'section', options: sectionList?.map((section: { id: number; name: string; }) => {

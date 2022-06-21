@@ -27,17 +27,14 @@ const UserAdminPage = () => {
         }
     }, [sectionList]);
 
-    const userfromapi = userList?.map((user) => {
-        const userRoles = user.roles?.map((role) => {
-            return role.concat("")
-        })
+    const userfromapi = userList?.map((user: UsersDetails) => {
         return {
             id: user.id,
             name: user.firstname,
             lastname: user.lastname,
             pseudo: user.username,
             email: user.email,
-            role: userRoles,
+            role: user.roles,
             sections: user.section.name,
             actions: (
                 <>
@@ -60,7 +57,7 @@ const UserAdminPage = () => {
                     <span> Pseudo : {data.username} </span>
                     <span> Email : {data.email} </span>
                     <span> Section : {data.section.name} </span>
-                    <span> Roles : {data.roles?.map((role: string) => { return role.concat("") })} </span>
+                    <span> Roles : {data.roles} </span>
                 </div>
             </>
         )
