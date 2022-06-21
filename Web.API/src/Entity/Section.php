@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\SectionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: SectionRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['item:get']],
     collectionOperations: [
         "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
         "post" => [
@@ -33,7 +34,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     itemOperations: [
-        "get" => ["normalization_context" => ["groups" => ["item:get"]]],
+        "get",
         "put" => [
             "normalization_context" => ["groups" => ["item:put"]],
             "openapi_context" => [
@@ -59,100 +60,59 @@ class Section
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["collection:get", "item:get"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Groups(["collection:get", "item:get"])]
     private $slug;
 
-    #[ORM\OneToMany(mappedBy: 'section', targetEntity: User::class, orphanRemoval: true)]
-    #[Groups(["collection:get", "item:get"])]
-    private $users;
-
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(["collection:get", "item:get"])]
     private $createdAt;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
         $this->createdAt = new \DatetimeImmutable('now');
         $this->slug = strtolower(str_replace(' ', '-', $this->name));
     }
 
+    #[ApiProperty(identifier: true)]
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('id')]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('name')]
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    #[Groups(["collection:post", "item:put"])]
+    #[SerializedName('name')]
     public function setName(string $name): self
     {
         $this->name = $name;
+        $this->slug = strtolower(str_replace(' ', '-', $name));
 
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('slug')]
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setSection($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getSection() === $this) {
-                $user->setSection(null);
-            }
-        }
-
-        return $this;
-    }
-
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('createdAt')]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 }

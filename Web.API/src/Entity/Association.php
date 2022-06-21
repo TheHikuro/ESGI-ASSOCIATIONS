@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AssociationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 #[ApiResource(
+    normalizationContext: ['groups' => ['item:get']],
     collectionOperations: [
         "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
         "post" => [
@@ -35,7 +38,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     ],
     itemOperations: [
-        "get" => ["normalization_context" => ["groups" => ["item:get"]]],
+        "get",
         "put" => [
             "normalization_context" => ["groups" => ["item:put"]],
             "openapi_context" => [
@@ -57,24 +60,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 ],
             ],
         ],
-        "patch" => [
-            "normalization_context" => ["groups" => ["item:patch"]],
-            "openapi_context" => [
-                "requestBody" => [
-                    "content" => [
-                        "application/ld+json" => [
-                            "schema" => [
-                                "type" => "object",
-                                "properties" => [
-                                    "events" => ["type" => "array", "items" => ["type" => "string"]],
-                                    "members" => ["type" => "array", "items" => ["type" => "string"]],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
+        // "patch" => [
+        //     "normalization_context" => ["groups" => ["item:patch"]],
+        //     "openapi_context" => [
+        //         "requestBody" => [
+        //             "content" => [
+        //                 "application/ld+json" => [
+        //                     "schema" => [
+        //                         "type" => "object",
+        //                         "properties" => [
+        //                             "events" => ["type" => "array", "items" => ["type" => "string"]],
+        //                             "members" => ["type" => "array", "items" => ["type" => "string"]],
+        //                         ],
+        //                     ],
+        //                 ],
+        //             ],
+        //         ],
+        //     ],
+        // ],
         "delete",
     ],
 )]
@@ -83,32 +86,26 @@ class Association
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["collection:get", "item:get"])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'associations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $owner;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $name;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(["collection:get", "item:get"])]
     private $createdAt;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["collection:get", "collection:post", "item:get", "item:put"])]
     private $description;
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Event::class, orphanRemoval: true)]
-    #[Groups(["collection:get", "item:get", "item:put", "item:patch"])]
     private $events;
 
     #[ORM\ManyToMany(targetEntity: User::class)]
-    #[Groups(["collection:get", "item:get", "item:put", "item:patch"])]
+    #[ORM\JoinColumn(nullable: false)]
     private $members;
 
     public function __construct()
@@ -118,16 +115,23 @@ class Association
         $this->createdAt = new \DatetimeImmutable('now');
     }
 
+    #[ApiProperty(identifier: true)]
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('id')]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('owner')]
     public function getOwner(): ?User
     {
         return $this->owner;
     }
 
+    #[Groups(["collection:post", "item:put"])]
+    #[SerializedName('owner')]
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
@@ -135,11 +139,15 @@ class Association
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('name')]
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    #[Groups(["collection:post", "item:put"])]
+    #[SerializedName('name')]
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -147,23 +155,22 @@ class Association
         return $this;
     }
 
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('createdAt')]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('description')]
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    #[Groups(["collection:post", "item:put"])]
+    #[SerializedName('description')]
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -171,57 +178,63 @@ class Association
         return $this;
     }
 
-    /**
-     * @return Collection<int, Event>
-     */
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('events')]
     public function getEvents(): Collection
     {
         return $this->events;
     }
 
-    public function addEvent(Event $event): self
-    {
-        if (!$this->events->contains($event)) {
-            $this->events[] = $event;
-            $event->setAssociation($this);
-        }
+    // #[Groups(["item:put", "item:patch"])]
+    // #[SerializedName('events')]
+    // public function addEvent(Event $event): self
+    // {
+    //     if (!$this->events->contains($event)) {
+    //         $this->events[] = $event;
+    //         $event->setAssociation($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeEvent(Event $event): self
-    {
-        if ($this->events->removeElement($event)) {
-            // set the owning side to null (unless already changed)
-            if ($event->getAssociation() === $this) {
-                $event->setAssociation(null);
-            }
-        }
+    // #[Groups(["item:put", "item:patch"])]
+    // #[SerializedName('events')]
+    // public function removeEvent(Event $event): self
+    // {
+    //     if ($this->events->removeElement($event)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($event->getAssociation() === $this) {
+    //             $event->setAssociation(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    /**
-     * @return Collection<int, User>
-     */
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('members')]
     public function getMembers(): Collection
     {
         return $this->members;
     }
 
-    public function addMember(User $member): self
-    {
-        if (!$this->members->contains($member)) {
-            $this->members[] = $member;
-        }
+    // #[Groups(["item:put"])]
+    // #[SerializedName('members')]
+    // public function addMember(User $member): self
+    // {
+    //     if (!$this->members->contains($member)) {
+    //         $this->members[] = $member;
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeMember(User $member): self
-    {
-        $this->members->removeElement($member);
+    // #[Groups(["item:put"])]
+    // #[SerializedName('members')]
+    // public function removeMember(User $member): self
+    // {
+    //     $this->members->removeElement($member);
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }
