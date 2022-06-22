@@ -28,11 +28,9 @@ export function FormComponents(props: IFormDataProps) {
             return acc;
         }, {})
 
-        for (const key in data) {
-            if (data[key] !== prevValues[key]) {
-                updatedValues[key] = data[key];
-            }
-        }
+        for (const key in data)
+            if (JSON.stringify(data[key]) !== JSON.stringify(prevValues[key]))
+                updatedValues[key] = Array.isArray(data[key]) ? JSON.stringify(data[key]) : data[key];
 
         console.log(updatedValues);
 

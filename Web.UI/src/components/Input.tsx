@@ -125,7 +125,7 @@ export const CodeInputs = ({ length, loading, onComplete }: ICodeInputProps) => 
 }
 
 export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
-    const [roles, setRoles] = React.useState<string[]>(JSON.parse(value));
+    const [roles, setRoles] = React.useState<string[]>(value);
     console.log(roles);
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>, checked: boolean) => {
         const newRoles = [...roles];
@@ -167,7 +167,7 @@ export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
                 >
                     {allRoles.map((name: string) => (
                         <MenuItem key={name} value={name}>
-                            <Checkbox checked={roles.indexOf(name) > -1} onChange={handleChangeCheckbox} defaultChecked={JSON.parse(value).includes(name)} value={name} />
+                            <Checkbox checked={roles.indexOf(name) > -1} onChange={handleChangeCheckbox} value={name} />
                             <ListItemText primary={name} />
                         </MenuItem>
                     ))}
