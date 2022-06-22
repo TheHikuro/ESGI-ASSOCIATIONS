@@ -21,6 +21,7 @@ export function FormComponents(props: IFormDataProps) {
     const { dispatch } = useStoreContext()
 
     const onSubmit: SubmitHandler<IFormData<any>> = async (data: any) => {
+
         const updatedValues: any = {}
         const prevValues = values.reduce((acc, value) => {
             acc[value.formControlName] = value.defaultValue;
@@ -73,7 +74,7 @@ export function FormComponents(props: IFormDataProps) {
                                     {value.label}
                                 </label>
                                 {value.isArray ? (
-                                    <LabelComposant formcontrol={register(value.formControlName)} arr={value.defaultValue} />
+                                    <LabelComposant formcontrol={register(value.formControlName)} value={value.defaultValue} />
                                 ) : (
                                     <Input type={value.type} formcontrol={register(value.formControlName)} name={value.label} value={value.defaultValue} />
                                 )}
