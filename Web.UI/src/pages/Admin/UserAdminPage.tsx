@@ -82,7 +82,7 @@ const UserAdminPage = () => {
                                 }
                             })
                         },
-                        { label: "Roles", formControlName: "roles", type: "text", defaultValue: JSON.parse(data.roles), isArray: true },
+                        { label: "Roles", formControlName: "roles", type: "text", defaultValue: data.roles, isArray: true },
                     ]}
                     submitButtonText="Modifier"
                     id={data.id}

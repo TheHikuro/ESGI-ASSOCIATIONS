@@ -271,22 +271,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @see UserInterface
+     */
     #[Groups(["collection:get", "item:get"])]
     #[SerializedName('roles')]
-    public function getRolesJson(): string
+    public function getRoles(): array
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
-        return json_encode(array_unique($roles));
+        return array_unique($roles);
     }
 
     #[Groups(["item:put"])]
     #[SerializedName('roles')]
-    public function setRolesFromJson(string $roles): self
+    public function setRoles(array $roles): self
     {
-        $this->roles = json_decode($roles);
+        $this->roles = $roles;
 
         return $this;
     }
@@ -458,25 +461,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-
-        return $this;
     }
 
     /**

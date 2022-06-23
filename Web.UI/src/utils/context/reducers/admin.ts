@@ -6,7 +6,7 @@ export interface UsersDetails {
     username: string;
     email: string;
     section: any;
-    roles: string;
+    roles: Array<string>;
     id: number;
     createdAt: string;
     updatedAt: string;

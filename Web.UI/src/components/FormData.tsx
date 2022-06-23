@@ -30,12 +30,12 @@ export function FormComponents(props: IFormDataProps) {
 
         for (const key in data)
             if (JSON.stringify(data[key]) !== JSON.stringify(prevValues[key]))
-                updatedValues[key] = Array.isArray(data[key]) ? JSON.stringify(data[key]) : data[key];
+                updatedValues[key] = data[key];
 
         console.log(updatedValues);
 
 
-        //id && updateUserActions(dispatch, updatedValues, id)
+        id && updateUserActions(dispatch, updatedValues, id)
     }
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,7 +62,7 @@ export function FormComponents(props: IFormDataProps) {
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                     Section
                                 </label>
-                                <Dropdown name={value.label} formcontrol={register(value.formControlName)} arr={value.options} value={value.defaultValue} key={key} />
+                                <Dropdown name={value.label} formcontrol={register(value.formControlName, {value: value.defaultValue})} arr={value.options} value={value.defaultValue} key={key} />
                             </div>
                         </Fragment>
                     ) : (
@@ -72,9 +72,9 @@ export function FormComponents(props: IFormDataProps) {
                                     {value.label}
                                 </label>
                                 {value.isArray ? (
-                                    <LabelComposant formcontrol={register(value.formControlName)} value={value.defaultValue} />
+                                    <LabelComposant formcontrol={register(value.formControlName, {value: value.defaultValue})} value={value.defaultValue} />
                                 ) : (
-                                    <Input type={value.type} formcontrol={register(value.formControlName)} name={value.label} value={value.defaultValue} />
+                                    <Input type={value.type} formcontrol={register(value.formControlName, {value: value.defaultValue})} name={value.label} value={value.defaultValue} />
                                 )}
                             </div>
                         </Fragment>

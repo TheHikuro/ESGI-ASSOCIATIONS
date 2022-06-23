@@ -126,7 +126,6 @@ export const CodeInputs = ({ length, loading, onComplete }: ICodeInputProps) => 
 
 export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
     const [roles, setRoles] = React.useState<string[]>(value);
-    console.log(roles);
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>, checked: boolean) => {
         const newRoles = [...roles];
         if (checked) {
@@ -138,8 +137,6 @@ export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
     }
 
     const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('eventTarget', event.target.value);
-
         const {
             target: { checked },
         } = event;
