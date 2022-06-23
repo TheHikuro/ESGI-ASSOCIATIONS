@@ -5,29 +5,24 @@ import { Dashboard } from "../../components/Dashboard";
 import { FormComponents } from "../../components/FormData";
 import { useModalContext } from "../../components/modal";
 import { Table } from "../../components/Table";
-import { getUsersActions } from "../../utils/context/actions/admin";
+import { getUsersActions, updateAdminUsersActions } from "../../utils/context/actions/admin";
 import { getAllSections } from "../../utils/context/actions/section";
-import { updateUserActions } from "../../utils/context/actions/user";
 import { UsersDetails } from "../../utils/context/reducers/admin";
 import { useStoreContext } from "../../utils/context/StoreContext";
 
 const UserAdminPage = () => {
-    const { dispatch, state: { admin: { userList }, section: { sectionList } } } = useStoreContext()
+    const { dispatch, state: { admin: { userList, needRefresh }, section: { sectionList } } } = useStoreContext()
     const { openModal, updateModalTitle, updateModalContent } = useModalContext()
 
     React.useEffect(() => {
-        if (userList?.length === 0) {
-            getUsersActions(dispatch)
-        }
-    }, [userList])
+        if (needRefresh) { getUsersActions(dispatch) }
+    }, [needRefresh])
 
     React.useEffect(() => {
-        if (sectionList?.length === 0) {
-            getAllSections(dispatch)
-        }
+        if (sectionList?.length === 0) { getAllSections(dispatch) }
     }, [sectionList]);
 
-    const userfromapi = userList?.map((user: UsersDetails) => {
+    const userfromapi = userList && userList.map((user: UsersDetails) => {
         return {
             id: user.id,
             name: user.firstname,
@@ -86,6 +81,7 @@ const UserAdminPage = () => {
                     ]}
                     submitButtonText="Modifier"
                     id={data.id}
+                    action={updateAdminUsersActions}
                 />
             </Fragment>
         )

@@ -1,5 +1,5 @@
-import { getUsers } from "../../../api/users.axios.api";
-import { AdminTypes } from "../reducers/admin";
+import { getUsers, updateUser } from "../../../api/users.axios.api";
+import { AdminTypes, UsersDetails } from "../reducers/admin";
 import { endLoader, startLoader } from "./loader";
 
 export interface UserActionTypes {
@@ -24,4 +24,25 @@ export const getUsersActions = async (dispatch: Function) => {
         endLoader(dispatch);
 
     } catch (error) { console.log(error) }
+}
+
+export const updateAdminUsersActions = async (dispatch: Function, user: UsersDetails, userID: number) => {
+    dispatch({
+        type: AdminTypes.UPDATE_USER_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await updateUser(user, userID);
+        dispatch({
+            type: AdminTypes.UPDATE_USER_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    }
+    catch (error) { console.log(error) }
+
 }

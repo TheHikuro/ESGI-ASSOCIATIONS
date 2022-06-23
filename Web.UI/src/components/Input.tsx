@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { CheckIcon } from "@heroicons/react/outline";
-import { Roles } from "../utils/helpers/enums";
+import { EveryRoles } from "../utils/helpers/enums";
 import { OutlinedInput, Checkbox, ListItemText } from "@mui/material";
 interface IInputProps {
     name?: string;
@@ -145,8 +145,6 @@ export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
         );
     }
 
-    const allRoles = Object.values(Roles);
-
     return (
         <div>
             <FormControl className="w-full">
@@ -162,10 +160,10 @@ export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
                     className='bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full h-12'
                     {...(formcontrol)}
                 >
-                    {allRoles.map((name: string) => (
-                        <MenuItem key={name} value={name}>
-                            <Checkbox checked={roles.indexOf(name) > -1} onChange={handleChangeCheckbox} value={name} />
-                            <ListItemText primary={name} />
+                    {EveryRoles.map((role: any) => (
+                        <MenuItem key={role.value} value={role.label}>
+                            <Checkbox checked={roles.indexOf(role.value) > -1} onChange={handleChangeCheckbox} value={role.value} disabled={role.disable} />
+                            <ListItemText primary={role.label} />
                         </MenuItem>
                     ))}
                 </Select>

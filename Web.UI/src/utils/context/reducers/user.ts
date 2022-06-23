@@ -6,7 +6,7 @@ export const userIS = {
     id: 0,
     name: '',
     email: '',
-    role: '',
+    roles: Array<string>(),
     token: '',
     error: null,
 };

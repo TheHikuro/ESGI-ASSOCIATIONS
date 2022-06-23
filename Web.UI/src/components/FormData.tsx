@@ -1,9 +1,8 @@
 import React, { Fragment } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { updateUserActions } from "../utils/context/actions/user";
-import { UsersDetails } from "../utils/context/reducers/admin";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { Dropdown, Input, LabelComposant } from "./Input";
+import { useModalContext } from "./modal";
 
 interface IFormData<T> {
     [key: string]: T;
@@ -13,12 +12,14 @@ interface IFormDataProps {
     title?: string
     submitButtonText?: string
     id?: number
+    action: Function
 }
 
 export function FormComponents(props: IFormDataProps) {
-    const { values, title, submitButtonText, id } = props;
+    const { values, title, submitButtonText, id, action } = props;
     const { handleSubmit, register } = useForm<IFormData<any>>();
     const { dispatch } = useStoreContext()
+    const { closeModal } = useModalContext()
 
     const onSubmit: SubmitHandler<IFormData<any>> = async (data: any) => {
 
@@ -32,10 +33,8 @@ export function FormComponents(props: IFormDataProps) {
             if (JSON.stringify(data[key]) !== JSON.stringify(prevValues[key]))
                 updatedValues[key] = data[key];
 
-        console.log(updatedValues);
-
-
-        id && updateUserActions(dispatch, updatedValues, id)
+        id && action(dispatch, updatedValues, id)
+        closeModal()
     }
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -62,7 +61,7 @@ export function FormComponents(props: IFormDataProps) {
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                     Section
                                 </label>
-                                <Dropdown name={value.label} formcontrol={register(value.formControlName, {value: value.defaultValue})} arr={value.options} value={value.defaultValue} key={key} />
+                                <Dropdown name={value.label} formcontrol={register(value.formControlName, { value: value.defaultValue })} arr={value.options} value={value.defaultValue} key={key} />
                             </div>
                         </Fragment>
                     ) : (
@@ -72,9 +71,9 @@ export function FormComponents(props: IFormDataProps) {
                                     {value.label}
                                 </label>
                                 {value.isArray ? (
-                                    <LabelComposant formcontrol={register(value.formControlName, {value: value.defaultValue})} value={value.defaultValue} />
+                                    <LabelComposant formcontrol={register(value.formControlName, { value: value.defaultValue })} value={value.defaultValue} />
                                 ) : (
-                                    <Input type={value.type} formcontrol={register(value.formControlName, {value: value.defaultValue})} name={value.label} value={value.defaultValue} />
+                                    <Input type={value.type} formcontrol={register(value.formControlName, { value: value.defaultValue })} name={value.label} value={value.defaultValue} />
                                 )}
                             </div>
                         </Fragment>

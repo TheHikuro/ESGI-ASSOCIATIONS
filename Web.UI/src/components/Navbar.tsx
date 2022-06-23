@@ -4,6 +4,8 @@ import { authLogoutRequest } from "../utils/context/actions/auth"
 import { useStoreContext } from "../utils/context/StoreContext"
 import Logo from '../assets/img/ESGI-logo.png'
 import { AdjustmentsIcon, CalendarIcon, HomeIcon, TemplateIcon, UserGroupIcon, UserIcon } from "@heroicons/react/outline"
+import { EveryRoles } from "../utils/helpers/enums"
+import { getMyUserActions } from "../utils/context/actions/user"
 
 interface NavbarProps {
     children: React.ReactNode
@@ -21,17 +23,23 @@ const NavItem = ({ arr }: any) => {
 }
 
 const Navbar = ({ children, location }: NavbarProps) => {
-    const isAdmin = true
-    const isSuperAdmin = true
-    const { dispatch } = useStoreContext()
+
+    const { dispatch, state: { user: { roles } } } = useStoreContext()
+
+    React.useEffect(() => {
+        getMyUserActions(dispatch)
+    }, [])
+
+    const isAdmin = roles.includes(EveryRoles[0].value)
+    const isAssosManager = roles.includes(EveryRoles[1].value)
     const navigate = useNavigate()
     const elements = [
         { name: 'Home', link: '/Home', icon: <HomeIcon className="h-7 w-7 group-hover:text-black" />, display: true },
         { name: 'Profile', link: '/Profile', icon: <UserIcon className="h-7 w-7 group-hover:text-black" />, display: true },
         { name: 'Associations', link: '/Associations', icon: <UserGroupIcon className="h-7 w-7 group-hover:text-black" />, display: true },
         { name: 'Calendrier', link: '/Calendrier', icon: <CalendarIcon className="h-7 w-7 group-hover:text-black" />, display: true },
-        { name: 'Gestion Assosications', link: '/Gestion-Associations', icon: <TemplateIcon className="h-7 w-7 group-hover:text-black" />, display: isAdmin },
-        { name: 'Adminstration', link: '/Administration', icon: <AdjustmentsIcon className="h-7 w-7 group-hover:text-black" />, display: isSuperAdmin },
+        { name: 'Gestion Assosications', link: '/Gestion-Associations', icon: <TemplateIcon className="h-7 w-7 group-hover:text-black" />, display: isAssosManager },
+        { name: 'Adminstration', link: '/Administration', icon: <AdjustmentsIcon className="h-7 w-7 group-hover:text-black" />, display: isAdmin },
     ]
 
     const [display, setDisplay] = React.useState(true)
