@@ -1,6 +1,10 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AdminPage from "../pages/Admin/AdminPage";
+import AssosAdminPage from "../pages/Admin/AssosAdminPage";
+import EventsAdminPage from "../pages/Admin/EventsAdminPage";
+import MailerAdminPage from "../pages/Admin/MailerAdminPage";
+import SectionsAdminPage from "../pages/Admin/SectionsAdminPage";
 import UserAdminPage from "../pages/Admin/UserAdminPage";
 import AssosPage from "../pages/AssosPage";
 import CalendarPage from "../pages/CalendarPage";
@@ -45,6 +49,11 @@ const MyRoutes = () => {
             <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><GestionPage /></OnlyWhen>} />
             <Route path="/Administration" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AdminPage /></OnlyWhen>} />
             <Route path="/Administration/Users" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><UserAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Sections" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Evenements" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><EventsAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Mail" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
+
         </Routes>
     )
 }
