@@ -6,16 +6,24 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Controller\User\ConfirmationEmailController;
+use App\Controller\User\DeleteAvatarController;
+use App\Controller\User\PostAvatarController;
 use App\Controller\User\ValidateAccountController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints\Type;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+/**
+ * @Vich\Uploadable()
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['item:get']],
@@ -61,7 +69,6 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                                     "firstname" => ["type" => "string"],
                                     "lastname" => ["type" => "string"],
                                     "username" => ["type" => "string"],
-                                    "avatar" => ["type" => "string"],
                                     "description" => ["type" => "string"],
                                     "section" => ["type" => "string"],
                                     "associations" => ["type" => "array", "items" => ["type" => "string"]],
@@ -92,6 +99,35 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         //     ],
         // ],
         "delete",
+        "avatar" => [
+            "method" => "post",
+            "path" => "users/{id}/avatar",
+            "controller" => PostAvatarController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "multipart/form-data" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "avatar" => [
+                                        "type" => "string",
+                                        "format" => "binary"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                ],
+            ],
+        ],
+        "deleteAvatar" => [
+            "method" => "put",
+            "path" => "users/{id}/avatar",
+            "controller" => DeleteAvatarController::class,
+            "deserialize" => false,
+        ],
         "send_confirmation_email" => [
             "method" => "post",
             "path" => "users/{id}/send_confirmation_email",
@@ -103,7 +139,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
-                        "application/ld+json"
+                        "application/ld+json" => [
+                            "schema" => []
+                        ]
                     ],
                 ],
             ],
@@ -158,14 +196,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $username;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Vich\UploadableField(mapping="users_images", fileNameProperty="avatarPath")
+     */
+    #[Type([File::class,null])]
     private $avatar;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $avatarPath;
+
+    #[Type([string::class,null])]
+    private $avatarUrl;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $updatedAt;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $confirmationCode;
@@ -177,7 +227,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private $section;
 
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Association::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Association::class, orphanRemoval: true)]
     private $associations;
 
     #[ORM\Column(type: 'boolean')]
@@ -291,18 +341,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(["collection:get", "item:get"])]
     #[SerializedName('avatar')]
-    public function getAvatar(): ?string
+    public function getAvatarUrl()
     {
-        return $this->avatar;
-    }
-
-    #[Groups("item:put")]
-    #[SerializedName('avatar')]
-    public function setAvatar(?string $avatar): self
-    {
-        $this->avatar = $avatar;
-
-        return $this;
+        return $this->avatarUrl;
     }
 
     #[Groups(["collection:get", "item:get"])]
@@ -326,6 +367,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('updatedAt')]
+    public function getupdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 
     #[ApiSubresource(maxDepth: 1)]
@@ -463,6 +511,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = null;
     }
 
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?File
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?File $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getAvatarPath(): ?string
+    {
+        return $this->avatarPath;
+    }
+
+    public function setAvatarPath(?string $avatarPath): self
+    {
+        $this->avatarPath = $avatarPath;
+
+        return $this;
+    }
+
     public function activate(): self
     {
         $this->isActivated = true;
@@ -503,6 +582,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRecoveryToken(?string $recoveryToken): self
     {
         $this->recoveryToken = $recoveryToken;
+
+        return $this;
+    }
+
+    public function setAvatarUrl($avatarUrl): self
+    {
+        $this->avatarUrl = $avatarUrl;
 
         return $this;
     }
