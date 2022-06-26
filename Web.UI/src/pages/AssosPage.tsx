@@ -1,12 +1,27 @@
+import { useEffect, useState } from "react";
+import { getAllAssos } from "../api/assos.axios.api";
+import { Card } from "../components/Card";
+import { Layout } from "../components/Layout";
+import { Association } from "../models/association";
+
 const AssosPage = () => {
+    const [assos, setAssos] = useState<Association[]>([]);
+
+    useEffect(()=> {
+        getAssos();
+    }, []);
+
+    const getAssos = async () => {
+        setAssos(await getAllAssos());
+    }
+
     return (
-        <div>
-            <h1>Assos</h1>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-                quidem, doloremque, quisquam quisquam.
-            </p>
-        </div>
+        <Layout>
+            <>
+                <h1>Assos</h1>
+                {assos.map(asso => <Card title={asso.title} desc={asso.description} key={asso.title}></Card>)}
+            </>
+        </Layout>
     );
 }
 
