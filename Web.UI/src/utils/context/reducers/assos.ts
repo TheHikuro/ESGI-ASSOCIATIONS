@@ -10,9 +10,17 @@ export interface EventAssosState {
     createdAt: string
 }
 
+export interface OwnerAssosState {
+    id: number,
+    lastname: string,
+    firstname: string,
+    email: string,
+    avatar: string,
+}
+
 export interface AssosDetails {
     id: number,
-    owner: string,
+    owner: OwnerAssosState,
     name: string,
     description: string,
     avatar: string,
