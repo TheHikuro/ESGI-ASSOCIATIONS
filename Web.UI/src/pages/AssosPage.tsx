@@ -7,7 +7,7 @@ import { Association } from "../models/association";
 const AssosPage = () => {
     const [assos, setAssos] = useState<Association[]>([]);
 
-    useEffect(()=> {
+    useEffect(() => {
         getAssos();
     }, []);
 
@@ -18,8 +18,10 @@ const AssosPage = () => {
     return (
         <Layout>
             <>
-                <h1>Assos</h1>
-                {assos.map(asso => <Card title={asso.title} desc={asso.description} key={asso.title}></Card>)}
+                <h1>Rejoindre une Association ESGI</h1>
+                <div className="flex flex-wrap ">
+                    {assos.map(asso => <Card title={asso.title} desc={asso.description} key={asso.title}></Card>)}
+                </div>
             </>
         </Layout>
     );
