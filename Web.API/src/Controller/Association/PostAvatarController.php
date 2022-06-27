@@ -25,7 +25,6 @@ class PostAvatarController extends AbstractController
             throw new \ErrorException('Avatar mimeType must be ' . implode(', ', self::VALID_MIME_TYPES));
 
         $association->setAvatar($avatar);
-        $association->setUpdatedAt(new \DateTimeImmutable('now'));
 
         return $association;
     }

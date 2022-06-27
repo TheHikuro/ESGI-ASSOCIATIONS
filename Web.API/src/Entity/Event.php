@@ -87,6 +87,9 @@ class Event
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $updatedAt;
+
     public function __construct()
     {
         $this->createdAt = new \DatetimeImmutable('now');
@@ -185,5 +188,19 @@ class Event
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('updatedAt')]
+    public function getupdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }
