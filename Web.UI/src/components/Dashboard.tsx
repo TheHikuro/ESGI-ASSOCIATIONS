@@ -44,7 +44,8 @@ export const Dashboard = ({ children }: any) => {
                         </div>
                     </div>
                     <div className="w-full h-full">
-                        {children}
+
+                        <div className="w-full h-full">{children}</div>
                     </div>
                 </div>
             </div>

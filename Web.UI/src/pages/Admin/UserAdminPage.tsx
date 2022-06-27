@@ -1,4 +1,4 @@
-import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon } from "@heroicons/react/outline";
+import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon } from "@heroicons/react/outline";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { Fragment } from "react";
 import { Dashboard } from "../../components/Dashboard";
@@ -13,6 +13,8 @@ import { useStoreContext } from "../../utils/context/StoreContext";
 const UserAdminPage = () => {
     const { dispatch, state: { admin: { userList, needRefresh }, section: { sectionList } } } = useStoreContext()
     const { openModal, updateModalTitle, updateModalContent } = useModalContext()
+    const [searchValue, setSearchValue] = React.useState('');
+    const searchRegex = new RegExp(searchValue, 'i');
 
     React.useEffect(() => {
         if (needRefresh) { getUsersActions(dispatch) }
@@ -105,12 +107,19 @@ const UserAdminPage = () => {
     return (
         <div className="h-screen flex w-full bg-[url('./assets/img/bg-login.jpeg')]">
             <Dashboard>
+                <div className="w-full h-11 flex items-center justify-between">
+                    <span className="uppercase font-bold ml-5">Utilisateurs</span>
+                    <div className="flex items-center " onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)}>
+                        <input type="text" placeholder="Rechercher" className="p-1 bg-slate-300 rounded-lg mr-5 w-52" />
+                    </div>
+                </div>
                 <Table
-                    data={userfromapi}
+                    data={userfromapi.filter((item: any) => searchRegex.test((item.lastname)) || searchRegex.test((item.email)) || searchRegex.test((item.lastname)))}
                     header={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5, 10, 20, 50]}
                     disableSelectionOnClick
+                    headerCustom
                 />
             </Dashboard>
         </div>
