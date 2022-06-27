@@ -71,6 +71,9 @@ class Section
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $updatedAt;
+
     public function __construct()
     {
         $this->createdAt = new \DatetimeImmutable('now');
@@ -114,5 +117,26 @@ class Section
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('updatedAt')]
+    public function getupdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }
