@@ -5,5 +5,5 @@ const instanceWithoutAuth = getAxiosInstanceWithoutAuth();
 
 export const getSections = async () => {
     const response = await instanceWithoutAuth.get("/sections"); // ?itemsPerPage=1
-    return response.data["hydra:member"];
+    return response.data;
 }

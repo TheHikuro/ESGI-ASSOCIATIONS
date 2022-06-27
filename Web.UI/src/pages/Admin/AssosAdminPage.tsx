@@ -3,7 +3,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { Table } from "../../components/Table";
 import { useStoreContext } from "../../utils/context/StoreContext";
 import React from "react";
-import { getAllAssosActions } from "../../utils/context/actions/assos";
+import { getAllAssosActions, updateAssosActions } from "../../utils/context/actions/assos";
 import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon } from "@heroicons/react/outline";
 import { AssosDetails } from "../../utils/context/reducers/assos";
 import moment from "moment";
@@ -78,7 +78,7 @@ const AssosAdminPage = () => {
                     ]}
                     id={assos.id}
                     submitButtonText="Enregistrer"
-                    action={() => { }}
+                    action={updateAssosActions}
                 />
             </>
         )

@@ -39,11 +39,18 @@ const RegisterPage = () => {
 
     const { dispatch, state: { section: { sectionList } } } = useStoreContext();
 
+    console.log(sectionList);
+
+
     React.useEffect(() => {
         if (sectionList?.length === 0) {
+            console.log('getAllSections');
             getAllSections(dispatch)
         }
     }, [sectionList]);
+
+    console.log('sectionList', sectionList);
+
 
     const { handleSubmit, register } = useForm<IRegisterForm>();
 
@@ -72,6 +79,7 @@ const RegisterPage = () => {
             )
         },
     ]
+
 
     return (
         <div className="flex flex-col items-center justify-center w-full h-screen bg-[url('./assets/img/bg-login.jpeg')] bg-cover">

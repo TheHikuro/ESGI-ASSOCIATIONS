@@ -7,7 +7,7 @@ export interface SectionDetails {
 }
 
 export interface SectionState {
-    sectionList: SectionDetails[] | null;
+    sectionList: SectionDetails[];
 }
 
 export const sectionIS: SectionState = {
