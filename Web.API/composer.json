@@ -31,7 +31,8 @@
         "symfony/swiftmailer-bundle": "^3.5",
         "symfony/twig-bundle": "5.4.*",
         "symfony/validator": "5.4.*",
-        "symfony/yaml": "5.4.*"
+        "symfony/yaml": "5.4.*",
+        "vich/uploader-bundle": "^1.19"
     },
     "config": {
         "allow-plugins": {

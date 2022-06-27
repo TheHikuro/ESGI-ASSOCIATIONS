@@ -4,13 +4,21 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\Association\DeleteAvatarController;
+use App\Controller\Association\PostAvatarController;
 use App\Repository\AssociationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints\Type;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+/**
+ * @Vich\Uploadable()
+ */
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['item:get']],
@@ -79,6 +87,35 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         //     ],
         // ],
         "delete",
+        "avatar" => [
+            "method" => "post",
+            "path" => "associations/{id}/avatar",
+            "controller" => PostAvatarController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "multipart/form-data" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "avatar" => [
+                                        "type" => "string",
+                                        "format" => "binary"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                ],
+            ],
+        ],
+        "deleteAvatar" => [
+            "method" => "put",
+            "path" => "associations/{id}/avatar",
+            "controller" => DeleteAvatarController::class,
+            "deserialize" => false,
+        ],
     ],
 )]
 class Association
@@ -97,6 +134,21 @@ class Association
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $updatedAt;
+
+    /**
+     * @Vich\UploadableField(mapping="associations_images", fileNameProperty="avatarPath")
+     */
+    #[Type([File::class,null])]
+    private $avatar;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $avatarPath;
+
+    #[Type([string::class,null])]
+    private $avatarUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $description;
@@ -160,6 +212,20 @@ class Association
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('updatedAt')]
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('avatar')]
+    public function getAvatarUrl()
+    {
+        return $this->avatarUrl;
     }
 
     #[Groups(["collection:get", "item:get"])]
@@ -237,4 +303,42 @@ class Association
 
     //     return $this;
     // }
+
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar($avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getAvatarPath()
+    {
+        return $this->avatarPath;
+    }
+
+    public function setAvatarPath($avatarPath): self
+    {
+        $this->avatarPath = $avatarPath;
+
+        return $this;
+    }
+
+    public function setAvatarUrl($avatarUrl): self
+    {
+        $this->avatarUrl = $avatarUrl;
+
+        return $this;
+    }
+
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
 }
