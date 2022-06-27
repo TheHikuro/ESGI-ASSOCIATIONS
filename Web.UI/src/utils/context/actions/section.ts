@@ -1,5 +1,5 @@
-import { getSections } from "../../../api/sections.axios";
-import { sectionTypes } from "../reducers/sections";
+import { createSections, getSections, updateSection } from "../../../api/sections.axios";
+import { SectionDetails, sectionTypes } from "../reducers/sections";
 import { startLoader, endLoader } from "./loader";
 
 export interface SectionActionTypes {
@@ -18,6 +18,44 @@ export const getAllSections = async (dispatch: Function) => {
         const response = await getSections();
         dispatch({
             type: sectionTypes.GET_SECTIONS_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+export const updateSections = async (dispatch: Function, section: SectionDetails, sectionId: number) => {
+    dispatch({
+        type: sectionTypes.UPDATE_SECTION_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await updateSection(section, sectionId);
+        dispatch({
+            type: sectionTypes.UPDATE_SECTION_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+export const createSectionAction = async (dispatch: Function, section: SectionDetails) => {
+    dispatch({
+        type: sectionTypes.CREATE_SECTION_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await createSections(section);
+        dispatch({
+            type: sectionTypes.CREATE_SECTION_SUCCESS,
             payload: response,
         });
 

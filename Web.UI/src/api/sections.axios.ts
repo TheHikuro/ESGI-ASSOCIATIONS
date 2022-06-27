@@ -9,7 +9,7 @@ export const getSections = async () => {
     return response.data;
 }
 
-export const updateSections = async (data: SectionDetails, sectionId: number) => {
+export const updateSection = async (data: SectionDetails, sectionId: number) => {
     const response = await instance.put(`/sections/${sectionId}`, data);
     return response.data;
 }
