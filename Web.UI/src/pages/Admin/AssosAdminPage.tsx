@@ -19,13 +19,13 @@ const AssosAdminPage = () => {
         if (needRefresh) { getAllAssosActions(dispatch) }
     }, [needRefresh])
 
-    const assosFromAPi = assosList && assosList.map((assos: AssosDetails) => {
+    const assosFromAPi = assosList.map((assos: AssosDetails) => {
         return {
             id: assos.id,
             name: assos.name,
             owner: assos.owner.firstname,
             description: assos.description,
-            avatar: assos.avatar ? assos.avatar : '',
+            avatar: assos.avatar,
             createdAt: moment(assos.createdAt).format('DD/MM/YYYY'),
             actions: (
                 <>
@@ -74,7 +74,6 @@ const AssosAdminPage = () => {
                     values={[
                         { label: 'Nom', type: 'text', formControlName: 'name', defaultValue: assos.name },
                         { label: 'Description', type: 'textarea', formControlName: 'description', defaultValue: assos.description },
-                        // { label: 'Avatar', type: 'file', formControlName: 'avatar', defaultValue: 'avatar', accept: 'image/*' },
                     ]}
                     id={assos.id}
                     submitButtonText="Enregistrer"

@@ -13,3 +13,8 @@ export const updateAssos = async (data: AssosDetails, assosId: number) => {
     const response = await instance.put(`/associations/${assosId}`, data);
     return response.data;
 }
+
+export const deleteAssos = async (assosId: number) => {
+    const response = await instance.delete(`/associations/${assosId}`);
+    return response.data;
+}

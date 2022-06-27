@@ -39,18 +39,11 @@ const RegisterPage = () => {
 
     const { dispatch, state: { section: { sectionList } } } = useStoreContext();
 
-    console.log(sectionList);
-
-
     React.useEffect(() => {
         if (sectionList?.length === 0) {
-            console.log('getAllSections');
             getAllSections(dispatch)
         }
     }, [sectionList]);
-
-    console.log('sectionList', sectionList);
-
 
     const { handleSubmit, register } = useForm<IRegisterForm>();
 
