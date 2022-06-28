@@ -32,6 +32,12 @@ export const SoloInput = ({ name, type, onChange, value, required, handlePressEn
     )
 }
 
+export const TextAreaInput = ({ name, type, formcontrol, _key, value }: IInputProps) => {
+    return (
+        <textarea placeholder={name} className='p-3 h-96 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' {...(formcontrol)} key={_key} defaultValue={value} />
+    )
+}
+
 export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) => {
     const [section, setSection] = React.useState(value);
 

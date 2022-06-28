@@ -1,4 +1,4 @@
-import { createSections, getSections, updateSection } from "../../../api/sections.axios";
+import { createSections, deleteSections, getSections, updateSection } from "../../../api/sections.axios";
 import { SectionDetails, sectionTypes } from "../reducers/sections";
 import { startLoader, endLoader } from "./loader";
 
@@ -56,6 +56,25 @@ export const createSectionAction = async (dispatch: Function, section: SectionDe
         const response = await createSections(section);
         dispatch({
             type: sectionTypes.CREATE_SECTION_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+export const deleteSectionActions = async (dispatch: Function, sectionId: number) => {
+    dispatch({
+        type: sectionTypes.DELETE_SECTION_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await deleteSections(sectionId);
+        dispatch({
+            type: sectionTypes.DELETE_SECTION_SUCCESS,
             payload: response,
         });
 

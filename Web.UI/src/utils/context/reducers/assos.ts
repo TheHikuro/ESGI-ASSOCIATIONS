@@ -77,8 +77,8 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
         case AssosTypes.DELETE_ASSOS_SUCCESS:
             return {
                 ...state,
-                assosList: action.payload,
-                needRefresh: false
+                assosList: state.assosList.filter(assos => assos.id !== action.payload),
+                needRefresh: true
             };
         case AssosTypes.UPDATE_ASSOS_REQUEST:
             return {

@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useStoreContext } from "../utils/context/StoreContext";
-import { Dropdown, Input, LabelComposant } from "./Input";
+import { Dropdown, Input, LabelComposant, TextAreaInput } from "./Input";
 import { useModalContext } from "./modal";
 
 interface IFormData<T> {
@@ -13,6 +13,8 @@ interface IFormDataProps {
     submitButtonText?: string
     id?: number
     action: Function
+    actionWithoutDispatch?: Function
+    textOnSubmit?: string
 }
 
 export function FormComponents(props: IFormDataProps) {
@@ -92,13 +94,13 @@ export function FormComponents(props: IFormDataProps) {
 }
 
 export function FormComponentCreate(props: IFormDataProps) {
-    const { values, title, submitButtonText, action } = props;
+    const { values, title, submitButtonText, action, actionWithoutDispatch, textOnSubmit } = props;
     const { handleSubmit, register } = useForm<IFormData<any>>();
     const { dispatch } = useStoreContext()
     const { closeModal } = useModalContext()
 
     const onSubmit: SubmitHandler<IFormData<any>> = async (data: any) => {
-        action(dispatch, data)
+        actionWithoutDispatch ? actionWithoutDispatch(data) : action(dispatch, data)
         closeModal()
     }
 
@@ -129,7 +131,11 @@ export function FormComponentCreate(props: IFormDataProps) {
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-firstName">
                                     {value.label}
                                 </label>
-                                <Input type={value.type} formcontrol={register(value.formControlName, { value: value.defaultValue })} />
+                                {value.type === 'textarea' ? (
+                                    <TextAreaInput formcontrol={register(value.formControlName, { value: value.defaultValue })} name={value.label} value={value.defaultValue} />
+                                ) : (
+                                    <Input type={value.type} formcontrol={register(value.formControlName, { value: value.defaultValue })} />
+                                )}
                             </div>
                         </Fragment>
                     )

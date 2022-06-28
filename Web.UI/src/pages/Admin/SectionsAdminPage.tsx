@@ -2,7 +2,7 @@ import { PencilIcon, TrashIcon, UserAddIcon } from "@heroicons/react/outline";
 import React, { Fragment } from "react";
 import { Dashboard } from "../../components/Dashboard";
 import { Table } from "../../components/Table";
-import { createSectionAction, getAllSections, updateSections } from "../../utils/context/actions/section";
+import { createSectionAction, deleteSectionActions, getAllSections, updateSections } from "../../utils/context/actions/section";
 import { SectionDetails } from "../../utils/context/reducers/sections";
 import { useStoreContext } from "../../utils/context/StoreContext";
 import { GridColDef } from "@mui/x-data-grid";
@@ -12,7 +12,7 @@ import { FormComponentCreate, FormComponents } from "../../components/FormData";
 const SectionsAdminPage = () => {
 
     const { dispatch, state: { section: { sectionList, needRefresh } } } = useStoreContext();
-    const { openModal, updateModalTitle, updateModalContent } = useModalContext();
+    const { openModal, updateModalTitle, updateModalContent, yesNoModal, yesActionModal, closeModal } = useModalContext();
     React.useEffect(() => {
         if (needRefresh) { getAllSections(dispatch) }
     }, [needRefresh]);
@@ -24,7 +24,7 @@ const SectionsAdminPage = () => {
             actions: (
                 <>
                     <PencilIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer mr-2" onClick={() => handleEditSection(section)} />
-                    <TrashIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" />
+                    <TrashIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" onClick={() => handleDeleteSection(section)} />
                 </>
             )
         }
@@ -69,6 +69,17 @@ const SectionsAdminPage = () => {
         openModal();
     }
 
+    const handleDeleteSection = (section: SectionDetails) => {
+        updateModalTitle('Supprimer une section');
+        updateModalContent(<>Voulez vous supprimer la section {section.name} ?</>)
+        yesNoModal()
+        yesActionModal(() => {
+            deleteSectionActions(dispatch, section.id)
+            closeModal();
+        })
+        openModal();
+    }
+
     return (
         <div className="h-screen flex w-full bg-[url('./assets/img/bg-login.jpeg')]" >
             <Dashboard>
@@ -83,7 +94,7 @@ const SectionsAdminPage = () => {
                 <Table
                     data={sectionsFromApi}
                     header={columns}
-                    pageSize={5}
+                    pageSize={10}
                     rowsPerPageOptions={[5, 10, 20, 50]}
                     disableSelectionOnClick
                     headerCustom
