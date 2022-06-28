@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     collectionOperations: [
         "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
         "post" => [
-            "normalization_context" => ["groups" => ["collection:post"]],
+            "denormalization_context" => ["groups" => ["collection:post"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -39,7 +39,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     itemOperations: [
         "get",
         "put" => [
-            "normalization_context" => ["groups" => ["item:put"]],
+            "denormalization_context" => ["groups" => ["item:put"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
