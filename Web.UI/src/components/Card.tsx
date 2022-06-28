@@ -3,20 +3,22 @@ import React from "react";
 interface CardProps {
     // image?: string;
     desc: string;
-    title: string;
+    name: string;
     // join: boolean;
-    test?: string;
 }
 
 export const Card = (props: CardProps) => {
-    console.log(props.desc.length);
     return (
-        <div className="bg-gray-300 m-11 rounded-xl text-center w-2/5 h-36 p-3">
-            <div>photo a ajouter</div>
-            <div className="text-gray-700">{props.title.length > 30 ? props.title.substring(0, 30) : props.title}</div>
-            <hr></hr>
-            <div className="text-gray-700 max-h-20">{props.desc.length > 70 ? props.desc.substring(0, 70) : props.desc}</div>
-            <button className="text-gray-700 bg-gray-500 p-1 rounded-xl">Rejoindre</button>
+        <div className="bg-gray-300 m-11 rounded-xl text-center w-44 h-80 p-3">
+            <div className="h-full w-full flex justify-between flex-col">
+                <div className="flex justify-center items-center flex-col">
+                    <div className="rounded-full w-20 h-20 bg-white shadow-md">photo a ajouter</div>
+                    <div className="text-gray-700">{props.name.length > 30 ? props.name.substring(0, 30) : props.name}</div>
+                    <hr className="w-full h-2 mt-1"></hr>
+                </div>
+                <div className="text-gray-700 max-h-20">{props.desc.length > 50 ? props.desc.substring(0, 50) : props.desc}</div>
+                <button className="text-gray-700 bg-gray-500 p-1 rounded-md">Rejoindre</button>
+            </div>
         </div>
     )
 }
