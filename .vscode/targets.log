@@ -1,0 +1,309 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i386-apple-darwin11.3.0
+
+# Make data base, printed on Tue Jun 28 12:15:06 2022
+
+# Variables
+
+# makefile (from `.docker/conf/.env.local', line 18)
+APP_SECRET = 4c50a0e3cf4bf33ba7e8ed2144ebaba7
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# makefile (from `.docker/conf/.env.local', line 44)
+DB_HOST = mariadb
+# makefile (from `.docker/conf/.env.local', line 31)
+CORS_ALLOW_ORIGIN = '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+# makefile (from `.docker/conf/.env.local', line 51)
+JWT_PUBLIC_KEY = %kernel.project_dir%/config/jwt/public.pem
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile (from `.docker/conf/.env.local', line 17)
+APP_ENV = dev
+# makefile
+CURDIR := /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
+# makefile
+SHELL = /bin/sh
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
+# environment
+_ = /usr/bin/make
+# makefile (from `.docker/conf/.env.local', line 1)
+MAKEFILE_LIST :=  Makefile .docker/conf/.env.local
+# makefile (from `.docker/conf/.env.local', line 47)
+DATABASE_URL = "mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?serverVersion=${DB_SRV_VERSION}"
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+__CFBundleIdentifier = com.microsoft.VSCode
+# environment
+INFOPATH = /opt/homebrew/share/info:
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/vscode-ipc-42ed655a-1141-477c-be62-9dba37c788a4.sock
+# environment
+VSCODE_CWD = /
+# environment
+PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin
+# environment
+LSCOLORS = Gxfxcxdxbxegedabagacad
+# makefile (from `.docker/conf/.env.local', line 50)
+JWT_SECRET_KEY = %kernel.project_dir%/config/jwt/private.pem
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+# environment
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.O0mGbMyQ0a/Listeners
+# automatic
+%F = $(notdir $%)
+# makefile (from `.docker/conf/.env.local', line 36)
+MAILER_DSN = smtp://mailcatcher:25
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+PWD = /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
+# environment
+HOMEBREW_CELLAR = /opt/homebrew/Cellar
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+MANPATH = /opt/homebrew/share/man::
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /Users/loancleris
+# default
+MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/loancleris/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+# environment
+LOGNAME = loancleris
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+ZSH = /Users/loancleris/.oh-my-zsh
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+XPC_FLAGS = 0x0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# makefile (from `.docker/conf/.env.local', line 45)
+DB_SRV_VERSION = mariadb-10.6.4
+# environment
+SHLVL = 1
+# default
+MAKE_VERSION := 3.81
+# environment
+USER = loancleris
+# makefile
+.DEFAULT_GOAL := build
+# environment
+LESS = -R
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# makefile (from `.docker/conf/.env.local', line 37)
+MAILER_URL = smtp://mailcatcher:25
+# default
+MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+# default
+.VARIABLES := 
+# environment
+TMPDIR = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /Users/loancleris/Library/Application Support/Code/1.68.1-main.sock
+# makefile (from `.docker/conf/.env.local', line 43)
+DB_PASSWORD = esgigaming
+# makefile (from `.docker/conf/.env.local', line 52)
+JWT_PASSPHRASE = insomniak
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# makefile (from `Makefile', line 1)
+envFile = .env.local
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.31634515.31634521
+# environment
+HOMEBREW_PREFIX = /opt/homebrew
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# automatic
++F = $(notdir $+)
+# environment
+HOMEBREW_REPOSITORY = /opt/homebrew
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# makefile (from `.docker/conf/.env.local', line 41)
+DB_USER = insomniak
+# environment
+PAGER = less
+# environment
+LC_ALL = C
+# makefile (from `.docker/conf/.env.local', line 38)
+MAILER_USER = admin@myges.fr
+# automatic
+^F = $(notdir $^)
+# makefile (from `.docker/conf/.env.local', line 42)
+DB_NAME = esgi_gaming
+# default
+SUFFIXES := 
+# environment
+MAKELEVEL := 0
+# environment
+GPG_TTY = not a tty
+# environment
+LANG = C
+# environment
+VSCODE_PID = 8620
+# variable set hash-table stats:
+# Load=87/1024=8%, Rehash=0, Collisions=1/114=1%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 16777234, inode 28374545): 13 files, no impossibilities.
+
+# 13 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+stop:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 19):
+	docker-compose --env-file="./Web.API/${envFile}" stop
+	
+
+setup:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 9):
+	cp .docker/conf/${envFile} ./Web.API/${envFile}
+	docker-compose --env-file="./Web.API/${envFile}" up -d
+	docker logs esgi-assos_composer --follow
+	docker exec -it esgi-assos_php-fpm php bin/console lexik:jwt:generate-keypair --overwrite -n
+	docker exec -it esgi-assos_php-fpm php bin/console doctrine:migrations:migrate -n
+	
+
+# Not a target:
+.docker/conf/.env.local:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-03 12:01:58
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+all:
+#  Command-line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-14 19:17:38
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+start:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 16):
+	docker-compose --env-file="./Web.API/${envFile}" up -d
+	
+
+build:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 5):
+	docker-compose --env-file="./Web.API/${envFile}" up -d --build
+	make setup
+	
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+down:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 22):
+	docker-compose --env-file="./Web.API/${envFile}" down
+	
+
+# files hash-table stats:
+# Load=10/1024=1%, Rehash=0, Collisions=0/23=0%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+ 
+make: *** No rule to make target `all'.  Stop.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 2
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 4063 / max = 4063 / min = 4063 / avg = 4063
+
+# Finished Make data base on Tue Jun 28 12:15:06 2022
+
+ 

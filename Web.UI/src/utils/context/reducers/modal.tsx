@@ -27,7 +27,8 @@ export const modalReducer = (state: any, action: any) => {
         case ActionType.Close:
             return {
                 ...state,
-                open: false
+                open: false,
+                yesNo: false
             };
         case ActionType.YesNo:
             return {

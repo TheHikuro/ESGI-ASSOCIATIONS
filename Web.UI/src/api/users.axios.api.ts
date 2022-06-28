@@ -17,3 +17,8 @@ export const updateUser = async (user: UsersDetails, userID: number) => {
     const response = await instance.put(`/users/${userID}`, user);
     return response.data;
 }
+
+export const deleteUser = async (userID: number) => {
+    const response = await instance.delete(`/users/${userID}`);
+    return response.data;
+}

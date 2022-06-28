@@ -56,7 +56,7 @@ export const AdminReducer = (state = AdminIS, action: UserActionTypes) => {
             return {
                 ...state,
                 userList: action.payload,
-                needRefresh: false
+                needRefresh: true
             };
         case AdminTypes.UPDATE_USER_REQUEST:
             return {

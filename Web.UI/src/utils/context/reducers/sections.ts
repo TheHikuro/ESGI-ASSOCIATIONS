@@ -48,7 +48,7 @@ export const sectionReducer = (state = sectionIS, action: SectionActionTypes) =>
             return {
                 ...state,
                 sectionList: [...state.sectionList, action.payload],
-                needRefresh: false
+                needRefresh: true
             };
         case sectionTypes.DELETE_SECTION_REQUEST:
             return {

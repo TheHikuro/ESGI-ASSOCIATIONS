@@ -77,11 +77,13 @@ export const ModalProvider = ({ children }: any) => {
                                     <div className="p-6">
                                         {store.content}
                                     </div>
-                                    {store.yesNoModalState && (
-                                        <div className="mt-auto mb-6 ml-auto mr-6">
-                                            {/* <Button name="Yes" onClick={store.yesAction} custom='mr-3 w-32' />
-                                            <Button name="No" onClick={store.noAction} custom='w-32' /> */}
-                                        </div>
+                                    {store.yesNo && (
+                                        <>
+                                            <div className="mt-auto mb-6 ml-auto mr-6">
+                                                <button className="w-12 mr-3 p-2 text-white shadow-md rounded-md bg-red-400 hover:bg-red-500 font-bold" onClick={store.yesAction}>Oui</button>
+                                                <button className="w-12 p-2 text-white shadow-md rounded-md bg-blue-400 hover:bg-blue-500 font-bold" onClick={closeModal}>Non</button>
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             </div>
