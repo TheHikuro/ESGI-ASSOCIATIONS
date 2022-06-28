@@ -4,6 +4,8 @@ import { authLogoutRequest } from "../utils/context/actions/auth"
 import { useStoreContext } from "../utils/context/StoreContext"
 import Logo from '../assets/img/ESGI-logo.png'
 import { AdjustmentsIcon, CalendarIcon, HomeIcon, TemplateIcon, UserGroupIcon, UserIcon } from "@heroicons/react/outline"
+import { EveryRoles } from "../utils/helpers/enums"
+import { getMyUserActions } from "../utils/context/actions/user"
 
 interface NavbarProps {
     children: React.ReactNode
@@ -11,51 +13,63 @@ interface NavbarProps {
 }
 
 const NavItem = ({ arr }: any) => {
-    // Keep white on active
+    const active = location.pathname === arr.link
     return (
-        <Link to={arr.link} className="text-white flex justify-start items-center p-3 m-2 rounded-sm bg-slate-800 hover:bg-white group shadow-md w-full">
-            {arr.icon}
-            <span className="text-white group-hover:text-slate-700 ml-4">{arr.name}</span>
+        <Link to={arr.link} className={`${active ? 'bg-white' : 'bg-slate-800'} flex justify-start items-center p-3 m-2 rounded-sm hover:bg-white group shadow-md w-full`}>
+            <span className={`${active ? 'text-black' : 'text-white'}`}>{arr.icon}</span>
+            <span className={`${active ? 'text-slate-700' : 'text-white'} group-hover:text-slate-700 ml-4`}>{arr.name}</span>
         </Link>
     )
 }
 
 const Navbar = ({ children, location }: NavbarProps) => {
-    const isAdmin = true
-    const isSuperAdmin = true
-    const { dispatch } = useStoreContext()
+
+    const { dispatch, state: { user: { roles } } } = useStoreContext()
+
+    React.useEffect(() => {
+        getMyUserActions(dispatch)
+    }, [])
+
+    const isAdmin = roles.includes(EveryRoles[0].value)
+    const isAssosManager = roles.includes(EveryRoles[1].value)
     const navigate = useNavigate()
     const elements = [
         { name: 'Home', link: '/Home', icon: <HomeIcon className="h-7 w-7 group-hover:text-black" />, display: true },
         { name: 'Profile', link: '/Profile', icon: <UserIcon className="h-7 w-7 group-hover:text-black" />, display: true },
         { name: 'Associations', link: '/Associations', icon: <UserGroupIcon className="h-7 w-7 group-hover:text-black" />, display: true },
         { name: 'Calendrier', link: '/Calendrier', icon: <CalendarIcon className="h-7 w-7 group-hover:text-black" />, display: true },
-        { name: 'Gestion Assosications', link: '/Gestion-Associations', icon: <TemplateIcon className="h-7 w-7 group-hover:text-black" />, display: isAdmin },
-        { name: 'Adminstration', link: '/Administration', icon: <AdjustmentsIcon className="h-7 w-7 group-hover:text-black" />, display: isSuperAdmin },
+        { name: 'Gestion Assosications', link: '/Gestion-Associations', icon: <TemplateIcon className="h-7 w-7 group-hover:text-black" />, display: isAssosManager },
+        { name: 'Adminstration', link: '/Administration', icon: <AdjustmentsIcon className="h-7 w-7 group-hover:text-black" />, display: isAdmin },
     ]
 
-    const [display, setDisplay] = React.useState(false)
+    const [display, setDisplay] = React.useState(true)
+
+    const whenPatternMatches = (string: string, patterns: Array<[RegExp, Function]>) => {
+        const foundPattern = patterns.find(([pattern]) => pattern.exec(string));
+
+        if (foundPattern) {
+            const [, effect] = foundPattern;
+            effect();
+        }
+    }
 
     React.useEffect(() => {
-        switch (location.pathname) {
-            case '/FirstPage':
-                setDisplay(false)
-                break;
-            case '/login':
-                setDisplay(false)
-                break;
-            case '/register':
-                setDisplay(false)
-                break;
-            default:
-                setDisplay(true)
-                break;
+        whenPatternMatches(location.pathname, [
+            [/^\/Administration\/.*$/, () => setDisplay(false)],
+            [/^\/login\/?$/, () => setDisplay(false)],
+            [/^\/register\/?$/, () => setDisplay(false)],
+            [/^\/FirstPage\/?$/, () => setDisplay(false)],
+        ])
+
+        return () => {
+            setDisplay(true)
         }
-    }, [location])
+    }, [location.pathname])
+
 
     return (
         <>
-            <div className='flex'>
+            <div className='flex w-full'>
                 {!display ? ('') : (
                     <div className="w-56 relative h-screen bg-gray-700 flex flex-col items-center justify-between">
                         <div className="my-3 flex items-center flex-col h-1/6">

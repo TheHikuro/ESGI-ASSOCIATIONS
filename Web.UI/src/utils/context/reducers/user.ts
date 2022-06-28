@@ -6,7 +6,7 @@ export const userIS = {
     id: 0,
     name: '',
     email: '',
-    role: '',
+    roles: Array<string>(),
     token: '',
     error: null,
 };
@@ -17,6 +17,8 @@ export const types = {
     CREATE_USER_SUCCESS: 'CREATE_USER_SUCCESS',
     GET_MY_USER_REQUEST: 'GET_MY_USER_REQUEST',
     GET_MY_USER_SUCCESS: 'GET_MY_USER_SUCCESS',
+    UPDATE_USER_REQUEST: 'UPDATE_USER_REQUEST',
+    UPDATE_USER_SUCCESS: 'UPDATE_USER_SUCCESS',
 }
 
 // create reducer
@@ -36,6 +38,15 @@ export const userReducer = (state = userIS, action: UserActionTypes) => {
                 ...state,
             }
         case types.GET_MY_USER_SUCCESS:
+            return {
+                ...state,
+                ...action.payload,
+            }
+        case types.UPDATE_USER_REQUEST:
+            return {
+                ...state,
+            }
+        case types.UPDATE_USER_SUCCESS:
             return {
                 ...state,
                 ...action.payload,

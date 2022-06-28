@@ -1,12 +1,25 @@
+import { useEffect, useState } from "react";
+import { Card } from "../components/Card";
+import { Layout } from "../components/Layout";
+import { getAllAssosActions } from "../utils/context/actions/assos";
+import { useStoreContext } from "../utils/context/StoreContext";
+
 const AssosPage = () => {
+    const { dispatch, state: { assos: { assosList, needRefresh}}} = useStoreContext();
+    useEffect(() => {
+        if(needRefresh){
+            getAllAssosActions(dispatch);
+        }
+    }, [needRefresh])
     return (
-        <div>
-            <h1>Assos</h1>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-                quidem, doloremque, quisquam quisquam.
-            </p>
-        </div>
+        <Layout>
+            <>
+                <h1 className="flex justify-center"><b>Rejoindre une Association ESGI</b></h1>
+                <div className="flex flex-wrap w-full">
+                    {assosList.map(asso => <Card name={asso.name} desc={asso.description} key={asso.name}></Card>)}
+                </div>
+            </>
+        </Layout>
     );
 }
 

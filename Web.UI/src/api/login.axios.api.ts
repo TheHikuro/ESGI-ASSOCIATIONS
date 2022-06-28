@@ -1,16 +1,17 @@
 import { useStoreContext } from "../utils/context/StoreContext";
-import { getAxiosInstance } from "./apiUtils";
+import { getAxiosInstance, getAxiosInstanceWithoutAuth } from "./apiUtils";
 
 const instance = getAxiosInstance();
+const instanceWithoutAuth = getAxiosInstanceWithoutAuth();
 
 export const checkLogin = async (payload: any) => {
-    const response = await instance.post(`/login_check`, payload);
+    const response = await instanceWithoutAuth.post(`/login_check`, payload);
     return response.data;
 }
 
 export const registerAction = async (payload: any) => {
 
-    const response = await instance.post(`/users`, payload);
+    const response = await instanceWithoutAuth.post(`/users`, payload);
     return response.data;
 }
 

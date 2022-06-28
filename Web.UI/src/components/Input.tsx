@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormRegisterReturn } from "react-hook-form";
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { CheckIcon } from "@heroicons/react/outline";
+import { EveryRoles } from "../utils/helpers/enums";
+import { OutlinedInput, Checkbox, ListItemText } from "@mui/material";
 interface IInputProps {
     name?: string;
     type?: string;
-    formcontrol?: any;
+    formcontrol?: UseFormRegisterReturn;
     arr?: any[];
     value?: any
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -17,9 +20,9 @@ interface IInputProps {
     _key?: number
 }
 
-export const Input = ({ name, type, formcontrol, _key }: IInputProps) => {
+export const Input = ({ name, type, formcontrol, _key, value }: IInputProps) => {
     return (
-        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' {...(formcontrol)} key={_key} />
+        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' {...(formcontrol)} key={_key} defaultValue={value} />
     )
 }
 
@@ -29,8 +32,8 @@ export const SoloInput = ({ name, type, onChange, value, required, handlePressEn
     )
 }
 
-export const Dropdown = ({ name, formcontrol, arr, _key }: IInputProps) => {
-    const [section, setSection] = React.useState('');
+export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) => {
+    const [section, setSection] = React.useState(value);
 
     const handleChange = (event: any) => {
         setSection(event.target.dataset.value);
@@ -51,7 +54,7 @@ export const Dropdown = ({ name, formcontrol, arr, _key }: IInputProps) => {
                         key={_key}
                     >
                         {arr?.map((item: any, index: number) => {
-                            return <MenuItem value={item.value} key={index}>{item.label}</MenuItem>
+                            return <MenuItem value={item.value} defaultValue={item.value} key={index}>{item.label}</MenuItem>
                         })}
                     </Select>
                 </FormControl>
@@ -119,4 +122,52 @@ export const CodeInputs = ({ length, loading, onComplete }: ICodeInputProps) => 
             </div>
         </>
     )
+}
+
+export const LabelComposant = ({ formcontrol, value }: IInputProps) => {
+    const [roles, setRoles] = React.useState<string[]>(value);
+    const handleChange = (event: React.ChangeEvent<{ value: unknown }>, checked: boolean) => {
+        const newRoles = [...roles];
+        if (checked) {
+            newRoles.push(event.target.value as string);
+        } else {
+            newRoles.splice(newRoles.indexOf(event.target.value as string), 1);
+        }
+        setRoles(newRoles);
+    }
+
+    const handleChangeCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {
+            target: { checked },
+        } = event;
+        setRoles(
+            checked ? [...roles, event.target.value] : roles.filter(role => role !== event.target.value),
+        );
+    }
+
+    return (
+        <div>
+            <FormControl className="w-full">
+                <InputLabel id="demo-multiple-checkbox-label">Roles</InputLabel>
+                <Select
+                    labelId="demo-multiple-checkbox-label"
+                    id="demo-multiple-checkbox"
+                    multiple
+                    value={roles}
+                    onChange={(e: any) => handleChange(e, true)}
+                    input={<OutlinedInput label="roles" />}
+                    renderValue={(selected) => selected.join(', ')}
+                    className='bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full h-12'
+                    {...(formcontrol)}
+                >
+                    {EveryRoles.map((role: any) => (
+                        <MenuItem key={role.value} value={role.label}>
+                            <Checkbox checked={roles.indexOf(role.value) > -1} onChange={handleChangeCheckbox} value={role.value} disabled={role.disable} />
+                            <ListItemText primary={role.label} />
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+        </div>
+    );
 }
