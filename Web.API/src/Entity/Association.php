@@ -69,7 +69,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],
         ],
         // "patch" => [
-        //     "normalization_context" => ["groups" => ["item:patch"]],
+        //     "denormalization_context" => ["groups" => ["item:patch"]],
         //     "openapi_context" => [
         //         "requestBody" => [
         //             "content" => [

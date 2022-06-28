@@ -9,9 +9,10 @@ interface TableProps {
     checkbox?: boolean;
     onRowClick?: (row: any) => void;
     disableSelectionOnClick?: boolean;
+    headerCustom?: boolean
 }
 
-export const Table = ({ data, pageSize, rowsPerPageOptions, checkbox, onRowClick, header, disableSelectionOnClick }: TableProps) => {
+export const Table = ({ data, pageSize, rowsPerPageOptions, checkbox, onRowClick, header, disableSelectionOnClick, headerCustom }: TableProps) => {
     return (
         <DataGrid
             columns={header}
@@ -21,6 +22,7 @@ export const Table = ({ data, pageSize, rowsPerPageOptions, checkbox, onRowClick
             checkboxSelection={checkbox}
             onRowClick={onRowClick}
             disableSelectionOnClick={disableSelectionOnClick}
+            style={headerCustom ? { height: '94%' } : {}}
         />
     )
 }

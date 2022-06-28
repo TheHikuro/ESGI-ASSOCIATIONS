@@ -32,11 +32,10 @@ export const Dashboard = ({ children }: any) => {
                         <div className="px-2 py-2 flex justify-between flex-col h-full">
                             <div className="h-3/4 w-full">
                                 <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold mb-2">Dashboard</h1>
-                                <DashboardItem name='Users' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/quizz' />
-                                <DashboardItem name='Associations' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/questions' />
-                                <DashboardItem name='Sections' icon={<CameraIcon className="w-5 h-5" />} onpress='' />
-                                <DashboardItem name='Evenements' icon={<CameraIcon className="w-5 h-5" />} onpress='' />
-                                <DashboardItem name='Mail' icon={<CameraIcon className="w-5 h-5" />} onpress='' />
+                                <DashboardItem name='Users' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/Users' />
+                                <DashboardItem name='Associations' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/Associations' />
+                                <DashboardItem name='Sections' icon={<CameraIcon className="w-5 h-5" />} onpress='/Administration/Sections' />
+                                <DashboardItem name='Mail' icon={<CameraIcon className="w-5 h-5" />} onpress='/Administration/Mail' />
                             </div>
                             <div className="h-1/6 w-full flex justify-end flex-col">
                                 <div className="p-3 rounded-md shadow-md bg-slate-200 uppercase text-sm hover:bg-slate-300 hover:text-red-500 text-center hover:cursor-pointer" onClick={() => navigate('/Home')}>Retour</div>
@@ -44,7 +43,7 @@ export const Dashboard = ({ children }: any) => {
                         </div>
                     </div>
                     <div className="w-full h-full">
-                        {children}
+                        <div className="w-full h-full">{children}</div>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import { getAllAssos, updateAssos } from "../../../api/assos.axios";
+import { deleteAssos, getAllAssos, updateAssos } from "../../../api/assos.axios";
 import { AssosDetails, AssosTypes } from "../reducers/assos";
 import { startLoader, endLoader } from "./loader";
 
@@ -37,6 +37,25 @@ export const updateAssosActions = async (dispatch: Function, data: AssosDetails,
         const response = await updateAssos(data, assosId);
         dispatch({
             type: AssosTypes.UPDATE_ASSOS_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+export const deleteAssosActions = async (dispatch: Function, assosId: number) => {
+    dispatch({
+        type: AssosTypes.DELETE_ASSOS_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await deleteAssos(assosId);
+        dispatch({
+            type: AssosTypes.DELETE_ASSOS_SUCCESS,
             payload: response,
         });
 

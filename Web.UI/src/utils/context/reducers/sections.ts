@@ -8,10 +8,12 @@ export interface SectionDetails {
 
 export interface SectionState {
     sectionList: SectionDetails[];
+    needRefresh: boolean;
 }
 
 export const sectionIS: SectionState = {
     sectionList: [],
+    needRefresh: true
 }
 
 export const sectionTypes = {
@@ -35,33 +37,40 @@ export const sectionReducer = (state = sectionIS, action: SectionActionTypes) =>
             return {
                 ...state,
                 sectionList: action.payload,
+                needRefresh: false
             };
         case sectionTypes.CREATE_SECTION_REQUEST:
             return {
                 ...state,
+                needRefresh: false
             };
         case sectionTypes.CREATE_SECTION_SUCCESS:
             return {
                 ...state,
-                sectionList: action.payload,
+                sectionList: [...state.sectionList, action.payload],
+                needRefresh: true
             };
         case sectionTypes.DELETE_SECTION_REQUEST:
             return {
                 ...state,
+                needRefresh: false
             };
         case sectionTypes.DELETE_SECTION_SUCCESS:
             return {
                 ...state,
-                sectionList: action.payload,
+                sectionList: state.sectionList.filter(section => section.id !== action.payload),
+                needRefresh: true
             };
         case sectionTypes.UPDATE_SECTION_REQUEST:
             return {
                 ...state,
+                needRefresh: false
             };
         case sectionTypes.UPDATE_SECTION_SUCCESS:
             return {
                 ...state,
-                sectionList: action.payload,
+                sectionList: [action.payload, ...state.sectionList],
+                needRefresh: true
             };
         default:
             return state;

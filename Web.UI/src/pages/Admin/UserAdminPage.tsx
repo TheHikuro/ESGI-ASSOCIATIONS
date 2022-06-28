@@ -1,18 +1,20 @@
-import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon } from "@heroicons/react/outline";
+import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon } from "@heroicons/react/outline";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { Fragment } from "react";
 import { Dashboard } from "../../components/Dashboard";
 import { FormComponents } from "../../components/FormData";
 import { useModalContext } from "../../components/modal";
 import { Table } from "../../components/Table";
-import { getUsersActions, updateAdminUsersActions } from "../../utils/context/actions/admin";
+import { deleteAdminUsersActions, getUsersActions, updateAdminUsersActions } from "../../utils/context/actions/admin";
 import { getAllSections } from "../../utils/context/actions/section";
 import { UsersDetails } from "../../utils/context/reducers/admin";
 import { useStoreContext } from "../../utils/context/StoreContext";
 
 const UserAdminPage = () => {
     const { dispatch, state: { admin: { userList, needRefresh }, section: { sectionList } } } = useStoreContext()
-    const { openModal, updateModalTitle, updateModalContent } = useModalContext()
+    const { openModal, updateModalTitle, updateModalContent, yesNoModal, yesActionModal, closeModal } = useModalContext()
+    const [searchValue, setSearchValue] = React.useState('');
+    const searchRegex = new RegExp(searchValue, 'i');
 
     React.useEffect(() => {
         if (needRefresh) { getUsersActions(dispatch) }
@@ -34,7 +36,7 @@ const UserAdminPage = () => {
             actions: (
                 <>
                     <PencilIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer mr-2" onClick={() => handleModalUpdate(user)} />
-                    <TrashIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" onClick={() => { }} />
+                    <TrashIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" onClick={() => handleDeleteModal(user.id)} />
                     <DotsCircleHorizontalIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer" onClick={() => handleModalInfo(user)} />
                 </>
             )
@@ -88,6 +90,17 @@ const UserAdminPage = () => {
         openModal()
     }
 
+    const handleDeleteModal = (userId: number) => {
+        updateModalTitle(`Suppression de l'utilisateur`)
+        updateModalContent(<>Voulez-vous vraiment supprimer cet utilisateur ?</>)
+        yesNoModal()
+        yesActionModal(() => {
+            deleteAdminUsersActions(dispatch, userId)
+            closeModal()
+        })
+        openModal()
+    }
+
     const columns: GridColDef[] = [
         { headerName: 'Prenom', field: 'name', width: 200, align: 'left' },
         { headerName: 'Nom', field: 'lastname', width: 200, align: 'left' },
@@ -105,12 +118,19 @@ const UserAdminPage = () => {
     return (
         <div className="h-screen flex w-full bg-[url('./assets/img/bg-login.jpeg')]">
             <Dashboard>
+                <div className="w-full h-11 flex items-center justify-between">
+                    <span className="uppercase font-bold ml-5">Utilisateurs</span>
+                    <div className="flex items-center " onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)}>
+                        <input type="text" placeholder="Rechercher" className="p-1 bg-slate-300 rounded-lg mr-5 w-52" />
+                    </div>
+                </div>
                 <Table
-                    data={userfromapi}
+                    data={Object.values(userfromapi).filter((item: any) => searchRegex.test((item.lastname)) || searchRegex.test((item.email)) || searchRegex.test((item.lastname)))}
                     header={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5, 10, 20, 50]}
                     disableSelectionOnClick
+                    headerCustom
                 />
             </Dashboard>
         </div>

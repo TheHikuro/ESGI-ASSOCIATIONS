@@ -23,7 +23,7 @@ export interface AssosDetails {
     owner: OwnerAssosState,
     name: string,
     description: string,
-    avatar: string,
+    avatar: string | null,
     createdAt: string,
     events: EventAssosState[],
 }
@@ -77,8 +77,8 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
         case AssosTypes.DELETE_ASSOS_SUCCESS:
             return {
                 ...state,
-                assosList: action.payload,
-                needRefresh: false
+                assosList: state.assosList.filter(assos => assos.id !== action.payload),
+                needRefresh: true
             };
         case AssosTypes.UPDATE_ASSOS_REQUEST:
             return {
@@ -89,7 +89,7 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
             return {
                 ...state,
                 assosList: [action.payload, ...state.assosList],
-                needRefresh: false
+                needRefresh: true
             };
         case AssosTypes.CREATE_ASSOS_REQUEST:
             return {
@@ -100,7 +100,7 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
             return {
                 ...state,
                 assosList: [action.payload, ...state.assosList],
-                needRefresh: false
+                needRefresh: true
             };
         case AssosTypes.GET_ASSOS_EVENTS_REQUEST:
             return {
