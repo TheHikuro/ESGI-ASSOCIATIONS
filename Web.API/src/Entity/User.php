@@ -8,6 +8,7 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Controller\User\ConfirmationEmailController;
 use App\Controller\User\DeleteAvatarController;
 use App\Controller\User\PostAvatarController;
+use App\Controller\User\SendGLobalEmailController;
 use App\Controller\User\ValidateAccountController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -52,6 +53,30 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ],
         ],
+        "send_email" => [
+            "method" => "post",
+            "path" => "users/send_global_email",
+            "output" => false,
+            "defaults" => [
+                "_api_receive" => false
+            ],
+            "controller" => SendGLobalEmailController::class,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "subject" => ["type" => "string"],
+                                    "body" => ["type" => "string"],
+                                ],
+                            ]
+                        ]
+                    ],
+                ],
+            ],   
+        ]
     ],
     itemOperations: [
         "get",
