@@ -4,8 +4,12 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Controller\Association\AddMemberController;
 use App\Controller\Association\DeleteAvatarController;
 use App\Controller\Association\PostAvatarController;
+use App\Controller\Association\RemoveMemberController;
+use App\Controller\Association\AddAssociationController;
 use App\Repository\AssociationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,8 +28,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     normalizationContext: ['groups' => ['item:get']],
     collectionOperations: [
         "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
-        "post" => [
+        "addAssociation" => [
+            "method" => "post",
             "denormalization_context" => ["groups" => ["collection:post"]],
+            "path" => "associations",
+            "controller" => AddAssociationController::class,
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -59,14 +66,42 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                                     "owner" => ["type" => "string"],
                                     "name" => ["type" => "string"],
                                     "description" => ["type" => "string"],
-                                    "events" => ["type" => "array", "items" => ["type" => "string"]],
-                                    "members" => ["type" => "array", "items" => ["type" => "string"]],
                                 ],
                             ],
                         ],
                     ],
                 ],
             ],
+        ],
+        "addMember" => [
+            "method" => "put",
+            "path" => "associations/{id}/add_member/{idMember}",
+            "controller" => AddMemberController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => []
+                        ]
+                    ],
+                ],
+            ],  
+        ],
+        "removeMember" => [
+            "method" => "put",
+            "path" => "associations/{id}/remove_member/{idMember}",
+            "controller" => RemoveMemberController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => []
+                        ]
+                    ],
+                ],
+            ],  
         ],
         // "patch" => [
         //     "denormalization_context" => ["groups" => ["item:patch"]],
@@ -157,7 +192,7 @@ class Association
     private $events;
 
     #[ORM\ManyToMany(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $members;
 
     public function __construct()
@@ -244,6 +279,7 @@ class Association
         return $this;
     }
 
+    #[ApiSubresource(maxDepth: 1)]
     #[Groups(["collection:get", "item:get"])]
     #[SerializedName('events')]
     public function getEvents(): Collection
@@ -251,32 +287,7 @@ class Association
         return $this->events;
     }
 
-    // #[Groups(["item:put", "item:patch"])]
-    // #[SerializedName('events')]
-    // public function addEvent(Event $event): self
-    // {
-    //     if (!$this->events->contains($event)) {
-    //         $this->events[] = $event;
-    //         $event->setAssociation($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // #[Groups(["item:put", "item:patch"])]
-    // #[SerializedName('events')]
-    // public function removeEvent(Event $event): self
-    // {
-    //     if ($this->events->removeElement($event)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($event->getAssociation() === $this) {
-    //             $event->setAssociation(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
-
+    #[ApiSubresource(maxDepth: 1)]
     #[Groups(["collection:get", "item:get"])]
     #[SerializedName('members')]
     public function getMembers(): Collection
@@ -284,25 +295,43 @@ class Association
         return $this->members;
     }
 
-    // #[Groups(["item:put"])]
-    // #[SerializedName('members')]
-    // public function addMember(User $member): self
-    // {
-    //     if (!$this->members->contains($member)) {
-    //         $this->members[] = $member;
-    //     }
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->setAssociation($this);
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // #[Groups(["item:put"])]
-    // #[SerializedName('members')]
-    // public function removeMember(User $member): self
-    // {
-    //     $this->members->removeElement($member);
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getAssociation() === $this) {
+                $event->setAssociation(null);
+            }
+        }
 
-    //     return $this;
-    // }
+        return $this;
+    }
+
+    public function addMember(User $member): self
+    {
+        if (!$this->members->contains($member)) {
+            $this->members[] = $member;
+        }
+
+        return $this;
+    }
+
+    public function removeMember(User $member): self
+    {
+        $this->members->removeElement($member);
+
+        return $this;
+    }
 
     public function getAvatar()
     {
