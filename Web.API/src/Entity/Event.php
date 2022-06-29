@@ -68,7 +68,7 @@ class Event
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'dateinterval')]
+    #[ORM\Column(type: 'dateinterval', nullable: true)]
     private $dateInterval;
 
     #[ORM\Column(type: 'boolean')]
@@ -81,7 +81,7 @@ class Event
     private $name;
 
     #[ORM\ManyToOne(targetEntity: Association::class, inversedBy: 'event')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private $association;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -92,6 +92,7 @@ class Event
 
     public function __construct()
     {
+        $this->active = false;
         $this->createdAt = new \DatetimeImmutable('now');
     }
 
