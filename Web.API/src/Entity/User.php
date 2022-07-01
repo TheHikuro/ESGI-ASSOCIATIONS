@@ -263,6 +263,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private $plainPassword;
 
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Post::class)]
+    private $posts;
+
     public function __construct()
     {
         $this->associations = new ArrayCollection();
@@ -270,6 +273,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isActivated = false;
         $this->haveRecoverToken = false;
         $this->roles[] = 'ROLE_USER';
+        $this->posts = new ArrayCollection();
     }
 
     #[ApiProperty(identifier: true)]
@@ -478,6 +482,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('posts')]
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -598,6 +610,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatarUrl($avatarUrl): self
     {
         $this->avatarUrl = $avatarUrl;
+
+        return $this;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getOwner() === $this) {
+                $post->setOwner(null);
+            }
+        }
 
         return $this;
     }

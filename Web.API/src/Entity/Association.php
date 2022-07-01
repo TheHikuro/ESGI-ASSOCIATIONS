@@ -195,11 +195,15 @@ class Association
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private $members;
 
+    #[ORM\OneToMany(mappedBy: 'association', targetEntity: Post::class, orphanRemoval: true)]
+    private $posts;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->createdAt = new \DatetimeImmutable('now');
+        $this->posts = new ArrayCollection();
     }
 
     #[ApiProperty(identifier: true)]
@@ -295,6 +299,14 @@ class Association
         return $this->members;
     }
 
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get", "item:get"])]
+    #[SerializedName('posts')]
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
     public function addEvent(Event $event): self
     {
         if (!$this->events->contains($event)) {
@@ -367,6 +379,28 @@ class Association
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getAssociation() === $this) {
+                $post->setAssociation(null);
+            }
+        }
 
         return $this;
     }
