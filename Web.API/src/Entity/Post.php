@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,11 +15,11 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ApiResource(
     mercure: true,
-    normalizationContext: ['groups' => ['item:get']],
+    normalizationContext: ['groups' => ['item:get:post']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:post"]]],
         "post" => [
-            "denormalization_context" => ["groups" => ["collection:post"]],
+            "denormalization_context" => ["groups" => ["collection:post:post"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -42,7 +43,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     itemOperations: [
         "get",
         "put" => [
-            "denormalization_context" => ["groups" => ["item:put"]],
+            "denormalization_context" => ["groups" => ["item:put:post"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -66,29 +67,48 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[ApiProperty(identifier: true)]
+    #[Groups(["collection:get:post", "item:get:post"])]
+    #[SerializedName("id")]
     private $id;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(["collection:get:post", "item:get:post"])]
+    #[SerializedName("createdAt")]
     private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: Association::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["collection:get:post", "item:get:post", "collection:post:post"])]
+    #[SerializedName("association")]
     private $association;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["collection:get:post", "item:get:post", "collection:post:post"])]
+    #[SerializedName("owner")]
     private $owner;
 
     #[ORM\Column(type: 'string', length: 2048)]
+    #[Groups(["collection:get:post", "item:get:post", "collection:post:post", "item:put:post"])]
+    #[SerializedName("content")]
     private $content;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childPosts')]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:post", "item:get:post", "collection:post:post"])]
+    #[SerializedName("parentPost")]
     private $parentPost;
 
     #[ORM\OneToMany(mappedBy: 'parentPost', targetEntity: self::class)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:post", "item:get:post"])]
+    #[SerializedName("childPosts")]
     private $childPosts;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(["collection:get:post", "item:get:post"])]
+    #[SerializedName("updatedAt")]
     private $updatedAt;
 
     public function __construct()
@@ -97,30 +117,21 @@ class Post
         $this->childPosts = new ArrayCollection();
     }
 
-    #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("id")]
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("createdAt")]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("association")]
     public function getAssociation(): ?Association
     {
         return $this->association;
     }
 
-    #[Groups(["collection:post"])]
-    #[SerializedName("association")]
     public function setAssociation(?Association $association): self
     {
         $this->association = $association;
@@ -128,15 +139,11 @@ class Post
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("owner")]
     public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    #[Groups(["collection:post"])]
-    #[SerializedName("owner")]
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
@@ -144,15 +151,11 @@ class Post
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("content")]
     public function getContent(): ?string
     {
         return $this->content;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName("content")]
     public function setContent(string $content): self
     {
         $this->content = $content;
@@ -160,15 +163,11 @@ class Post
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("parentPost")]
     public function getParentPost(): ?self
     {
         return $this->parentPost;
     }
 
-    #[Groups(["collection:post"])]
-    #[SerializedName("parentPost")]
     public function setParentPost(?self $parentPost): self
     {
         $parentPost->addChildPost($this);
@@ -177,15 +176,11 @@ class Post
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("childPosts")]
     public function getChildPosts(): Collection
     {
         return $this->childPosts;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName("updatedAt")]
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;

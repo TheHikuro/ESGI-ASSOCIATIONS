@@ -39,6 +39,7 @@ services:
 
   mercure:
     image: dunglas/mercure
+    container_name: esgi-assos_mercure
     environment:
       SERVER_NAME: ':80'
       MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'

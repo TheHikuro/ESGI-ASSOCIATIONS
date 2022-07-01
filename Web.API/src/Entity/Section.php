@@ -11,11 +11,11 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: SectionRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['item:get']],
+    normalizationContext: ['groups' => ['item:get:section']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:section"]]],
         "post" => [
-            "denormalization_context" => ["groups" => ["collection:post"]],
+            "denormalization_context" => ["groups" => ["collection:post:section"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -36,7 +36,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     itemOperations: [
         "get",
         "put" => [
-            "denormalization_context" => ["groups" => ["item:put"]],
+            "denormalization_context" => ["groups" => ["item:put:section"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -60,18 +60,29 @@ class Section
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[ApiProperty(identifier: true)]
+    #[Groups(["collection:get:section", "item:get:section"])]
+    #[SerializedName('id')]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Groups(["collection:get:section", "item:get:section", "collection:post:section", "item:put:section"])]
+    #[SerializedName('name')]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Groups(["collection:get:section", "item:get:section"])]
+    #[SerializedName('slug')]
     private $slug;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(["collection:get:section", "item:get:section"])]
+    #[SerializedName('createdAt')]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(["collection:get:section", "item:get:section"])]
+    #[SerializedName('updatedAt')]
     private $updatedAt;
 
     public function __construct()
@@ -80,23 +91,17 @@ class Section
         $this->slug = strtolower(str_replace(' ', '-', $this->name));
     }
 
-    #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('id')]
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('name')]
+
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('name')]
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -105,22 +110,16 @@ class Section
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('slug')]
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('createdAt')]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('updatedAt')]
     public function getupdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;

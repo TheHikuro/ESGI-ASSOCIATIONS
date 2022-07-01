@@ -25,12 +25,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['item:get']],
+    normalizationContext: ['groups' => ['item:get:association']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:association"]]],
         "addAssociation" => [
             "method" => "post",
-            "denormalization_context" => ["groups" => ["collection:post"]],
+            "denormalization_context" => ["groups" => ["collection:post:association"]],
             "path" => "associations",
             "controller" => AddAssociationController::class,
             "openapi_context" => [
@@ -55,7 +55,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     itemOperations: [
         "get",
         "put" => [
-            "denormalization_context" => ["groups" => ["item:put"]],
+            "denormalization_context" => ["groups" => ["item:put:association"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -104,7 +104,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],  
         ],
         // "patch" => [
-        //     "denormalization_context" => ["groups" => ["item:patch"]],
+        //     "denormalization_context" => ["groups" => ["item:patch:association"]],
         //     "openapi_context" => [
         //         "requestBody" => [
         //             "content" => [
@@ -158,19 +158,31 @@ class Association
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[ApiProperty(identifier: true)]
+    #[Groups(["collection:get:association", "item:get:association"])]
+    #[SerializedName('id')]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'associations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association"])]
+    #[SerializedName('owner')]
     private $owner;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association"])]
+    #[SerializedName('name')]
     private $name;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(["collection:get:association", "item:get:association"])]
+    #[SerializedName('createdAt')]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(["collection:get:association", "item:get:association"])]
+    #[SerializedName('updatedAt')]
     private $updatedAt;
 
     /**
@@ -183,19 +195,32 @@ class Association
     private $avatarPath;
 
     #[Type([string::class,null])]
+    #[Groups(["collection:get:association", "item:get:association"])]
+    #[SerializedName('avatar')]
     private $avatarUrl;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association"])]
+    #[SerializedName('description')]
     private $description;
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Event::class, orphanRemoval: true)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:association", "item:get:association"])]
+    #[SerializedName('events')]
     private $events;
 
     #[ORM\ManyToMany(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:association", "item:get:association"])]
+    #[SerializedName('members')]
     private $members;
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Post::class, orphanRemoval: true)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:association", "item:get:association"])]
+    #[SerializedName('posts')]
     private $posts;
 
     public function __construct()
@@ -206,23 +231,16 @@ class Association
         $this->posts = new ArrayCollection();
     }
 
-    #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('id')]
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('owner')]
     public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('owner')]
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
@@ -230,15 +248,11 @@ class Association
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('name')]
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('name')]
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -246,36 +260,26 @@ class Association
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('createdAt')]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('updatedAt')]
     public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('avatar')]
     public function getAvatarUrl()
     {
         return $this->avatarUrl;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('description')]
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('description')]
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -283,25 +287,16 @@ class Association
         return $this;
     }
 
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('events')]
     public function getEvents(): Collection
     {
         return $this->events;
     }
 
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('members')]
     public function getMembers(): Collection
     {
         return $this->members;
     }
 
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('posts')]
     public function getPosts(): Collection
     {
         return $this->posts;

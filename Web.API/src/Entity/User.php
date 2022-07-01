@@ -27,11 +27,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['item:get']],
+    normalizationContext: ['groups' => ['item:get:user']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:user"]]],
         "post" => [
-            "denormalization_context" => ["groups" => ["collection:post"]],
+            "denormalization_context" => ["groups" => ["collection:post:user"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -81,7 +81,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     itemOperations: [
         "get",
         "put" => [
-            "denormalization_context" => ["groups" => ["item:put"]],
+            "denormalization_context" => ["groups" => ["item:put:user"]],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -106,7 +106,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],
         ],
         // "patch" => [
-        //     "denormalization_context" => ["groups" => ["item:patch"]],
+        //     "denormalization_context" => ["groups" => ["item:patch:user"]],
         //     "openapi_context" => [
         //         "requestBody" => [
         //             "content" => [
@@ -201,24 +201,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[ApiProperty(identifier: true)]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('id')]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
+    #[SerializedName('email')]
     private $email;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(["collection:get:user", "item:get:user", "item:put:user"])]
+    #[SerializedName('roles')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
+    #[SerializedName('firstname')]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
+    #[SerializedName('lastname')]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
+    #[SerializedName('username')]
     private $username;
 
     /**
@@ -231,15 +244,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatarPath;
 
     #[Type([string::class,null])]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('avatar')]
     private $avatarUrl;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["collection:get:user", "item:get:user", "item:put:user"])]
+    #[SerializedName('description')]
     private $description;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('createdAt')]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('updatedAt')]
     private $updatedAt;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -250,20 +271,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToOne(targetEntity: Section::class, inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
+    #[SerializedName('section')]
     private $section;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Association::class, orphanRemoval: true)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('associations')]
     private $associations;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('isActivated')]
     private $isActivated;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('haveRecoverToken')]
     private $haveRecoverToken;
 
+    #[Groups(["collection:post:user", "item:put:user"])]
+    #[SerializedName('password')]
     private $plainPassword;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Post::class)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('posts')]
     private $posts;
 
     public function __construct()
@@ -276,23 +312,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->posts = new ArrayCollection();
     }
 
-    #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('id')]
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('email')]
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('email')]
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -303,8 +332,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('roles')]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -314,8 +341,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
-    #[Groups(["item:put"])]
-    #[SerializedName('roles')]
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -323,15 +348,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('firstname')]
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('firstname')]
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
@@ -339,15 +360,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('lastname')]
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('lastname')]
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
@@ -355,15 +372,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('username')]
     public function getUsername(): string
     {
         return $this->username;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('username')]
     public function setUsername(?string $username): self
     {
         $this->username = $username;
@@ -371,22 +384,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('avatar')]
     public function getAvatarUrl()
     {
         return $this->avatarUrl;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('description')]
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    #[Groups(["item:put"])]
-    #[SerializedName('description')]
     public function setDescription(?string $description): self
     {
         $this->description = $description;
@@ -394,30 +401,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('createdAt')]
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('updatedAt')]
     public function getupdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('section')]
     public function getSection(): ?Section
     {
         return $this->section;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('section')]
     public function setSection(?Section $section): self
     {
         $this->section = $section;
@@ -425,15 +423,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('associations')]
     public function getAssociations(): Collection
     {
         return $this->associations;
     }
 
-    // #[Groups(["item:put", "item:patch"])]
+    // #[Groups(["item:put:user", "item:patch:user"])]
     // #[SerializedName('associations')]
     // public function addAssociation(Association $association): self
     // {
@@ -445,7 +440,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     //     return $this;
     // }
 
-    // #[Groups(["item:put", "item:patch"])]
+    // #[Groups(["item:put:user", "item:patch:user"])]
     // #[SerializedName('associations')]
     // public function removeAssociation(Association $association): self
     // {
@@ -459,22 +454,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     //     return $this;
     // }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('isActivated')]
     public function isActivated(): ?bool
     {
         return $this->isActivated;
     }
 
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('haveRecoverToken')]
     public function isHaveRecoverToken(): ?bool
     {
         return $this->haveRecoverToken;
     }
 
-    #[Groups(["collection:post", "item:put"])]
-    #[SerializedName('password')]
     public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
@@ -482,9 +471,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get", "item:get"])]
-    #[SerializedName('posts')]
     public function getPosts(): Collection
     {
         return $this->posts;
