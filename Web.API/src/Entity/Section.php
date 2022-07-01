@@ -61,17 +61,17 @@ class Section
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get:section", "item:get:section"])]
+    #[Groups(["collection:get:section", "item:get:section", "collection:get:user", "item:get:user"])]
     #[SerializedName('id')]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Groups(["collection:get:section", "item:get:section", "collection:post:section", "item:put:section"])]
+    #[Groups(["collection:get:section", "item:get:section", "collection:post:section", "item:put:section", "collection:get:user", "item:get:user"])]
     #[SerializedName('name')]
     private $name;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Groups(["collection:get:section", "item:get:section"])]
+    #[Groups(["collection:get:section", "item:get:section", "collection:get:user", "item:get:user"])]
     #[SerializedName('slug')]
     private $slug;
 

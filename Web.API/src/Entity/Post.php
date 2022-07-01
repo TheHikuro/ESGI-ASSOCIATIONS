@@ -79,12 +79,14 @@ class Post
 
     #[ORM\ManyToOne(targetEntity: Association::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[ApiSubresource(maxDepth: 1)]
     #[Groups(["collection:get:post", "item:get:post", "collection:post:post"])]
     #[SerializedName("association")]
     private $association;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[ApiSubresource(maxDepth: 1)]
     #[Groups(["collection:get:post", "item:get:post", "collection:post:post"])]
     #[SerializedName("owner")]
     private $owner;
@@ -95,6 +97,7 @@ class Post
     private $content;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childPosts')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ApiSubresource(maxDepth: 1)]
     #[Groups(["collection:get:post", "item:get:post", "collection:post:post"])]
     #[SerializedName("parentPost")]
