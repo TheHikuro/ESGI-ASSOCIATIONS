@@ -18,6 +18,13 @@ export interface OwnerAssosState {
     avatar: string,
 }
 
+export interface PostsState {
+    id: number,
+    content: string,
+    createdAt: string,
+    owner: string,
+}
+
 export interface AssosDetails {
     id: number,
     owner: OwnerAssosState,
@@ -26,6 +33,7 @@ export interface AssosDetails {
     avatar: string | null,
     createdAt: string,
     events: EventAssosState[],
+    posts: PostsState[],
 }
 
 export interface AssosState {
