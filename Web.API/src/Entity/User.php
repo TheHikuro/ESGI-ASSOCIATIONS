@@ -27,9 +27,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['item:get:user']],
+    normalizationContext: ['groups' => ['item:get:user', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:user"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:user", 'get:id']]],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:user"]],
             "openapi_context" => [
@@ -202,7 +202,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get:user", "item:get:user"])]
+    #[Groups(["collection:get:user", "item:get:user", 'get:id'])]
     #[SerializedName('id')]
     private $id;
 

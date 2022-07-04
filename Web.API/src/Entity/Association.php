@@ -25,9 +25,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  */
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['item:get:association']],
+    normalizationContext: ['groups' => ['item:get:association', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:association"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:association", 'get:id']]],
         "addAssociation" => [
             "method" => "post",
             "denormalization_context" => ["groups" => ["collection:post:association"]],
@@ -159,7 +159,7 @@ class Association
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get:association", "item:get:association"])]
+    #[Groups(["collection:get:association", "item:get:association", 'get:id'])]
     #[SerializedName('id')]
     private $id;
 
