@@ -30,8 +30,8 @@ const AssosManagerPage = () => {
         if (needRefresh) { getAllAssosActions(dispatch) }
     }, [needRefresh])
 
-    const assosFromApi2 = assosList.filter((assos: AssosDetails) => assos.owner.lastname === 'manag');
-    const assosFromAPi = assosFromApi2.map((assos: AssosDetails) => {
+    const assosFromApiFiltered = assosList.filter((assos: AssosDetails) => assos.owner.lastname === 'manag');
+    const assosFromAPi = assosFromApiFiltered.map((assos: AssosDetails) => {
 
         return {
             id: assos.id,
@@ -49,7 +49,6 @@ const AssosManagerPage = () => {
             )
         }
     })
-    console.log(assosFromAPi)
 
     const columns: GridColDef[] = [
         { field: "name", headerName: "Nom", width: 200, align: 'left' },

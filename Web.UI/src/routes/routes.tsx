@@ -16,6 +16,7 @@ import LoginPage from "../pages/LoginPage";
 import ProfilePage from "../pages/ProfilePage";
 import RegisterPage from "../pages/RegisterPage";
 import { useStoreContext } from "../utils/context/StoreContext";
+import UserManagerPage from "../pages/Manager/UserManagerPage";
 
 interface RequireAuthenticationProps {
     otherwise: string;
@@ -54,8 +55,8 @@ const MyRoutes = () => {
             <Route path="/Administration/Sections" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
             <Route path="/Administration/Mail" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
             <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ManagerPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations/Users" element={<OnlyWhen condition={isAuthenticated} otherwise="/Gestion-Associations"><UserManagerPage /></OnlyWhen>} />
             <Route path="/Gestion-Associations/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
-
         </Routes>
     )
 }
