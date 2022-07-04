@@ -12,9 +12,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['item:get:event']],
+    normalizationContext: ['groups' => ['item:get:event', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:event"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:event", 'get:id']]],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:event"]],
             "openapi_context" => [
@@ -68,7 +68,7 @@ class Event
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get:event", "item:get:event"])]
+    #[Groups(["collection:get:event", "item:get:event", 'get:id'])]
     #[SerializedName("id")]
     private $id;
 

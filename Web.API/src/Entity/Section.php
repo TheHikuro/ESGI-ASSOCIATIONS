@@ -11,9 +11,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 
 #[ORM\Entity(repositoryClass: SectionRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['item:get:section']],
+    normalizationContext: ['groups' => ['item:get:section', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:section"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:section", 'get:id']]],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:section"]],
             "openapi_context" => [
@@ -61,7 +61,7 @@ class Section
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get:section", "item:get:section", "collection:get:user", "item:get:user"])]
+    #[Groups(["collection:get:section", "item:get:section", "collection:get:user", "item:get:user", 'get:id'])]
     #[SerializedName('id')]
     private $id;
 

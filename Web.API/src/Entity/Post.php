@@ -15,9 +15,9 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ApiResource(
     mercure: true,
-    normalizationContext: ['groups' => ['item:get:post']],
+    normalizationContext: ['groups' => ['item:get:post', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:post"]]],
+        "get" => ["normalization_context" => ["groups" => ["collection:get:post", 'get:id']]],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:post"]],
             "openapi_context" => [
@@ -68,7 +68,7 @@ class Post
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[ApiProperty(identifier: true)]
-    #[Groups(["collection:get:post", "item:get:post"])]
+    #[Groups(["collection:get:post", "item:get:post", 'get:id'])]
     #[SerializedName("id")]
     private $id;
 
