@@ -4,6 +4,8 @@ import AdminPage from "../pages/Admin/AdminPage";
 import AssosAdminPage from "../pages/Admin/AssosAdminPage";
 import MailerAdminPage from "../pages/Admin/MailerAdminPage";
 import SectionsAdminPage from "../pages/Admin/SectionsAdminPage";
+import ManagerPage from "../pages/Manager/ManagerPage";
+import AssosManagerPage from "../pages/Manager/AssosManagerPage";
 import UserAdminPage from "../pages/Admin/UserAdminPage";
 import AssosPage from "../pages/AssosPage";
 import CalendarPage from "../pages/CalendarPage";
@@ -51,6 +53,8 @@ const MyRoutes = () => {
             <Route path="/Administration/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />
             <Route path="/Administration/Sections" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
             <Route path="/Administration/Mail" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ManagerPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
 
         </Routes>
     )
