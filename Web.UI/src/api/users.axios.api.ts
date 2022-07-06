@@ -5,7 +5,7 @@ const instance = getAxiosInstance();
 
 export const getUsers = async () => {
     const response = await instance.get("/users"); // ?itemsPerPage=1
-    return response.data["hydra:member"];
+    return response.data;
 }
 
 export const getMyUser = async () => {
@@ -25,4 +25,9 @@ export const deleteUser = async (userID: number) => {
 
 export const sendMailToAllUsers = (data: { subject: string, body: string }) => {
     return instance.post("/users/send_global_email", data);
+}
+
+export const getMyAssos = async (idUser: number) => {
+    const response = await instance.get(`/users/${idUser}/associations`);
+    return response.data;
 }

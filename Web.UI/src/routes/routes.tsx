@@ -53,8 +53,7 @@ const MyRoutes = () => {
             <Route path="/Administration/Sections" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
             <Route path="/Administration/Mail" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
             <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ManagerPage /></OnlyWhen>} />
-            <Route path="/Gestion-Associations/Users" element={<OnlyWhen condition={isAuthenticated} otherwise="/Gestion-Associations"><UserManagerPage /></OnlyWhen>} />
-            <Route path="/Gestion-Associations/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations/:id" element={<OnlyWhen condition={isAuthenticated} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
         </Routes>
     )
 }

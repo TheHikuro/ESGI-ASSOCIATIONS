@@ -22,7 +22,7 @@ export const getAxiosInstance = () => {
         (request: any) => {
             request.headers = {
                 ...request.headers,
-                Accept: 'application/ld+json',
+                Accept: 'application/json',
                 Authorization: `Bearer ${getBearer()}`
             };
 

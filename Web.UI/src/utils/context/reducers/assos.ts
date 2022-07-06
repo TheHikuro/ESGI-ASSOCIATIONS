@@ -7,6 +7,8 @@ export interface OwnerAssosState {
 }
 export interface MemberAssosState {
     id: number,
+    firstname: string,
+    lastname: string,
 }
 
 export interface PostsAssosState {
