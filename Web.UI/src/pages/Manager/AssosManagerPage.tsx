@@ -13,30 +13,30 @@ import { FormComponents } from "../../components/FormData";
 const AssosManagerPage = () => {
 
     const { dispatch, state: {
-      assos: {
-        assosList,
-        needRefresh
-      },
-      auth: {
-        isAuthenticated,
-        activated,
-      } } } = useStoreContext()
+        assos: {
+            assosList,
+            needRefreshAssos
+        },
+        auth: {
+            isAuthenticated,
+            activated,
+        } } } = useStoreContext()
     const { openModal, updateModalTitle, updateModalContent, yesActionModal, yesNoModal, closeModal } = useModalContext()
 
     const [searchValue, setSearchValue] = React.useState('');
     const searchRegex = new RegExp(searchValue, 'i');
 
     React.useEffect(() => {
-        if (needRefresh) { getAllAssosActions(dispatch) }
-    }, [needRefresh])
+        if (needRefreshAssos) { getAllAssosActions(dispatch) }
+    }, [needRefreshAssos])
 
-    const assosFromApiFiltered = assosList.filter((assos: AssosDetails) => assos.owner.lastname === 'manag');
+    const assosFromApiFiltered = assosList.filter((assos: AssosDetails) => assos.owner.id === 0);
     const assosFromAPi = assosFromApiFiltered.map((assos: AssosDetails) => {
 
         return {
             id: assos.id,
             name: assos.name,
-            owner: assos.owner.firstname,
+            owner: assos.owner.id,
             description: assos.description,
             avatar: assos.avatar,
             createdAt: moment(assos.createdAt).format('DD/MM/YYYY'),
@@ -71,7 +71,7 @@ const AssosManagerPage = () => {
                     <div className="text-sm">{assos.description}</div>
                 </div>
                 <div className="flex flex-col">
-                    <div className="text-sm">Propriétaire : {assos.owner.firstname}</div>
+                    <div className="text-sm">Propriétaire : {assos.owner.id}</div>
                     <div className="text-sm">Créé le : {moment(assos.createdAt).format('DD/MM/YYYY')}</div>
                 </div>
             </div>

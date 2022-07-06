@@ -16,12 +16,12 @@ export interface UsersDetails {
 
 export interface UsersState {
     userList: UsersDetails[];
-    needRefresh: boolean;
+    needRefreshAdmin: boolean;
 }
 
 export const AdminIS: UsersState = {
     userList: [],
-    needRefresh: true
+    needRefreshAdmin: true
 }
 
 export const AdminTypes = {
@@ -45,40 +45,40 @@ export const AdminReducer = (state = AdminIS, action: UserActionTypes) => {
             return {
                 ...state,
                 userList: action.payload,
-                needRefresh: false
+                needRefreshAdmin: false
             };
         case AdminTypes.DELETE_USER_REQUEST:
             return {
                 ...state,
-                needRefresh: true
+                needRefreshAdmin: true
             };
         case AdminTypes.DELETE_USER_SUCCESS:
             return {
                 ...state,
                 userList: action.payload,
-                needRefresh: true
+                needRefreshAdmin: true
             };
         case AdminTypes.UPDATE_USER_REQUEST:
             return {
                 ...state,
-                needRefresh: false
+                needRefreshAdmin: false
             };
         case AdminTypes.UPDATE_USER_SUCCESS:
             return {
                 ...state,
                 userList: [action.payload, ...state.userList],
-                needRefresh: true
+                needRefreshAdmin: true
             };
         case AdminTypes.CREATE_USER_REQUEST:
             return {
                 ...state,
-                needRefresh: true
+                needRefreshAdmin: true
             };
         case AdminTypes.CREATE_USER_SUCCESS:
             return {
                 ...state,
                 userList: action.payload,
-                needRefresh: false
+                needRefreshAdmin: false
             };
         default:
             return state;

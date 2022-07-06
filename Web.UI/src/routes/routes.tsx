@@ -10,7 +10,6 @@ import UserAdminPage from "../pages/Admin/UserAdminPage";
 import AssosPage from "../pages/AssosPage";
 import CalendarPage from "../pages/CalendarPage";
 import FirstConnectionPage from "../pages/FirstConnectionPage";
-import GestionPage from "../pages/GestionPage";
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/LoginPage";
 import ProfilePage from "../pages/ProfilePage";
@@ -48,7 +47,6 @@ const MyRoutes = () => {
             <Route path="/Profile" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ProfilePage /></OnlyWhen>} />
             <Route path="/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AssosPage /></OnlyWhen>} />
             <Route path="/Calendrier" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><CalendarPage /></OnlyWhen>} />
-            <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><GestionPage /></OnlyWhen>} />
             <Route path="/Administration" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AdminPage /></OnlyWhen>} />
             <Route path="/Administration/Users" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><UserAdminPage /></OnlyWhen>} />
             <Route path="/Administration/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />

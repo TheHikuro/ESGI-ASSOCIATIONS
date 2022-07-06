@@ -6,8 +6,11 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
+make: *** No rule to make target `all'.  Stop.
 
-# Make data base, printed on Tue Jun 28 12:15:06 2022
+
+# Make data base, printed on Wed Jul  6 14:24:03 2022
 
 # Variables
 
@@ -19,10 +22,14 @@ APP_SECRET = 4c50a0e3cf4bf33ba7e8ed2144ebaba7
 ?F = $(notdir $?)
 # makefile (from `.docker/conf/.env.local', line 44)
 DB_HOST = mariadb
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
 # makefile (from `.docker/conf/.env.local', line 31)
 CORS_ALLOW_ORIGIN = '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
 # makefile (from `.docker/conf/.env.local', line 51)
 JWT_PUBLIC_KEY = %kernel.project_dir%/config/jwt/public.pem
+# environment
+LC_CTYPE = UTF-8
 # environment
 VSCODE_LOG_NATIVE = false
 # automatic
@@ -52,15 +59,17 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/vscode-ipc-42ed655a-1141-477c-be62-9dba37c788a4.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/vscode-ipc-13fdd3ac-20b6-4dbb-8c04-3103c5b3f9e9.sock
 # environment
-VSCODE_CWD = /
+VSCODE_CWD = /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
 # environment
 PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # makefile (from `.docker/conf/.env.local', line 50)
 JWT_SECRET_KEY = %kernel.project_dir%/config/jwt/private.pem
+# environment
+LaunchInstanceID = D8323FEB-F152-4A5A-9EFA-80A74CFC4032
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -90,33 +99,43 @@ HOME = /Users/loancleris
 # default
 MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
 # environment
+VSCODE_CLI = 1
+# environment
 VSCODE_CODE_CACHE_PATH = /Users/loancleris/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
 # environment
 LOGNAME = loancleris
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 ZSH = /Users/loancleris/.oh-my-zsh
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
+# makefile (from `Makefile', line 1)
+envFile = .env.local
 # environment
 XPC_FLAGS = 0x0
+# environment
+COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
-# default
-MAKECMDGOALS := all
+# environment
+LC_TERMINAL = iTerm2
 # makefile (from `.docker/conf/.env.local', line 45)
 DB_SRV_VERSION = mariadb-10.6.4
 # environment
-SHLVL = 1
+SHLVL = 3
 # default
 MAKE_VERSION := 3.81
 # environment
 USER = loancleris
 # makefile
 .DEFAULT_GOAL := build
+# default
+MAKECMDGOALS := all
+# environment
+TERM_SESSION_ID = w0t2p0:5376242A-1250-470C-8D69-E8EB4336068D
 # environment
 LESS = -R
 # automatic
@@ -125,6 +144,10 @@ LESS = -R
 MAILER_URL = smtp://mailcatcher:25
 # default
 MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+# makefile (from `.docker/conf/.env.local', line 58)
+MERCURE_URL = http://mercure:80/.well-known/mercure
+# environment
+TERM_PROGRAM = iTerm.app
 # default
 .VARIABLES := 
 # environment
@@ -143,10 +166,12 @@ MAKEFLAGS = Rrqp
 MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
-# makefile (from `Makefile', line 1)
-envFile = .env.local
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.31634515.31634521
+TERM_PROGRAM_VERSION = 3.4.15
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.31634515.31634521.272FB429-3F39-4C93-9F9C-655FE20A3A93
+# environment
+LC_TERMINAL_VERSION = 3.4.15
 # environment
 HOMEBREW_PREFIX = /opt/homebrew
 # automatic
@@ -154,15 +179,25 @@ HOMEBREW_PREFIX = /opt/homebrew
 # automatic
 +F = $(notdir $+)
 # environment
+ITERM_SESSION_ID = w0t2p0:5376242A-1250-470C-8D69-E8EB4336068D
+# makefile (from `.docker/conf/.env.local', line 62)
+MERCURE_JWT_SECRET = eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.vhMwOaN5K68BTIhWokMLOeOJO4EPfT64brd8euJOA4M
+# environment
 HOMEBREW_REPOSITORY = /opt/homebrew
+# environment
+COLORFGBG = 15;0
 # environment
 __CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
 # environment
 COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
+# makefile (from `.docker/conf/.env.local', line 60)
+MERCURE_PUBLIC_URL = http://mercure:80/.well-known/mercure
 # automatic
 <F = $(notdir $<)
+# environment
+ITERM_PROFILE = Default
 # makefile (from `.docker/conf/.env.local', line 41)
 DB_USER = insomniak
 # environment
@@ -171,6 +206,8 @@ PAGER = less
 LC_ALL = C
 # makefile (from `.docker/conf/.env.local', line 38)
 MAILER_USER = admin@myges.fr
+# environment
+SECURITYSESSIONID = 186ab
 # automatic
 ^F = $(notdir $^)
 # makefile (from `.docker/conf/.env.local', line 42)
@@ -180,13 +217,15 @@ SUFFIXES :=
 # environment
 MAKELEVEL := 0
 # environment
-GPG_TTY = not a tty
+GPG_TTY = /dev/ttys000
 # environment
 LANG = C
 # environment
-VSCODE_PID = 8620
+TERM = xterm-256color
+# environment
+VSCODE_PID = 30380
 # variable set hash-table stats:
-# Load=87/1024=8%, Rehash=0, Collisions=1/114=1%
+# Load=105/1024=10%, Rehash=0, Collisions=7/132=5%
 
 # Pattern-specific Variable Values
 
@@ -194,9 +233,9 @@ VSCODE_PID = 8620
 
 # Directories
 
-# . (device 16777234, inode 28374545): 13 files, no impossibilities.
+# . (device 16777234, inode 28374545): 12 files, no impossibilities.
 
-# 13 files, no impossibilities in 1 directories.
+# 12 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -227,7 +266,7 @@ setup:
 # Not a target:
 .docker/conf/.env.local:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-03 12:01:58
+#  Last modified 2022-07-04 19:28:49
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -260,6 +299,7 @@ Makefile:
 start:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 16):
 	docker-compose --env-file="./Web.API/${envFile}" up -d
@@ -294,9 +334,6 @@ down:
 
 # No `vpath' search paths.
 
- 
-make: *** No rule to make target `all'.  Stop.
-
 # No general (`VPATH' variable) search path.
 
 # # of strings in strcache: 2
@@ -304,6 +341,6 @@ make: *** No rule to make target `all'.  Stop.
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4063 / max = 4063 / min = 4063 / avg = 4063
 
-# Finished Make data base on Tue Jun 28 12:15:06 2022
+# Finished Make data base on Wed Jul  6 14:24:03 2022
 
  

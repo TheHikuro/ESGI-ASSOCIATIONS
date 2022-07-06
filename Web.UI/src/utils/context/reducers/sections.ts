@@ -8,12 +8,12 @@ export interface SectionDetails {
 
 export interface SectionState {
     sectionList: SectionDetails[];
-    needRefresh: boolean;
+    needRefreshSection: boolean;
 }
 
 export const sectionIS: SectionState = {
     sectionList: [],
-    needRefresh: true
+    needRefreshSection: true
 }
 
 export const sectionTypes = {
@@ -37,40 +37,40 @@ export const sectionReducer = (state = sectionIS, action: SectionActionTypes) =>
             return {
                 ...state,
                 sectionList: action.payload,
-                needRefresh: false
+                needRefreshSection: false
             };
         case sectionTypes.CREATE_SECTION_REQUEST:
             return {
                 ...state,
-                needRefresh: false
+                needRefreshSection: false
             };
         case sectionTypes.CREATE_SECTION_SUCCESS:
             return {
                 ...state,
                 sectionList: [...state.sectionList, action.payload],
-                needRefresh: true
+                needRefreshSection: true
             };
         case sectionTypes.DELETE_SECTION_REQUEST:
             return {
                 ...state,
-                needRefresh: false
+                needRefreshSection: false
             };
         case sectionTypes.DELETE_SECTION_SUCCESS:
             return {
                 ...state,
                 sectionList: state.sectionList.filter(section => section.id !== action.payload),
-                needRefresh: true
+                needRefreshSection: true
             };
         case sectionTypes.UPDATE_SECTION_REQUEST:
             return {
                 ...state,
-                needRefresh: false
+                needRefreshSection: false
             };
         case sectionTypes.UPDATE_SECTION_SUCCESS:
             return {
                 ...state,
                 sectionList: [action.payload, ...state.sectionList],
-                needRefresh: true
+                needRefreshSection: true
             };
         default:
             return state;

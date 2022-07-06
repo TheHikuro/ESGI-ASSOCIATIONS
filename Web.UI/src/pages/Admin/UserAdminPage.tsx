@@ -11,18 +11,18 @@ import { UsersDetails } from "../../utils/context/reducers/admin";
 import { useStoreContext } from "../../utils/context/StoreContext";
 
 const UserAdminPage = () => {
-    const { dispatch, state: { admin: { userList, needRefresh }, section: { sectionList } } } = useStoreContext()
+    const { dispatch, state: { admin: { userList, needRefreshAdmin }, section: { sectionList, needRefreshSection } } } = useStoreContext()
     const { openModal, updateModalTitle, updateModalContent, yesNoModal, yesActionModal, closeModal } = useModalContext()
     const [searchValue, setSearchValue] = React.useState('');
     const searchRegex = new RegExp(searchValue, 'i');
 
     React.useEffect(() => {
-        if (needRefresh) { getUsersActions(dispatch) }
-    }, [needRefresh])
+        if (needRefreshAdmin) { getUsersActions(dispatch) }
+    }, [needRefreshAdmin])
 
     React.useEffect(() => {
-        if (sectionList?.length === 0) { getAllSections(dispatch) }
-    }, [sectionList]);
+        if (needRefreshSection) { getAllSections(dispatch) }
+    }, [needRefreshSection]);
 
     const userfromapi = userList && userList.map((user: UsersDetails) => {
         return {
