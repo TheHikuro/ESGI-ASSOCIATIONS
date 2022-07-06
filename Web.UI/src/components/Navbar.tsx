@@ -6,6 +6,7 @@ import Logo from '../assets/img/ESGI-logo.png'
 import { AdjustmentsIcon, CalendarIcon, HomeIcon, TemplateIcon, UserGroupIcon, UserIcon } from "@heroicons/react/outline"
 import { EveryRoles } from "../utils/helpers/enums"
 import { getMyUserActions } from "../utils/context/actions/user"
+import { whenPatternMatches } from "../utils/helpers/assist"
 
 interface NavbarProps {
     children: React.ReactNode
@@ -44,18 +45,10 @@ const Navbar = ({ children, location }: NavbarProps) => {
 
     const [display, setDisplay] = React.useState(true)
 
-    const whenPatternMatches = (string: string, patterns: Array<[RegExp, Function]>) => {
-        const foundPattern = patterns.find(([pattern]) => pattern.exec(string));
-
-        if (foundPattern) {
-            const [, effect] = foundPattern;
-            effect();
-        }
-    }
-
     React.useEffect(() => {
         whenPatternMatches(location.pathname, [
             [/^\/Administration\/.*$/, () => setDisplay(false)],
+            [/^\/Gestion-Associations\/.*$/, () => setDisplay(false)],
             [/^\/login\/?$/, () => setDisplay(false)],
             [/^\/register\/?$/, () => setDisplay(false)],
             [/^\/FirstPage\/?$/, () => setDisplay(false)],

@@ -2,6 +2,7 @@ import { AcademicCapIcon, CameraIcon } from "@heroicons/react/outline"
 import React from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useStoreContext } from "../utils/context/StoreContext"
+import { whenPatternMatches } from "../utils/helpers/assist"
 import { EveryRoles } from "../utils/helpers/enums"
 
 interface DashboardItemsProps {
@@ -12,12 +13,25 @@ interface DashboardItemsProps {
 
 export const DashboardItem = ({ name, onpress, icon }: DashboardItemsProps) => {
     const location = window.location.pathname
-    const { dispatch, state: { user: { roles } } } = useStoreContext()
-    const isAdmin = roles.includes(EveryRoles[0].value)
-    const isAssosManager = roles.includes(EveryRoles[1].value)
+    const [display, setDisplay] = React.useState({
+        admin: false,
+        assos: false,
+    })
+    React.useEffect(() => {
+        whenPatternMatches(window.location.pathname, [
+            [/^\/Administration\/.*$/, () => setDisplay({
+                admin: true,
+                assos: false,
+            })],
+            [/^\/Gestion-Associations\/.*$/, () => setDisplay({
+                admin: false,
+                assos: true,
+            })],
+        ])
+    }, [])
 
     return (
-        <Link to={ isAdmin ? `/Administration/${name}` : isAssosManager ? `/Gestion-Associations/${name}`: ''}>
+        <Link to={display.admin ? `/Administration/${name}` : display.assos ? `/Gestion-Associations/${name}` : ''}>
             <div className="py-1">
                 <div className={`w-full h-12 items-center flex justify-between rounded-md p-2 hover:cursor-pointer hover:bg-slate-300 bg-slate-200 ${location === onpress ? 'bg-slate-300' : ''}`}>
                     {icon && icon}
@@ -31,8 +45,22 @@ export const DashboardItem = ({ name, onpress, icon }: DashboardItemsProps) => {
 export const Dashboard = ({ children }: any) => {
     const navigate = useNavigate()
     const { dispatch, state: { user: { roles } } } = useStoreContext()
-    const isAdmin = roles.includes(EveryRoles[0].value)
-    const isAssosManager = roles.includes(EveryRoles[1].value)
+    const [display, setDisplay] = React.useState({
+        admin: false,
+        assos: false,
+    })
+    React.useEffect(() => {
+        whenPatternMatches(window.location.pathname, [
+            [/^\/Administration\/.*$/, () => setDisplay({
+                admin: true,
+                assos: false,
+            })],
+            [/^\/Gestion-Associations\/.*$/, () => setDisplay({
+                admin: false,
+                assos: true,
+            })],
+        ])
+    }, [])
 
     return (
         <div className="w-full h-screen flex flex-col">
@@ -42,14 +70,14 @@ export const Dashboard = ({ children }: any) => {
                         <div className="px-2 py-2 flex justify-between flex-col h-full">
                             <div className="h-3/4 w-full">
                                 <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold mb-2">Dashboard</h1>
-                                {isAdmin ? (
+                                {display.admin ? (
                                     <>
                                         <DashboardItem name='Users' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/Users' />
                                         <DashboardItem name='Associations' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/Associations' />
                                         <DashboardItem name='Sections' icon={<CameraIcon className="w-5 h-5" />} onpress='/Administration/Sections' />
                                         <DashboardItem name='Mail' icon={<CameraIcon className="w-5 h-5" />} onpress='/Administration/Mail' />
                                     </>
-                                ) : isAssosManager ? (
+                                ) : display.assos ? (
                                     <>
                                         <DashboardItem name='Users' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Gestion-Associations/Users' />
                                         <DashboardItem name='Associations' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Gestion-Associations/Associations' />

@@ -6,12 +6,12 @@ import { AssosDetails } from "../utils/context/reducers/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
 
 const AssosPage = () => {
-    const { dispatch, state: { assos: { assosList, needRefresh } } } = useStoreContext();
+    const { dispatch, state: { assos: { assosList, needRefreshAssos } } } = useStoreContext();
     useEffect(() => {
-        if (needRefresh) {
+        if (needRefreshAssos) {
             getAllAssosActions(dispatch);
         }
-    }, [needRefresh])
+    }, [needRefreshAssos])
     return (
         <Layout>
             <>
