@@ -1,6 +1,6 @@
 // create action for users
 import { types } from '../reducers/user';
-import { getMyUser, updateUser } from '../../../api/users.axios.api';
+import { getMyAssos, getMyUser, updateUser } from '../../../api/users.axios.api';
 import { UsersDetails } from '../reducers/admin';
 
 export interface UserActionTypes {
@@ -37,6 +37,22 @@ export const updateUserActions = async (dispatch: Function, user: UsersDetails, 
         const response = await updateUser(user, userID);
         dispatch({
             type: types.UPDATE_USER_SUCCESS,
+            payload: response,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getMyAssosActions = async (dispatch: Function, idUser: number) => {
+    dispatch({
+        type: types.GET_MY_ASSOS_REQUEST,
+    });
+
+    try {
+        const response = await getMyAssos(idUser);
+        dispatch({
+            type: types.GET_MY_ASSOS_SUCCESS,
             payload: response,
         });
     } catch (error) {

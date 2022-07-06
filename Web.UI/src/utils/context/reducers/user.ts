@@ -2,6 +2,11 @@
 import React from "react";
 import { UserActionTypes } from "../actions/user";
 
+export interface MyAssosState {
+    id: number,
+    name: string,
+}
+
 export const userIS = {
     id: 0,
     name: '',
@@ -9,6 +14,7 @@ export const userIS = {
     roles: Array<string>(),
     token: '',
     error: null,
+    associations: Array<MyAssosState>(),
 };
 
 // create action types
@@ -19,6 +25,8 @@ export const types = {
     GET_MY_USER_SUCCESS: 'GET_MY_USER_SUCCESS',
     UPDATE_USER_REQUEST: 'UPDATE_USER_REQUEST',
     UPDATE_USER_SUCCESS: 'UPDATE_USER_SUCCESS',
+    GET_MY_ASSOS_REQUEST: 'GET_MY_ASSOS_REQUEST',
+    GET_MY_ASSOS_SUCCESS: 'GET_MY_ASSOS_SUCCESS',
 }
 
 // create reducer
@@ -47,6 +55,15 @@ export const userReducer = (state = userIS, action: UserActionTypes) => {
                 ...state,
             }
         case types.UPDATE_USER_SUCCESS:
+            return {
+                ...state,
+                ...action.payload,
+            }
+        case types.GET_MY_ASSOS_REQUEST:
+            return {
+                ...state,
+            }
+        case types.GET_MY_ASSOS_SUCCESS:
             return {
                 ...state,
                 ...action.payload,

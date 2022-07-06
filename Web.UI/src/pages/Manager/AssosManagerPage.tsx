@@ -9,104 +9,52 @@ import { AssosDetails } from "../../utils/context/reducers/assos";
 import moment from "moment";
 import { useModalContext } from "../../components/modal";
 import { FormComponents } from "../../components/FormData";
+import { getMembersAction } from "../../utils/context/actions/members";
+import { useParams } from "react-router-dom";
 
 const AssosManagerPage = () => {
 
     const { dispatch, state: {
-        assos: {
-            assosList,
-            needRefreshAssos
-        },
-        auth: {
-            isAuthenticated,
-            activated,
+        members: {
+            memberList,
+            needRefreshMember
         } } } = useStoreContext()
-    const { openModal, updateModalTitle, updateModalContent, yesActionModal, yesNoModal, closeModal } = useModalContext()
+    //const { openModal, updateModalTitle, updateModalContent, yesActionModal, yesNoModal, closeModal } = useModalContext()
 
     const [searchValue, setSearchValue] = React.useState('');
     const searchRegex = new RegExp(searchValue, 'i');
+    const { id } = useParams();
+
+    const [prevPath, setPrevPath] = React.useState(Number(id));
 
     React.useEffect(() => {
-        if (needRefreshAssos) { getAllAssosActions(dispatch) }
-    }, [needRefreshAssos])
+        if (Number(id) !== prevPath) {
+            setPrevPath(Number(id));
+            getMembersAction(dispatch, Number(id));
+        }
+    }, [prevPath, id]);
 
-    const assosFromApiFiltered = assosList.filter((assos: AssosDetails) => assos.owner.id === 0);
-    const assosFromAPi = assosFromApiFiltered.map((assos: AssosDetails) => {
+    React.useEffect(() => {
+        if (needRefreshMember) { getMembersAction(dispatch, Number(id)) }
+    }, [needRefreshMember])
 
+    const membersfromapi = memberList.map(member => {
         return {
-            id: assos.id,
-            name: assos.name,
-            owner: assos.owner.id,
-            description: assos.description,
-            avatar: assos.avatar,
-            createdAt: moment(assos.createdAt).format('DD/MM/YYYY'),
-            actions: (
-                <Fragment>
-                    <PencilIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer mr-2" onClick={() => handleModalEdit(assos)} />
-                    <TrashIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" onClick={() => handleDeleteAssos(assos.id)} />
-                    <DotsCircleHorizontalIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer" onClick={() => handleModalInfo(assos)} />
-                </Fragment>
-            )
+            id: member.id,
+            firstName: member.firstname,
+            lastName: member.lastname,
         }
     })
 
     const columns: GridColDef[] = [
-        { field: "name", headerName: "Nom", width: 200, align: 'left' },
-        { field: "owner", headerName: "Propriétaire", width: 200, align: 'left' },
-        { field: "description", headerName: "Description", width: 300, align: 'left' },
-        { field: "createdAt", headerName: "Créé le", width: 200, align: 'left' },
+        { field: "firstName", headerName: "Prenom", width: 200, align: 'left' },
+        { field: "lastName", headerName: "Nom", width: 200, align: 'left' },
         {
             field: "actions", headerName: "Actions", width: 200, align: 'right', renderCell: (params: any) => {
                 return params.value
             }
         }
     ]
-
-    const handleModalInfo = (assos: AssosDetails) => {
-        updateModalTitle('Informations')
-        updateModalContent(<div className="flex items-center">
-            <div className="flex justify-between">
-                <div className="flex flex-col">
-                    <div className="text-lg font-bold">{assos.name}</div>
-                    <div className="text-sm">{assos.description}</div>
-                </div>
-                <div className="flex flex-col">
-                    <div className="text-sm">Propriétaire : {assos.owner.id}</div>
-                    <div className="text-sm">Créé le : {moment(assos.createdAt).format('DD/MM/YYYY')}</div>
-                </div>
-            </div>
-        </div>)
-        openModal()
-    }
-
-    const handleModalEdit = (assos: AssosDetails) => {
-        updateModalTitle('Edition')
-        updateModalContent(
-            <Fragment>
-                <FormComponents
-                    values={[
-                        { label: 'Nom', type: 'text', formControlName: 'name', defaultValue: assos.name },
-                        { label: 'Description', type: 'textarea', formControlName: 'description', defaultValue: assos.description },
-                    ]}
-                    id={assos.id}
-                    submitButtonText="Enregistrer"
-                    action={updateAssosActions}
-                />
-            </Fragment>
-        )
-        openModal()
-    }
-
-    const handleDeleteAssos = (assosId: number) => {
-        updateModalTitle('Suppression')
-        updateModalContent(<>Voulez vous vraiment supprimer cette Association ?</>)
-        yesNoModal()
-        yesActionModal(() => {
-            deleteAssosActions(dispatch, assosId)
-            closeModal()
-        })
-        openModal()
-    }
 
     return (
         <div className="h-screen flex w-full bg-[url('./assets/img/bg-login.jpeg')]">
@@ -118,7 +66,7 @@ const AssosManagerPage = () => {
                     </div>
                 </div>
                 <Table
-                    data={assosFromAPi.filter((item: any) => searchRegex.test((item.name)))}
+                    data={membersfromapi.filter(member => { return searchRegex.test(member.firstName) || searchRegex.test(member.lastName) })}
                     header={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5, 10, 20, 50]}

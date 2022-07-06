@@ -1,17 +1,18 @@
 import { AcademicCapIcon, CameraIcon } from "@heroicons/react/outline"
 import React from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { getMyAssosActions } from "../utils/context/actions/user"
 import { useStoreContext } from "../utils/context/StoreContext"
 import { whenPatternMatches } from "../utils/helpers/assist"
-import { EveryRoles } from "../utils/helpers/enums"
 
 interface DashboardItemsProps {
     name: string
     onpress: string
     icon: any
+    idAssos?: number
 }
 
-export const DashboardItem = ({ name, onpress, icon }: DashboardItemsProps) => {
+export const DashboardItem = ({ name, onpress, icon, idAssos }: DashboardItemsProps) => {
     const location = window.location.pathname
     const [display, setDisplay] = React.useState({
         admin: false,
@@ -31,7 +32,7 @@ export const DashboardItem = ({ name, onpress, icon }: DashboardItemsProps) => {
     }, [])
 
     return (
-        <Link to={display.admin ? `/Administration/${name}` : display.assos ? `/Gestion-Associations/${name}` : ''}>
+        <Link to={display.admin ? `/Administration/${name}` : display.assos ? `/Gestion-Associations/${idAssos}` : ''}>
             <div className="py-1">
                 <div className={`w-full h-12 items-center flex justify-between rounded-md p-2 hover:cursor-pointer hover:bg-slate-300 bg-slate-200 ${location === onpress ? 'bg-slate-300' : ''}`}>
                     {icon && icon}
@@ -44,7 +45,14 @@ export const DashboardItem = ({ name, onpress, icon }: DashboardItemsProps) => {
 
 export const Dashboard = ({ children }: any) => {
     const navigate = useNavigate()
-    const { dispatch, state: { user: { roles } } } = useStoreContext()
+    const { dispatch, state: { assos: { assosList, needRefreshAssos }, user: { id, associations } } } = useStoreContext()
+
+    React.useEffect(() => {
+        if (needRefreshAssos) {
+            getMyAssosActions(dispatch, id)
+        }
+    }, [needRefreshAssos])
+
     const [display, setDisplay] = React.useState({
         admin: false,
         assos: false,
@@ -79,9 +87,9 @@ export const Dashboard = ({ children }: any) => {
                                     </>
                                 ) : display.assos ? (
                                     <>
-                                        <DashboardItem name='Users' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Gestion-Associations/Users' />
-                                        <DashboardItem name='Associations' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Gestion-Associations/Associations' />
-                                        <DashboardItem name='Mail' icon={<CameraIcon className="w-5 h-5" />} onpress='/Gestion-Associations/Mail' />
+                                        {associations.map((assos: any) => (
+                                            <DashboardItem name={assos.name} icon={<AcademicCapIcon className="w-5 h-5" />} onpress={`/Gestion-Associations/${assos.id}`} idAssos={assos.id} />
+                                        ))}
                                     </>
                                 ) : <></>}
 
