@@ -43,7 +43,7 @@ const AssosManagerPage = () => {
     }, [needRefreshMember])
 
     const membersfromapi = memberList.map(member => {
-        let actions: any = userId === member.id 
+        const actions: any = userId === member.id 
             ? <></> 
             :(
                 <Fragment>
@@ -89,7 +89,6 @@ const AssosManagerPage = () => {
     }
 
     const handleDeleteUserFromAsso = (assoId: string, memberId: number) => {
-        console.log(assoId, memberId)
         updateModalTitle('Bannir utilisateur')
         updateModalContent(<>Voulez vous vraiment supprimer cet utilisateur de votre association ?</>)
         yesNoModal()
