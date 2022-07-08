@@ -3,9 +3,9 @@ import { GridColDef } from "@mui/x-data-grid";
 import { Table } from "../../components/Table";
 import { useStoreContext } from "../../utils/context/StoreContext";
 import React, { Fragment } from "react";
-import { deleteAssosActions, getAllAssosActions, updateAssosActions, createAssosActions } from "../../utils/context/actions/assos";
+import { deleteAssosActions, getAllAssosActions, deleteUserFromAsso, createAssosActions } from "../../utils/context/actions/assos";
 import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon } from "@heroicons/react/outline";
-import { AssosDetails } from "../../utils/context/reducers/assos";
+import { AssosDetails, MemberAssosState } from "../../utils/context/reducers/assos";
 import moment from "moment";
 import { useModalContext } from "../../components/modal";
 import { FormComponents } from "../../components/FormData";
@@ -24,7 +24,6 @@ const AssosManagerPage = () => {
         user: {
         id: userId
     } } } = useStoreContext()
-    //const { openModal, updateModalTitle, updateModalContent, yesActionModal, yesNoModal, closeModal } = useModalContext()
 
     const [searchValue, setSearchValue] = React.useState('');
     const searchRegex = new RegExp(searchValue, 'i');
@@ -44,10 +43,19 @@ const AssosManagerPage = () => {
     }, [needRefreshMember])
 
     const membersfromapi = memberList.map(member => {
+        let actions: any = userId === member.id 
+            ? <></> 
+            :(
+                <Fragment>
+                    <TrashIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" onClick={() => (typeof id === 'string') && handleDeleteUserFromAsso(id, member.id) } />
+                </Fragment>
+        );
+
         return {
             id: member.id,
             firstName: member.firstname,
             lastName: member.lastname,
+            actions
         }
     })
 
@@ -77,6 +85,18 @@ const AssosManagerPage = () => {
                 />
             </Fragment>
         )
+        openModal()
+    }
+
+    const handleDeleteUserFromAsso = (assoId: string, memberId: number) => {
+        console.log(assoId, memberId)
+        updateModalTitle('Bannir utilisateur')
+        updateModalContent(<>Voulez vous vraiment supprimer cet utilisateur de votre association ?</>)
+        yesNoModal()
+        yesActionModal(() => {
+            deleteUserFromAsso(dispatch, parseInt(assoId), memberId)
+            closeModal()
+        })
         openModal()
     }
 

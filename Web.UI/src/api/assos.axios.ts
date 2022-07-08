@@ -33,6 +33,7 @@ export const getMembers = async (assosId: number) => {
     return response.data;
 }
 
+// TODO add route backend
 export const removeMembers = async (assosId: number, memberId: number) => {
     const response = await instance.delete(`/associations/${assosId}/members/${memberId}`);
     return response.data;
