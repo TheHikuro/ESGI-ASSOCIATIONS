@@ -9,6 +9,15 @@ export const getAllAssos = async () => {
     return response.data;
 }
 
+export const createAssos = async (data: AssosDetails, id: number) => {
+    const postData = {
+        ...data,
+        owner: `/api/users/${id.toString()}}`
+    }
+    const response = await instance.post('/associations', postData);
+    return response.data;
+}
+
 export const updateAssos = async (data: AssosDetails, assosId: number) => {
     const response = await instance.put(`/associations/${assosId}`, data);
     return response.data;

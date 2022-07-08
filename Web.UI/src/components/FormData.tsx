@@ -30,7 +30,6 @@ export function FormComponents(props: IFormDataProps) {
             acc[value.formControlName] = value.defaultValue;
             return acc;
         }, {})
-
         for (const key in data)
             if (JSON.stringify(data[key]) !== JSON.stringify(prevValues[key]))
                 updatedValues[key] = data[key];
