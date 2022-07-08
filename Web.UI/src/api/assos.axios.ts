@@ -1,8 +1,7 @@
 import { AssosDetails } from "../utils/context/reducers/assos";
-import { getAxiosInstance, getAxiosInstanceWithoutAuth } from "./apiUtils";
+import { getAxiosInstance } from "./apiUtils";
 
 const instance = getAxiosInstance();
-const instanceWithoutAuth = getAxiosInstanceWithoutAuth();
 
 export const getAllAssos = async () => {
     const response = await instance.get(`/associations`);
@@ -17,4 +16,9 @@ export const updateAssos = async (data: AssosDetails, assosId: number) => {
 export const deleteAssos = async (assosId: number) => {
     const response = await instance.delete(`/associations/${assosId}`);
     return response.data;
+}
+
+export const getPostsByAssos = async (assosId: number) => {
+    const response = await instance.get(`/associations/${assosId}/posts`);
+    return response.data['hydra:member'];
 }

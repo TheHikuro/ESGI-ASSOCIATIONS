@@ -199,7 +199,7 @@ class Association
     #[SerializedName('avatar')]
     private $avatarUrl;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 2048)]
     #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association"])]
     #[SerializedName('description')]
     private $description;
