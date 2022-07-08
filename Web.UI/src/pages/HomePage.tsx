@@ -1,32 +1,43 @@
+import moment from "moment";
 import React from "react";
 import { Layout } from "../components/Layout";
-import { getPostsByAssosActions } from "../utils/context/actions/assos";
-import { AssosDetails, PostsState } from "../utils/context/reducers/assos";
+import Navbar from "../components/Navbar";
+import { FilterCheckbox, InputForPosts, Posts } from "../components/Posts";
+import { getAllAssosActions } from "../utils/context/actions/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { useMercureState } from "../utils/helpers/mercure";
 
 const HomePage = () => {
-    const { dispatch, state: { assos: { assosList, needRefresh } } } = useStoreContext();
+
+    const { dispatch, state: {
+        user: { associations, firstname, lastname },
+        assos: { assosList, needRefreshAssos }
+    } } = useStoreContext();
 
     React.useEffect(() => {
-        if (needRefresh) {
-            getPostsByAssosActions(dispatch, 1)
-        }
-    }, [needRefresh]);
+        if (needRefreshAssos) { getAllAssosActions(dispatch) }
+    }, [needRefreshAssos]);
 
-    const posts = useMercureState([]);
+    const assosfromapi = assosList.map(assos => {
+        return {
+            id: assos.id,
+            name: assos.name,
+            description: assos.description,
+            createdAt: assos.createdAt,
+            posts: assos.posts,
+            members: assos.members,
+        }
+    })
+
 
     return (
         <div className="w-full h-full flex">
             <Layout>
-                <h1 className="text-xl">HomePage</h1>
-                {posts.map((post: PostsState) => {
-                    return (
-                        <div className="flex flex-col">
-                            <p>{post.content}</p>
-                        </div>
-                    )
-                })}
+                <InputForPosts sender={<span>{firstname + ' ' + lastname}</span>} content={''} action={() => console.log('value')} />
+                <FilterCheckbox options={associations} />
+                <div className="px-32 mt-12">
+                    <Posts content="test" childPosts={[<span>child1</span>, <h1>child 2</h1>]} sender={<span>{firstname + ' ' + lastname}</span>} createdAt={moment(new Date()).format('DD/MM/YYYY')} />
+                </div>
             </Layout>
         </div>
     )
