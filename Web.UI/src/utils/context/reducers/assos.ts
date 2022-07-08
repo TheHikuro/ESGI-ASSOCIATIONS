@@ -30,12 +30,8 @@ export interface AssosDetails {
     avatar: string | null,
     createdAt: string,
     events: EventAssosState[],
-<<<<<<< HEAD
-    posts: PostsState[],
-=======
     members: MemberAssosState[],
     posts: PostsAssosState[],
->>>>>>> 286d893 (fix dashboard && routes)
 }
 
 export interface AssosState {
@@ -59,6 +55,12 @@ export const AssosTypes = {
     CREATE_ASSOS_SUCCESS: 'CREATE_ASSOS_SUCCESS',
     GET_ASSOS_EVENTS_REQUEST: 'GET_ASSOS_EVENTS_REQUEST',
     GET_ASSOS_EVENTS_SUCCESS: 'GET_ASSOS_EVENTS_SUCCESS',
+    DELETE_ASSOS_EVENT_REQUEST: 'DELETE_ASSOS_EVENT_REQUEST',
+    DELETE_ASSOS_EVENT_SUCCESS: 'DELETE_ASSOS_EVENT_SUCCESS',
+    CREATE_ASSOS_EVENT_REQUEST: 'CREATE_ASSOS_EVENT_REQUEST',
+    CREATE_ASSOS_EVENT_SUCCESS: 'CREATE_ASSOS_EVENT_SUCCESS',
+    UPDATE_ASSOS_EVENT_REQUEST: 'UPDATE_ASSOS_EVENT_REQUEST',
+    UPDATE_ASSOS_EVENT_SUCCESS: 'UPDATE_ASSOS_EVENT_SUCCESS',
 }
 
 export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
@@ -116,8 +118,6 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
                 assosList: action.payload,
                 needRefreshAssos: false
             };
-<<<<<<< HEAD
-=======
         case AssosTypes.DELETE_ASSOS_EVENT_REQUEST:
             return {
                 ...state,
@@ -152,7 +152,6 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
                 assosList: action.payload,
                 needRefreshAssos: false
             };
->>>>>>> 286d893 (fix dashboard && routes)
         default:
             return state;
     }

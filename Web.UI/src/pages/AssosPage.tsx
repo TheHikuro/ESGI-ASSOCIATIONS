@@ -25,7 +25,7 @@ const AssosPage = () => {
                                     desc={asso.description}
                                     key={asso.name}
                                     createdAt={asso.createdAt}
-                                    owner={asso.owner.firstname + ' ' + asso.owner.lastname}
+                                    owner={asso.owner.id.toString()}
                                 />
                             )
                         }
