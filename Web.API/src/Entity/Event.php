@@ -5,7 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Controller\Event\AddParticipantController;
+use App\Controller\Event\RemoveParticipantController;
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
@@ -25,10 +29,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                                 "type" => "object",
                                 "required" => true,
                                 "properties" => [
-                                    "dateInterval" => ["type" => "string"],
+                                    "dateStart" => ["type" => "string"],
+                                    "dateEnd" => ["type" => "string"],
                                     "description" => ["type" => "string"],
                                     "name" => ["type" => "string"],
                                     "association" => ["type" => "string"],
+                                    "pointsToWin" => ["type" => "number"],
                                 ],
                             ],
                         ],
@@ -48,16 +54,49 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                             "schema" => [
                                 "type" => "object",
                                 "properties" => [
-                                    "dateInterval" => ["type" => "string"],
+                                    "dateStart" => ["type" => "string"],
+                                    "dateEnd" => ["type" => "string"],
                                     "active" => ["type" => "boolean"],
                                     "description" => ["type" => "string"],
                                     "name" => ["type" => "string"],
+                                    "pointsToWin" => ["type" => "number"],
+                                    "closeJoin" => ["type" => "boolean"],
                                 ],
                             ],
                         ],
                     ],
                 ],
             ],
+        ],
+        "addParticipant" => [
+            "method" => "put",
+            "path" => "events/{id}/add_participant/{idParticipant}",
+            "controller" => AddParticipantController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => []
+                        ]
+                    ],
+                ],
+            ],  
+        ],
+        "removeParticipant" => [
+            "method" => "put",
+            "path" => "events/{id}/remove_participant/{idParticipant}",
+            "controller" => RemoveParticipantController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => []
+                        ]
+                    ],
+                ],
+            ],  
         ],
         "delete",
     ],
@@ -72,15 +111,25 @@ class Event
     #[SerializedName("id")]
     private $id;
 
-    #[ORM\Column(type: 'dateinterval', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(["collection:get:event", "item:get:event", "collection:post:event", "item:put:event"])]
-    #[SerializedName("dateInterval")]
-    private $dateInterval;
+    #[SerializedName("dateStart")]
+    private $dateStart;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(["collection:get:event", "item:get:event", "collection:post:event", "item:put:event"])]
+    #[SerializedName("dateEnd")]
+    private $dateEnd;
 
     #[ORM\Column(type: 'boolean')]
     #[Groups(["collection:get:event", "item:get:event", "item:put:event"])]
     #[SerializedName("active")]
     private $active;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(["collection:get:event", "item:get:event", "item:put:event"])]
+    #[SerializedName("closeJoin")]
+    private $closeJoin;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(["collection:get:event", "item:get:event", "collection:post:event", "item:put:event"])]
@@ -109,10 +158,24 @@ class Event
     #[SerializedName('updatedAt')]
     private $updatedAt;
 
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:event", "item:get:event"])]
+    #[SerializedName('participants')]
+    private $participants;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    #[Groups(["collection:get:event", "item:get:event", "collection:post:event", "item:put:event"])]
+    #[SerializedName('pointsToWin')]
+    private $pointsToWin;
+
     public function __construct()
     {
         $this->active = false;
         $this->createdAt = new \DatetimeImmutable('now');
+        $this->participants = new ArrayCollection();
+        $this->closeJoin = false;
     }
 
     public function getId(): ?int
@@ -120,14 +183,26 @@ class Event
         return $this->id;
     }
 
-    public function getDateInterval(): ?\DateInterval
+    public function getDateStart(): ?\DateTimeImmutable
     {
-        return $this->dateInterval;
+        return $this->dateStart;
     }
 
-    public function setDateInterval(\DateInterval $dateInterval): self
+    public function setDateStart(\DateTimeImmutable $dateStart): self
     {
-        $this->dateInterval = $dateInterval;
+        $this->dateStart = $dateStart;
+
+        return $this;
+    }
+
+    public function getDateEnd(): ?\DateTimeImmutable
+    {
+        return $this->dateEnd;
+    }
+
+    public function setDateEnd(\DateTimeImmutable $dateEnd): self
+    {
+        $this->dateEnd = $dateEnd;
 
         return $this;
     }
@@ -140,6 +215,18 @@ class Event
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function isCloseJoin(): ?bool
+    {
+        return $this->closeJoin;
+    }
+
+    public function setCloseJoin(bool $closeJoin): self
+    {
+        $this->closeJoin = $closeJoin;
 
         return $this;
     }
@@ -193,6 +280,39 @@ class Event
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(User $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(User $participant): self
+    {
+        $this->participants->removeElement($participant);
+
+        return $this;
+    }
+
+    public function getPointsToWin(): ?float
+    {
+        return $this->pointsToWin;
+    }
+
+    public function setPointsToWin(?float $pointsToWin): self
+    {
+        $this->pointsToWin = $pointsToWin;
 
         return $this;
     }
