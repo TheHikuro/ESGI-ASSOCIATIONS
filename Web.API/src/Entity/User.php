@@ -5,10 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use App\Controller\User\BanController;
 use App\Controller\User\ConfirmationEmailController;
 use App\Controller\User\DeleteAvatarController;
+use App\Controller\User\GetBannedUsersController;
 use App\Controller\User\PostAvatarController;
 use App\Controller\User\SendGLobalEmailController;
+use App\Controller\User\UnBanController;
 use App\Controller\User\ValidateAccountController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +33,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     normalizationContext: ['groups' => ['item:get:user', 'get:id']],
     collectionOperations: [
         "get" => ["normalization_context" => ["groups" => ["collection:get:user", 'get:id']]],
+        "getBannedUsers" => [
+            "method" => "get",
+            "path" => "users/banned",
+            "controller" => GetBannedUsersController::class,
+            "deserialize" => false,
+        ],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:user"]],
             "openapi_context" => [
@@ -105,25 +114,48 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ],
         ],
-        // "patch" => [
-        //     "denormalization_context" => ["groups" => ["item:patch:user"]],
-        //     "openapi_context" => [
-        //         "requestBody" => [
-        //             "content" => [
-        //                 "application/ld+json" => [
-        //                     "schema" => [
-        //                         "type" => "object",
-        //                         "properties" => [
-        //                             "roles" => ["type" => "array", "items" => ["type" => "string"]],
-        //                             "associations" => ["type" => "array", "items" => ["type" => "string"]],
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //         ],
-        //     ],
-        // ],
         "delete",
+        "ban" => [
+            "method" => "put",
+            "path" => "users/{id}/ban",
+            "controller" => BanController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "reason" => ["type" => "string"],
+                                    "notify" => ["type" => "boolean"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],   
+        ],
+        "unBan" => [
+            "method" => "put",
+            "path" => "users/{id}/unban",
+            "controller" => UnBanController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "notify" => ["type" => "boolean"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],   
+        ],
         "avatar" => [
             "method" => "post",
             "path" => "users/{id}/avatar",
@@ -302,6 +334,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[SerializedName('posts')]
     private $posts;
 
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('isBanned')]
+    private $isBanned;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('banReason')]
+    private $banReason;
+
     public function __construct()
     {
         $this->associations = new ArrayCollection();
@@ -427,32 +469,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->associations;
     }
-
-    // #[Groups(["item:put:user", "item:patch:user"])]
-    // #[SerializedName('associations')]
-    // public function addAssociation(Association $association): self
-    // {
-    //     if (!$this->associations->contains($association)) {
-    //         $this->associations[] = $association;
-    //         $association->setOwner($this);
-    //     }
-
-    //     return $this;
-    // }
-
-    // #[Groups(["item:put:user", "item:patch:user"])]
-    // #[SerializedName('associations')]
-    // public function removeAssociation(Association $association): self
-    // {
-    //     if ($this->associations->removeElement($association)) {
-    //         // set the owning side to null (unless already changed)
-    //         if ($association->getOwner() === $this) {
-    //             $association->setOwner(null);
-    //         }
-    //     }
-
-    //     return $this;
-    // }
 
     public function isActivated(): ?bool
     {
@@ -618,6 +634,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $post->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(bool $isBanned): self
+    {
+        $this->isBanned = $isBanned;
+
+        return $this;
+    }
+
+    public function getBanReason(): ?string
+    {
+        return $this->banReason;
+    }
+
+    public function setBanReason(?string $banReason): self
+    {
+        $this->banReason = $banReason;
 
         return $this;
     }

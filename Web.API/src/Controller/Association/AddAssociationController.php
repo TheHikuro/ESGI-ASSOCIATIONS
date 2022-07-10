@@ -7,8 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
-use function Symfony\Component\DependencyInjection\Loader\Configurator\ref;
-
 #[AsController]
 class AddAssociationController extends AbstractController
 {

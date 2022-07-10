@@ -16,7 +16,7 @@ class PostAvatarController extends AbstractController
     {
         $user = $request->attributes->get('data');
         $avatar = $request->files->get('avatar');
-
+        
         if(!($user instanceof User))
             throw new \RuntimeException('Expected user.');
         if(!$avatar)

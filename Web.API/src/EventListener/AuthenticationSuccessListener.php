@@ -24,6 +24,8 @@ class AuthenticationSuccessListener
             'roles' => $user->getRoles(),
             'associationsCount' => $user->getAssociations()->count(),
             'activated' => $user->isActivated(),
+            'isBanned' => $user->getIsBanned(),
+            'banReason' => $user->getBanReason(),
             'token' => $event->getData()['token'],
         ]);
     }
