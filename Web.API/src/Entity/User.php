@@ -350,6 +350,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new \DateTimeImmutable('now');
         $this->isActivated = false;
         $this->haveRecoverToken = false;
+        $this->isBanned = false;
         $this->roles[] = 'ROLE_USER';
         $this->posts = new ArrayCollection();
     }
