@@ -1,8 +1,10 @@
+import { Chip } from "@mui/material";
 import moment from "moment";
 import React, { Fragment } from "react";
+import { getAllAssosActions } from "../utils/context/actions/assos";
 import { postChildPostsAction } from "../utils/context/actions/posts";
 import { useStoreContext } from "../utils/context/StoreContext";
-import { getUserNameById } from "../utils/helpers/assist";
+import { getNameById, getUserNameById } from "../utils/helpers/assist";
 import { Avatar } from "./Avatar";
 
 export const InputForPosts = ({ sender, action }: { sender: JSX.Element, action: Function }) => {
@@ -18,10 +20,10 @@ export const InputForPosts = ({ sender, action }: { sender: JSX.Element, action:
         action(value);
     }
     return (
-        <div onSubmit={(e: any) => handleSubmit(e)} className='w-full h-52 bg-white rounded-md shadow-lg flex flex-col justify-between overflow-scroll p-3'>
+        <div onSubmit={(e: any) => handleSubmit(e)} className='w-full h-64 bg-white rounded-md shadow-lg flex flex-col justify-between overflow-scroll p-3'>
             <div>{sender}</div>
             <div>
-                <textarea value={value} onChange={(e: any) => handleChange(e)} className='w-full min-h-52 border-none focus:outline-0' placeholder="C'est le moment de se faire des amis..." />
+                <textarea value={value} onChange={(e: any) => handleChange(e)} className='w-full mt-2 min-h-52 border-none focus:outline-0' placeholder="C'est le moment de se faire des amis..." />
             </div>
             <div className="flex justify-end m-2">
                 <button onClick={(e: any) => handleSubmit(e)} className='rounded-lg p-2 bg-blue-400 text-white hover:bg-blue-500'>Envoyer</button>
@@ -30,38 +32,31 @@ export const InputForPosts = ({ sender, action }: { sender: JSX.Element, action:
     )
 }
 
-// filter with dropdown
-export const FilterCheckbox = ({ options }: { options: any }) => {
-    const [value, setValue] = React.useState<string[]>([]);
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>, checked: boolean) => {
-        const newValue = [...value];
-        if (checked) {
-            newValue.push(event.target.value as string);
-        } else {
-            newValue.splice(newValue.indexOf(event.target.value as string), 1);
-        }
-        setValue(newValue);
+export const FilterWithChip = ({ options }: { options: any }) => {
+    const [active, setActive] = React.useState<string[]>([]);
+    const handleClick = (event: React.MouseEvent<HTMLElement, MouseEvent>, value: string) => {
+        setActive(active.includes(value) ? active.filter(item => item !== value) : [...active, value]);
     }
-
     return (
-        <div className='flex flex-col w-full p-2 bg-white mt-3 rounded-lg shadow-lg'>
-            <div className='flex flex-row w-full justify-evenly'>
+        <>
+            <div className="flex w-full bg-white rounded-lg p-2 justify-start mt-3">
                 {options.map((option: any, index: number) => {
                     return (
-                        <div className='flex flex-row' key={index}>
-                            <input
-                                type='checkbox'
-                                value={option.name}
-                                onChange={(e) => handleChange(e, e.target.checked)}
-                                checked={value.includes(option.name)}
-                                className='hover:cursor-pointer'
-                            />
-                            <label className="ml-2">{option.name}</label>
-                        </div>
+                        <Chip
+                            key={index}
+                            label={option.name}
+                            className='hover:cursor-pointer hover:bg-slate-300'
+                            style={active.includes(option.name) ? { backgroundColor: '#B9B9B9', marginLeft: 5, marginRight: 5 } : {
+                                marginLeft: 5,
+                                marginRight: 5
+                            }}
+                            onClick={(e: any) => handleClick(e, option.name)}
+                        />
                     )
-                })}
+                }
+                )}
             </div>
-        </div>
+        </>
     )
 }
 
@@ -79,16 +74,24 @@ export const ChildPosts = ({ comment }: { comment: any }) => {
     const { state: { admin: { userList } } } = useStoreContext()
     return (
         <div className='flex flex-col w-full bg-white'>
-            <div className="flex w-full justify-end px-3 py-1">
-                <span className="p-2 rounded-md mr-4 shadow-lg bg-slate-100 my-1">{comment.content}</span>
-                <Avatar initial={getUserNameById(comment.owner.id, userList)} />
+            <div className="flex w-full justify-start px-3 py-1">
+                <Avatar initial={getUserNameById(comment.owner.id, userList)} displayName={false} />
+                <div className="p-2 rounded-md ml-2 shadow-lg bg-slate-100 my-1 flex flex-col">
+                    <span className="text-sm text-slate-900 font-bold">{getUserNameById(comment.owner.id, userList)}</span>
+                    {comment.content}
+                </div>
             </div>
         </div>
     )
 }
 
 export const Posts = ({ childPosts, content, sender, createdAt, idPost, idAssos }: PostsProps) => {
-    const { dispatch, state: { user: { id } } } = useStoreContext()
+    const { dispatch, state: { user: { id }, assos: { assosList, needRefreshAssos } } } = useStoreContext()
+
+    React.useEffect(() => {
+        if (needRefreshAssos) { getAllAssosActions(dispatch) }
+    }, [needRefreshAssos])
+
     const [value, setValue] = React.useState('');
     const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>, data: string) => {
         if (e.key === 'Enter') {
@@ -106,8 +109,9 @@ export const Posts = ({ childPosts, content, sender, createdAt, idPost, idAssos 
         <Fragment>
             <div className={`flex flex-col w-full p-1 bg-white mt-3 rounded-t-md shadow-lg max-h-96`}>
                 <div className='flex flex-col w-full justify-evenly h-1/6 mb-2'>
-                    <div className='flex flex-col'>
+                    <div className='flex flex-row justify-between'>
                         {sender}
+                        <Chip label={getNameById(idAssos!, assosList)} size="small" color="primary" variant="outlined" className="w-fit" />
                     </div>
                     <div className='flex flex-col text-sm'>
                         {createdAt}

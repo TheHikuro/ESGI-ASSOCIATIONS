@@ -63,7 +63,7 @@ export const Card = (props: CardProps) => {
                     </div>
                     <div className="flex items-center justify-between w-full mt-5">
                         <span className="flex items-center no-underline  text-black">
-                            <Avatar initial={owner} />
+                            <Avatar initial={owner} displayName />
                         </span>
                         <div className="p-2 shadow-md rounded-full bg-blue-400 hover:bg-blue-500 flex items-center hover:text-white hover:cursor-pointer">
                             <span className="mr-2">Rejoindre</span>

@@ -16,7 +16,7 @@ const AssosPage = () => {
     return (
         <Layout>
             <>
-                <h1 className="flex justify-center font-bold uppercase text-slate-800">Rejoindre une Association ESGI</h1>
+                <h1 className="flex justify-center font-bold uppercase text-slate-50">Rejoindre une Association ESGI</h1>
                 <div className="container my-12 mx-auto px-4 md:px-12">
                     <div className="flex flex-wrap -mx-1 lg:-mx-4">
                         {

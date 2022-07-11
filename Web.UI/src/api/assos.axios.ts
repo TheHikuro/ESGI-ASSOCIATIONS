@@ -51,3 +51,9 @@ export const createChildPosts = async (data: any) => {
     const response = await instance.post(`/posts`, data);
     return response.data;
 }
+
+export const getAllPostsFromAllAssos = async (userId: number, pageNumber: number) => {
+    // get 10 items per page
+    const response = await instance.get(`/posts?user_id=${userId}&itemsPerPage=2&page=${pageNumber}`);
+    return response.data;
+}

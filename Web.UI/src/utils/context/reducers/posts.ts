@@ -20,6 +20,8 @@ export const PostsTypes = {
     CREATE_POSTS_SUCCESS: 'CREATE_POSTS_SUCCESS',
     GET_CHILD_POSTS_REQUEST: 'GET_CHILD_POSTS_REQUEST',
     GET_CHILD_POSTS_SUCCESS: 'GET_CHILD_POSTS_SUCCESS',
+    GET_ALL_POSTS_FROM_ALL_ASSOS_REQUEST: 'GET_ALL_POSTS_FROM_ALL_ASSOS_REQUEST',
+    GET_ALL_POSTS_FROM_ALL_ASSOS_SUCCESS: 'GET_ALL_POSTS_FROM_ALL_ASSOS_SUCCESS',
 }
 
 export const PostsReducer = (state = PostsIS, action: PostsActionTypes) => {
@@ -29,6 +31,16 @@ export const PostsReducer = (state = PostsIS, action: PostsActionTypes) => {
                 ...state,
             };
         case PostsTypes.GET_POSTS_SUCCESS:
+            return {
+                ...state,
+                postsList: action.payload,
+                needRefreshPosts: false
+            };
+        case PostsTypes.GET_ALL_POSTS_FROM_ALL_ASSOS_REQUEST:
+            return {
+                ...state,
+            };
+        case PostsTypes.GET_ALL_POSTS_FROM_ALL_ASSOS_SUCCESS:
             return {
                 ...state,
                 postsList: action.payload,
