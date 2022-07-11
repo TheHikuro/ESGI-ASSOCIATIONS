@@ -2,6 +2,7 @@ import { AcademicCapIcon, CameraIcon } from "@heroicons/react/outline"
 import React from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { getMyAssosActions } from "../utils/context/actions/user"
+import { MyAssosState } from "../utils/context/reducers/user"
 import { useStoreContext } from "../utils/context/StoreContext"
 import { whenPatternMatches } from "../utils/helpers/assist"
 
@@ -57,6 +58,7 @@ export const Dashboard = ({ children }: any) => {
         admin: false,
         assos: false,
     })
+
     React.useEffect(() => {
         whenPatternMatches(window.location.pathname, [
             [/^\/Administration\/.*$/, () => setDisplay({
@@ -87,8 +89,10 @@ export const Dashboard = ({ children }: any) => {
                                     </>
                                 ) : display.assos ? (
                                     <>
-                                        {associations.map((assos: any) => (
-                                            <DashboardItem name={assos.name} icon={<AcademicCapIcon className="w-5 h-5" />} onpress={`/Gestion-Associations/${assos.id}`} idAssos={assos.id} />
+                                        {associations.map((assos: MyAssosState) => (
+                                            Number(assos.owner.match(/\d*$/)![0]) === id ? (
+                                                <DashboardItem name={assos.name} icon={<AcademicCapIcon className="w-5 h-5" />} onpress={`/Gestion-Associations/${assos.id}`} idAssos={assos.id} />
+                                            ) : null
                                         ))}
                                     </>
                                 ) : <></>}

@@ -12,7 +12,13 @@ export interface MemberAssosState {
 }
 
 export interface PostsAssosState {
+    owner: OwnerAssosState,
     id: number,
+    association: { id: number }
+    childPosts: Array<{}>
+    content: string
+    parentPost: string
+    createdAt: string
 }
 
 export interface PostsState {

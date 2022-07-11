@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Wed Jul  6 14:24:03 2022
+# Make data base, printed on Mon Jul 11 20:42:37 2022
 
 # Variables
 
@@ -30,8 +30,6 @@ CORS_ALLOW_ORIGIN = '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
 JWT_PUBLIC_KEY = %kernel.project_dir%/config/jwt/public.pem
 # environment
 LC_CTYPE = UTF-8
-# environment
-VSCODE_LOG_NATIVE = false
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -52,14 +50,12 @@ _ = /usr/bin/make
 MAKEFILE_LIST :=  Makefile .docker/conf/.env.local
 # makefile (from `.docker/conf/.env.local', line 47)
 DATABASE_URL = "mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?serverVersion=${DB_SRV_VERSION}"
-# environment
-VSCODE_VERBOSE_LOGGING = true
+# makefile (from `.docker/conf/.env.local', line 60)
+MERCURE_PUBLIC_URL = http://mercure:80/.well-known/mercure
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
-# environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/vscode-ipc-13fdd3ac-20b6-4dbb-8c04-3103c5b3f9e9.sock
 # environment
 VSCODE_CWD = /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
 # environment
@@ -71,8 +67,6 @@ JWT_SECRET_KEY = %kernel.project_dir%/config/jwt/private.pem
 # environment
 LaunchInstanceID = D8323FEB-F152-4A5A-9EFA-80A74CFC4032
 # environment
-VSCODE_LOG_STACK = false
-# environment
 ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
@@ -82,8 +76,6 @@ SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.O0mGbMyQ0a/Listeners
 %F = $(notdir $%)
 # makefile (from `.docker/conf/.env.local', line 36)
 MAILER_DSN = smtp://mailcatcher:25
-# environment
-VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
 # environment
@@ -101,11 +93,11 @@ MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/loancleris/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+VSCODE_CODE_CACHE_PATH = /Users/loancleris/Library/Application Support/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
 # environment
 LOGNAME = loancleris
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 ZSH = /Users/loancleris/.oh-my-zsh
 # environment
@@ -155,11 +147,11 @@ TMPDIR = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/loancleris/Library/Application Support/Code/1.68.1-main.sock
+VSCODE_IPC_HOOK = /Users/loancleris/Library/Application Support/Code/1.69.0-main.sock
 # makefile (from `.docker/conf/.env.local', line 43)
 DB_PASSWORD = esgigaming
-# makefile (from `.docker/conf/.env.local', line 52)
-JWT_PASSPHRASE = insomniak
+# environment
+MallocNanoZone = 0
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -169,7 +161,7 @@ MFLAGS = -Rrqp
 # environment
 TERM_PROGRAM_VERSION = 3.4.15
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.31634515.31634521.272FB429-3F39-4C93-9F9C-655FE20A3A93
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.33655451.33655458.0145083E-6A8A-4C41-A4EC-E0B3D558BA78
 # environment
 LC_TERMINAL_VERSION = 3.4.15
 # environment
@@ -192,8 +184,6 @@ __CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
 COMMAND_MODE = unix2003
 # default
 MAKEFILES := 
-# makefile (from `.docker/conf/.env.local', line 60)
-MERCURE_PUBLIC_URL = http://mercure:80/.well-known/mercure
 # automatic
 <F = $(notdir $<)
 # environment
@@ -223,9 +213,11 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 30380
+VSCODE_PID = 43760
+# makefile (from `.docker/conf/.env.local', line 52)
+JWT_PASSPHRASE = insomniak
 # variable set hash-table stats:
-# Load=105/1024=10%, Rehash=0, Collisions=7/132=5%
+# Load=101/1024=10%, Rehash=0, Collisions=7/128=5%
 
 # Pattern-specific Variable Values
 
@@ -266,7 +258,7 @@ setup:
 # Not a target:
 .docker/conf/.env.local:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-04 19:28:49
+#  Last modified 2022-07-08 13:34:11
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -299,7 +291,6 @@ Makefile:
 start:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 16):
 	docker-compose --env-file="./Web.API/${envFile}" up -d
@@ -309,6 +300,7 @@ build:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+ 
 #  commands to execute (from `Makefile', line 5):
 	docker-compose --env-file="./Web.API/${envFile}" up -d --build
 	make setup
@@ -316,7 +308,6 @@ build:
 
 # Not a target:
 .DEFAULT:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -342,6 +333,6 @@ down:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4063 / max = 4063 / min = 4063 / avg = 4063
 
-# Finished Make data base on Wed Jul  6 14:24:03 2022
+# Finished Make data base on Mon Jul 11 20:42:37 2022
 
  

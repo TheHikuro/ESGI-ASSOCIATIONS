@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import moment from "moment";
 import React from "react";
+import { Avatar } from "./Avatar";
 import { useModalContext } from "./modal";
 
 interface CardProps {
@@ -61,12 +62,9 @@ export const Card = (props: CardProps) => {
                         {desc.substring(0, 100) ? desc.substring(0, 100) + '...' : desc}
                     </div>
                     <div className="flex items-center justify-between w-full mt-5">
-                        <a className="flex items-center no-underline hover:underline text-black" href="#">
-                            <img alt="Placeholder" className="block rounded-full" src="https://picsum.photos/32/32/?random" />
-                            <p className="ml-2 text-sm">
-                                {owner}
-                            </p>
-                        </a>
+                        <span className="flex items-center no-underline  text-black">
+                            <Avatar initial={owner} />
+                        </span>
                         <div className="p-2 shadow-md rounded-full bg-blue-400 hover:bg-blue-500 flex items-center hover:text-white hover:cursor-pointer">
                             <span className="mr-2">Rejoindre</span>
                             <ArrowRightIcon className="h-5 w-5" />

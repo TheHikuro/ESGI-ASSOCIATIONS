@@ -4,9 +4,10 @@ import { Layout } from "../components/Layout";
 import { getAllAssosActions } from "../utils/context/actions/assos";
 import { AssosDetails } from "../utils/context/reducers/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
+import { getUserNameById } from "../utils/helpers/assist";
 
 const AssosPage = () => {
-    const { dispatch, state: { assos: { assosList, needRefreshAssos } } } = useStoreContext();
+    const { dispatch, state: { assos: { assosList, needRefreshAssos }, admin: { userList } } } = useStoreContext();
     useEffect(() => {
         if (needRefreshAssos) {
             getAllAssosActions(dispatch);
@@ -25,7 +26,7 @@ const AssosPage = () => {
                                     desc={asso.description}
                                     key={asso.name}
                                     createdAt={asso.createdAt}
-                                    owner={asso.owner.id.toString()}
+                                    owner={getUserNameById(asso.owner.id, userList)}
                                 />
                             )
                         }

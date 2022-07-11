@@ -41,3 +41,13 @@ export const getPosts = async (assosId: number) => {
     const response = await instance.get(`/associations/${assosId}/posts`);
     return response.data;
 }
+
+export const getChildPosts = async (parentId: number) => {
+    const response = await instance.get(`/posts/${parentId}/child_posts`);
+    return response.data;
+}
+
+export const createChildPosts = async (data: any) => {
+    const response = await instance.post(`/posts`, data);
+    return response.data;
+}

@@ -1,8 +1,13 @@
+import moment from "moment";
 import React, { Fragment } from "react";
+import { postChildPostsAction } from "../utils/context/actions/posts";
+import { useStoreContext } from "../utils/context/StoreContext";
+import { getUserNameById } from "../utils/helpers/assist";
+import { Avatar } from "./Avatar";
 
-export const InputForPosts = ({ sender, content, action }: { sender: JSX.Element, content: string, action: Function }) => {
+export const InputForPosts = ({ sender, action }: { sender: JSX.Element, action: Function }) => {
 
-    const [value, setValue] = React.useState(content);
+    const [value, setValue] = React.useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue(event.target.value);
@@ -13,10 +18,10 @@ export const InputForPosts = ({ sender, content, action }: { sender: JSX.Element
         action(value);
     }
     return (
-        <div onSubmit={(e: any) => handleSubmit(e)} className='w-full h-44 bg-white rounded-md shadow-lg flex flex-col justify-between overflow-scroll p-3'>
+        <div onSubmit={(e: any) => handleSubmit(e)} className='w-full h-52 bg-white rounded-md shadow-lg flex flex-col justify-between overflow-scroll p-3'>
             <div>{sender}</div>
             <div>
-                <textarea value={value} onChange={(e: any) => handleChange(e)} className='w-full min-h-52 border-none focus:outline-0' placeholder="C'est le moment de ce faire des amis..." />
+                <textarea value={value} onChange={(e: any) => handleChange(e)} className='w-full min-h-52 border-none focus:outline-0' placeholder="C'est le moment de se faire des amis..." />
             </div>
             <div className="flex justify-end m-2">
                 <button onClick={(e: any) => handleSubmit(e)} className='rounded-lg p-2 bg-blue-400 text-white hover:bg-blue-500'>Envoyer</button>
@@ -61,27 +66,45 @@ export const FilterCheckbox = ({ options }: { options: any }) => {
 }
 
 interface PostsProps {
+    idPost: number;
     sender: JSX.Element;
     content: string;
-    createdAt: string;
-    childPosts?: JSX.Element[];
-    parentPost?: JSX.Element;
+    createdAt?: string;
+    childPosts?: any;
+    parentPost?: any
+    idAssos?: number;
 }
 
-export const ChildPosts = ({ children }: { children: JSX.Element }) => {
+export const ChildPosts = ({ comment }: { comment: any }) => {
+    const { state: { admin: { userList } } } = useStoreContext()
     return (
-        <div className='flex flex-col w-full bg-white shadow-lg'>
-            <div className="flex w-full justify-end">
-                <span className="p-2 rounded-md shadow-md mr-4 my-1">{children}</span>
+        <div className='flex flex-col w-full bg-white'>
+            <div className="flex w-full justify-end px-3 py-1">
+                <span className="p-2 rounded-md mr-4 shadow-lg bg-slate-100 my-1">{comment.content}</span>
+                <Avatar initial={getUserNameById(comment.owner.id, userList)} />
             </div>
         </div>
     )
 }
 
-export const Posts = ({ childPosts, content, sender, createdAt }: PostsProps) => {
+export const Posts = ({ childPosts, content, sender, createdAt, idPost, idAssos }: PostsProps) => {
+    const { dispatch, state: { user: { id } } } = useStoreContext()
+    const [value, setValue] = React.useState('');
+    const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>, data: string) => {
+        if (e.key === 'Enter') {
+            const formatedData = {
+                owner: `api/users/${id}`,
+                content: data,
+                association: `api/associations/${idAssos}`,
+                parentPost: `api/posts/${idPost}`,
+            }
+            postChildPostsAction(dispatch, formatedData)
+            setValue('');
+        }
+    }
     return (
         <Fragment>
-            <div className={`flex flex-col w-full p-2 bg-white mt-3 rounded-t-md shadow-lg h-72`}>
+            <div className={`flex flex-col w-full p-1 bg-white mt-3 rounded-t-md shadow-lg max-h-96`}>
                 <div className='flex flex-col w-full justify-evenly h-1/6 mb-2'>
                     <div className='flex flex-col'>
                         {sender}
@@ -90,22 +113,20 @@ export const Posts = ({ childPosts, content, sender, createdAt }: PostsProps) =>
                         {createdAt}
                     </div>
                 </div>
-                <div className='flex flex-col w-full h-5/6 border border-slate-200 rounded-lg p-1'>
+                <div className='flex flex-col w-full border border-slate-200 rounded-md p-1'>
                     {content}
                 </div>
             </div>
             <div className='flex flex-col w-full'>
-                {childPosts && childPosts.map((child: JSX.Element, index: number) => {
+                {childPosts.map((child: any, index: number) => {
                     return (
-                        <ChildPosts key={index}>
-                            {child}
-                        </ChildPosts>
+                        <ChildPosts key={index} comment={child} />
                     )
                 }
                 )}
             </div>
-            <div>
-                <input type="text" placeholder="Répondre" className="w-full focus:outline-0 p-2 rounded-b-md" />
+            <div className="w-full rounded-b-md bg-white flex justify-center p-1">
+                <input type="text" placeholder="Répondre..." value={value} className="border focus:outline-0 p-2 w-full rounded-md" onKeyPress={(e) => handlePressEnter(e, value)} onChange={(e) => setValue(e.target.value)} />
             </div>
         </Fragment>
     )
