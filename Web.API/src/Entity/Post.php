@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -61,6 +64,14 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ],
         "delete",
     ],
+),
+ApiFilter(
+    ExistsFilter::class,
+    properties: ["parentPost", "childPosts"]
+),
+ApiFilter(
+    OrderFilter::class,
+    properties: ['createdAt']
 )]
 class Post
 {
