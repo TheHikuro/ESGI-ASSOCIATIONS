@@ -173,7 +173,8 @@ class Post
 
     public function setParentPost(?self $parentPost): self
     {
-        $parentPost->addChildPost($this);
+        if($parentPost !== null)
+            $parentPost->addChildPost($this);
         $this->parentPost = $parentPost;
 
         return $this;
