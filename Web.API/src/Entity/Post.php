@@ -8,6 +8,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use App\Controller\Post\AddChildPost;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -58,6 +59,29 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                                 ],
                             ],
                         ],
+                    ],
+                ],
+            ],
+        ],
+        "addChildPost" => [
+            "method" => "post",
+            "path" => "posts/{id}/childPosts",
+            "controller" => AddChildPost::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "required" => true,
+                                "properties" => [
+                                    "association" => ["type" => "string"],
+                                    "owner" => ["type" => "string"],
+                                    "content" => ["type" => "string"]
+                                ],
+                            ]
+                        ]
                     ],
                 ],
             ],
