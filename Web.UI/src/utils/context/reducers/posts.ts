@@ -43,7 +43,7 @@ export const PostsReducer = (state = PostsIS, action: PostsActionTypes) => {
         case PostsTypes.GET_ALL_POSTS_FROM_ALL_ASSOS_SUCCESS:
             return {
                 ...state,
-                postsList: action.payload,
+                postsList: [...state.postsList, ...action.payload],
                 needRefreshPosts: false
             };
         case PostsTypes.DELETE_POSTS_REQUEST:
@@ -66,7 +66,7 @@ export const PostsReducer = (state = PostsIS, action: PostsActionTypes) => {
             return {
                 ...state,
                 postsList: [...state.postsList, action.payload],
-                needRefreshPosts: true
+                needRefreshPosts: false
             };
         default:
             return state;

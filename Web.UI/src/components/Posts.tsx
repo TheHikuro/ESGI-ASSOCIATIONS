@@ -6,8 +6,19 @@ import { postChildPostsAction } from "../utils/context/actions/posts";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { getNameById, getUserNameById } from "../utils/helpers/assist";
 import { Avatar } from "./Avatar";
+import { ButtonDropdown } from "./Button";
 
-export const InputForPosts = ({ sender, action }: { sender: JSX.Element, action: Function }) => {
+interface InputPostProps {
+    sender: JSX.Element
+    action: Function
+    assodId: number
+    userId: number
+    assos: any
+}
+
+export const InputForPosts = ({ sender, action, assodId, userId, assos }: InputPostProps) => {
+
+    const { dispatch } = useStoreContext()
 
     const [value, setValue] = React.useState('');
 
@@ -17,7 +28,13 @@ export const InputForPosts = ({ sender, action }: { sender: JSX.Element, action:
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        action(value);
+        const formatedValue = {
+            owner: `api/users/${userId}`,
+            content: value,
+            association: `api/associations/${assodId}`,
+        }
+        action(dispatch, formatedValue);
+        setValue('');
     }
     return (
         <div onSubmit={(e: any) => handleSubmit(e)} className='w-full h-64 bg-white rounded-md shadow-lg flex flex-col justify-between overflow-scroll p-3'>
@@ -26,7 +43,8 @@ export const InputForPosts = ({ sender, action }: { sender: JSX.Element, action:
                 <textarea value={value} onChange={(e: any) => handleChange(e)} className='w-full mt-2 min-h-52 border-none focus:outline-0' placeholder="C'est le moment de se faire des amis..." />
             </div>
             <div className="flex justify-end m-2">
-                <button onClick={(e: any) => handleSubmit(e)} className='rounded-lg p-2 bg-blue-400 text-white hover:bg-blue-500'>Envoyer</button>
+                {/* <button onClick={(e: any) => handleSubmit(e)} className='rounded-lg p-2 bg-blue-400 text-white hover:bg-blue-500'>Envoyer</button> */}
+                <ButtonDropdown assos={assos} action={() => { }} />
             </div>
         </div>
     )
@@ -78,7 +96,8 @@ export const ChildPosts = ({ comment }: { comment: any }) => {
                 <Avatar initial={getUserNameById(comment.owner.id, userList)} displayName={false} />
                 <div className="p-2 rounded-md ml-2 shadow-lg bg-slate-100 my-1 flex flex-col">
                     <span className="text-sm text-slate-900 font-bold">{getUserNameById(comment.owner.id, userList)}</span>
-                    {comment.content}
+                    <span className="text-sm text-slate-800">{moment(comment.createdAt).format('llll')}</span>
+                    <span className="">{comment.content}</span>
                 </div>
             </div>
         </div>
@@ -99,9 +118,8 @@ export const Posts = ({ childPosts, content, sender, createdAt, idPost, idAssos 
                 owner: `api/users/${id}`,
                 content: data,
                 association: `api/associations/${idAssos}`,
-                parentPost: `api/posts/${idPost}`,
             }
-            postChildPostsAction(dispatch, formatedData)
+            postChildPostsAction(dispatch, formatedData, idPost)
             setValue('');
         }
     }

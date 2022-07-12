@@ -1,4 +1,4 @@
-import { createChildPosts, getAllPostsFromAllAssos, getChildPosts, getPosts } from "../../../api/assos.axios";
+import { createChildPosts, createPosts, getAllPostsFromAllAssos, getChildPosts, getPosts } from "../../../api/assos.axios";
 import { PostsTypes } from "../reducers/posts";
 
 export interface PostsActionTypes {
@@ -28,11 +28,11 @@ export const getChildPostsAction = async (dispatch: Function, parentId: number) 
     });
 }
 
-export const postChildPostsAction = async (dispatch: Function, data: any) => {
+export const postChildPostsAction = async (dispatch: Function, data: any, idParent: number) => {
     dispatch({
         type: PostsTypes.CREATE_POSTS_REQUEST,
     });
-    const response = await createChildPosts(data);
+    const response = await createChildPosts(data, idParent);
     dispatch({
         type: PostsTypes.CREATE_POSTS_SUCCESS,
         payload: response,
@@ -47,6 +47,17 @@ export const getAllPostsFromAllAssosAction = async (dispatch: Function, userId: 
 
     dispatch({
         type: PostsTypes.GET_ALL_POSTS_FROM_ALL_ASSOS_SUCCESS,
+        payload: response,
+    });
+}
+
+export const createPostsAction = async (dispatch: Function, data: any) => {
+    dispatch({
+        type: PostsTypes.CREATE_POSTS_REQUEST,
+    });
+    const response = await createPosts(data);
+    dispatch({
+        type: PostsTypes.CREATE_POSTS_SUCCESS,
         payload: response,
     });
 }

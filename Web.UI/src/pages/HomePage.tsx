@@ -5,7 +5,7 @@ import { Avatar } from "../components/Avatar";
 import { Layout } from "../components/Layout";
 import { FilterWithChip, InputForPosts, Posts } from "../components/Posts";
 import { getUsersActions } from "../utils/context/actions/admin";
-import { getAllPostsFromAllAssosAction, getChildPostsAction, getPostsAction } from "../utils/context/actions/posts";
+import { createPostsAction, getAllPostsFromAllAssosAction, getChildPostsAction } from "../utils/context/actions/posts";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { getUserNameById } from "../utils/helpers/assist";
 
@@ -20,23 +20,22 @@ const HomePage = () => {
 
     const [pageNumber, setPageNumber] = React.useState(1);
     const [prevPageNumber, setPrevPageNumber] = React.useState(pageNumber);
+    //const [selectedAssos, setSelectedAssos] = React.useState<number[]>([]);
 
     React.useEffect(() => {
         if (needRefreshPosts && id !== 0 || pageNumber !== prevPageNumber) {
             getAllPostsFromAllAssosAction(dispatch, id, pageNumber);
-            setStorePosts(storePosts => [...storePosts, ...postsList]);
+            //setStorePosts(storePosts => [...storePosts, ...postsList]);
         }
     }, [needRefreshPosts, id, pageNumber])
 
-    const [storePosts, setStorePosts] = React.useState(postsList);
+    // React.useEffect(() => {
+    //     if (needRefreshPosts) {
+    //         getChildPostsAction(dispatch, id);
+    //     }
+    // }, [needRefreshPosts])
 
-    React.useEffect(() => {
-        if (needRefreshPosts) {
-            postsList.map(post => {
-                getChildPostsAction(dispatch, post.id)
-            })
-        }
-    }, [needRefreshPosts])
+    //const [storePosts, setStorePosts] = React.useState(postsList);
 
     React.useEffect(() => {
         if (needRefreshAdmin) { getUsersActions(dispatch) }
@@ -47,38 +46,39 @@ const HomePage = () => {
         setPrevPageNumber(pageNumber)
     }
 
+    // map associations 
+    const assos = associations.map(association => {
+        return {
+            id: association.id,
+            name: association.name,
+        }
+    })
+
     return (
         <div className="w-full h-full flex">
             <Layout large>
                 <InputForPosts
                     sender={<Avatar initial={firstname + ' ' + lastname} displayName />}
-                    action={console.log}
+                    action={createPostsAction}
+                    assodId={1}
+                    userId={id}
+                    assos={assos}
                 />
                 <FilterWithChip options={associations} />
                 <div className=" mt-5 overflow-scroll h-5/6" onScroll={(e) => handleScroll(e)}>
-                    {isLoading ? (
-                        <Skeleton
-                            variant="rectangular"
-                            width={'100%'}
-                            height={'100%'}
-                            style={{ borderRadius: '8px' }}
-                        />
-                    ) : (
-                        storePosts.map((post, index) => {
-                            if (post.parentPost === null) {
-                                return (
-                                    <Posts
-                                        key={index}
-                                        content={post.content}
-                                        sender={<Avatar initial={getUserNameById(post.owner.id, userList)} subInfo={moment(post.createdAt).format('DD/MM/YYYY')} displayName />}
-                                        childPosts={post.childPosts}
-                                        idPost={post.id}
-                                        idAssos={post.association.id}
-                                    />
-                                )
-                            }
+                    {
+                        postsList.map((post: any) => {
+                            return (
+                                <Posts
+                                    content={post.content}
+                                    sender={<Avatar initial={getUserNameById(post.owner.id, userList)} subInfo={moment(post.createdAt).format('llll')} displayName />}
+                                    childPosts={post.childPosts}
+                                    idPost={post.id}
+                                    idAssos={post.association.id}
+                                />
+                            )
                         })
-                    )}
+                    }
                 </div>
             </Layout>
         </div>
@@ -86,3 +86,9 @@ const HomePage = () => {
 }
 
 export default HomePage
+
+// storePosts.sort((a, b) => {
+//     return moment(b.createdAt).unix() - moment(a.createdAt).unix()
+// }).map(post => (
+//    .filter(post => !storePosts.some(p => p.id === post.id))
+// ))

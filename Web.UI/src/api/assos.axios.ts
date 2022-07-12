@@ -47,13 +47,17 @@ export const getChildPosts = async (parentId: number) => {
     return response.data;
 }
 
-export const createChildPosts = async (data: any) => {
-    const response = await instance.post(`/posts`, data);
+export const createChildPosts = async (data: any, idParent: number) => {
+    const response = await instance.post(`/posts/${idParent}/childPosts`, data);
     return response.data;
 }
 
 export const getAllPostsFromAllAssos = async (userId: number, pageNumber: number) => {
-    // get 10 items per page
-    const response = await instance.get(`/posts?user_id=${userId}&itemsPerPage=2&page=${pageNumber}`);
+    const response = await instance.get(`/posts?itemsPerPage=3&page=${pageNumber}&order[createdAt]=DESC&exists[parentPost]=false`);
+    return response.data;
+}
+
+export const createPosts = async (data: any) => {
+    const response = await instance.post(`/posts`, data);
     return response.data;
 }
