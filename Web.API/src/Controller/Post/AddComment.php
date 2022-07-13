@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
-class AddChildPost extends AbstractController
+class AddComment extends AbstractController
 {
     private $pr;
 
