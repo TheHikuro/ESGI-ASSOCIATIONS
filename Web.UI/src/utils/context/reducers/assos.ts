@@ -15,7 +15,7 @@ export interface PostsAssosState {
     owner: OwnerAssosState,
     id: number,
     association: { id: number }
-    childPosts: Array<{}>
+    comments: Array<{}>
     content: string
     parentPost: string
     createdAt: string

@@ -26,12 +26,11 @@ export const InputForPosts = ({ sender, action, assodId, userId, assos }: InputP
         setValue(event.target.value);
     }
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = (idAssos: number) => {
         const formatedValue = {
             owner: `api/users/${userId}`,
             content: value,
-            association: `api/associations/${assodId}`,
+            association: `api/associations/${idAssos}`,
         }
         action(dispatch, formatedValue);
         setValue('');
@@ -43,8 +42,7 @@ export const InputForPosts = ({ sender, action, assodId, userId, assos }: InputP
                 <textarea value={value} onChange={(e: any) => handleChange(e)} className='w-full mt-2 min-h-52 border-none focus:outline-0' placeholder="C'est le moment de se faire des amis..." />
             </div>
             <div className="flex justify-end m-2">
-                {/* <button onClick={(e: any) => handleSubmit(e)} className='rounded-lg p-2 bg-blue-400 text-white hover:bg-blue-500'>Envoyer</button> */}
-                <ButtonDropdown assos={assos} action={() => { }} />
+                <ButtonDropdown assos={assos} action={handleSubmit} />
             </div>
         </div>
     )

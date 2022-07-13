@@ -6,6 +6,7 @@ import { Layout } from "../components/Layout";
 import { FilterWithChip, InputForPosts, Posts } from "../components/Posts";
 import { getUsersActions } from "../utils/context/actions/admin";
 import { createPostsAction, getAllPostsFromAllAssosAction, getChildPostsAction } from "../utils/context/actions/posts";
+import { PostsAssosState } from "../utils/context/reducers/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { getUserNameById } from "../utils/helpers/assist";
 
@@ -28,14 +29,6 @@ const HomePage = () => {
             //setStorePosts(storePosts => [...storePosts, ...postsList]);
         }
     }, [needRefreshPosts, id, pageNumber])
-
-    // React.useEffect(() => {
-    //     if (needRefreshPosts) {
-    //         getChildPostsAction(dispatch, id);
-    //     }
-    // }, [needRefreshPosts])
-
-    //const [storePosts, setStorePosts] = React.useState(postsList);
 
     React.useEffect(() => {
         if (needRefreshAdmin) { getUsersActions(dispatch) }
@@ -67,12 +60,12 @@ const HomePage = () => {
                 <FilterWithChip options={associations} />
                 <div className=" mt-5 overflow-scroll h-5/6" onScroll={(e) => handleScroll(e)}>
                     {
-                        postsList.map((post: any) => {
+                        postsList.map((post: PostsAssosState) => {
                             return (
                                 <Posts
                                     content={post.content}
                                     sender={<Avatar initial={getUserNameById(post.owner.id, userList)} subInfo={moment(post.createdAt).format('llll')} displayName />}
-                                    childPosts={post.childPosts}
+                                    childPosts={post.comments}
                                     idPost={post.id}
                                     idAssos={post.association.id}
                                 />

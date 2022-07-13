@@ -53,7 +53,7 @@ export const createChildPosts = async (data: any, idParent: number) => {
 }
 
 export const getAllPostsFromAllAssos = async (userId: number, pageNumber: number) => {
-    const response = await instance.get(`/posts?itemsPerPage=3&page=${pageNumber}&order[createdAt]=DESC&exists[parentPost]=false`);
+    const response = await instance.get(`/posts?itemsPerPage=3&page=${pageNumber}&order[createdAt]=DESC`);
     return response.data;
 }
 
