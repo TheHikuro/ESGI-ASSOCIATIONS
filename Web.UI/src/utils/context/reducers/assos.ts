@@ -11,11 +11,19 @@ export interface MemberAssosState {
     lastname: string,
 }
 
+export interface CommentsAssosState {
+    id: number,
+    content: string,
+    createdAt: string,
+    owner: OwnerAssosState,
+    post: PostsAssosState
+}
+
 export interface PostsAssosState {
     owner: OwnerAssosState,
     id: number,
     association: { id: number }
-    comments: Array<{}>
+    comments: Array<{ id: number }>,
     content: string
     parentPost: string
     createdAt: string

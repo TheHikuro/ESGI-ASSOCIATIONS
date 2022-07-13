@@ -5,7 +5,7 @@ import { Avatar } from "../components/Avatar";
 import { Layout } from "../components/Layout";
 import { FilterWithChip, InputForPosts, Posts } from "../components/Posts";
 import { getUsersActions } from "../utils/context/actions/admin";
-import { createPostsAction, getAllPostsFromAllAssosAction, getChildPostsAction } from "../utils/context/actions/posts";
+import { createPostsAction, getAllPostsFromAllAssosAction, getCommentsAction } from "../utils/context/actions/posts";
 import { PostsAssosState } from "../utils/context/reducers/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { getUserNameById } from "../utils/helpers/assist";
@@ -16,6 +16,7 @@ const HomePage = () => {
         user: { associations, firstname, lastname, id },
         posts: { postsList, needRefreshPosts },
         admin: { userList, needRefreshAdmin },
+        comments: { commentList, needRefreshComment },
         loader: { isLoading },
     } } = useStoreContext();
 
@@ -24,11 +25,17 @@ const HomePage = () => {
     //const [selectedAssos, setSelectedAssos] = React.useState<number[]>([]);
 
     React.useEffect(() => {
-        if (needRefreshPosts && id !== 0 || pageNumber !== prevPageNumber) {
-            getAllPostsFromAllAssosAction(dispatch, id, pageNumber);
+        if (userList.length === 0 || pageNumber !== prevPageNumber) {
+            getAllPostsFromAllAssosAction(dispatch, pageNumber);
             //setStorePosts(storePosts => [...storePosts, ...postsList]);
         }
-    }, [needRefreshPosts, id, pageNumber])
+    }, [needRefreshPosts, pageNumber])
+
+    React.useEffect(() => {
+        if (needRefreshComment) {
+            getCommentsAction(dispatch)
+        }
+    }, [needRefreshComment])
 
     React.useEffect(() => {
         if (needRefreshAdmin) { getUsersActions(dispatch) }
@@ -39,13 +46,24 @@ const HomePage = () => {
         setPrevPageNumber(pageNumber)
     }
 
-    // map associations 
     const assos = associations.map(association => {
         return {
             id: association.id,
             name: association.name,
         }
     })
+
+    const commentsfromapi = commentList.map((comment) => {
+        return {
+            id: comment.id,
+            content: comment.content,
+            owner: comment.owner,
+            createdAt: comment.createdAt,
+            post: comment.post
+        }
+    })
+
+    console.table(postsList);
 
     return (
         <div className="w-full h-full flex">
@@ -58,14 +76,14 @@ const HomePage = () => {
                     assos={assos}
                 />
                 <FilterWithChip options={associations} />
-                <div className=" mt-5 overflow-scroll h-5/6" onScroll={(e) => handleScroll(e)}>
+                <div className="mt-5 overflow-scroll h-5/6" onScroll={(e) => handleScroll(e)}>
                     {
                         postsList.map((post: PostsAssosState) => {
                             return (
                                 <Posts
                                     content={post.content}
                                     sender={<Avatar initial={getUserNameById(post.owner.id, userList)} subInfo={moment(post.createdAt).format('llll')} displayName />}
-                                    childPosts={post.comments}
+                                    comments={commentsfromapi}
                                     idPost={post.id}
                                     idAssos={post.association.id}
                                 />
@@ -79,9 +97,3 @@ const HomePage = () => {
 }
 
 export default HomePage
-
-// storePosts.sort((a, b) => {
-//     return moment(b.createdAt).unix() - moment(a.createdAt).unix()
-// }).map(post => (
-//    .filter(post => !storePosts.some(p => p.id === post.id))
-// ))

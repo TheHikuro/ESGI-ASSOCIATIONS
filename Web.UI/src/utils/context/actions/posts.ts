@@ -1,4 +1,5 @@
-import { createChildPosts, createPosts, getAllPostsFromAllAssos, getChildPosts, getPosts } from "../../../api/assos.axios";
+import { createChildPosts, createPosts, getAllPostsFromAllAssos, getCommentsPosts, getPosts } from "../../../api/assos.axios";
+import { CommentTypes } from "../reducers/coments";
 import { PostsTypes } from "../reducers/posts";
 
 export interface PostsActionTypes {
@@ -17,33 +18,34 @@ export const getPostsAction = async (dispatch: Function, assosId: number) => {
     });
 }
 
-export const getChildPostsAction = async (dispatch: Function, parentId: number) => {
+export const getCommentsAction = async (dispatch: Function) => {
     dispatch({
-        type: PostsTypes.GET_CHILD_POSTS_REQUEST,
+        type: CommentTypes.GET_COMMENT_REQUEST
     });
-    const response = await getChildPosts(parentId);
+
+    const response = await getCommentsPosts();
     dispatch({
-        type: PostsTypes.GET_CHILD_POSTS_SUCCESS,
+        type: CommentTypes.GET_COMMENT_SUCCESS,
         payload: response,
     });
 }
 
-export const postChildPostsAction = async (dispatch: Function, data: any, idParent: number) => {
+export const postChildPostsAction = async (dispatch: Function, data: any) => {
     dispatch({
         type: PostsTypes.CREATE_POSTS_REQUEST,
     });
-    const response = await createChildPosts(data, idParent);
+    const response = await createChildPosts(data);
     dispatch({
         type: PostsTypes.CREATE_POSTS_SUCCESS,
         payload: response,
     });
 }
 
-export const getAllPostsFromAllAssosAction = async (dispatch: Function, userId: number, pageNumber: number) => {
+export const getAllPostsFromAllAssosAction = async (dispatch: Function, pageNumber: number) => {
     dispatch({
         type: PostsTypes.GET_ALL_POSTS_FROM_ALL_ASSOS_REQUEST,
     });
-    const response = await getAllPostsFromAllAssos(userId, pageNumber);
+    const response = await getAllPostsFromAllAssos(pageNumber);
 
     dispatch({
         type: PostsTypes.GET_ALL_POSTS_FROM_ALL_ASSOS_SUCCESS,

@@ -42,17 +42,17 @@ export const getPosts = async (assosId: number) => {
     return response.data;
 }
 
-export const getChildPosts = async (parentId: number) => {
-    const response = await instance.get(`/posts/${parentId}/child_posts`);
+export const getCommentsPosts = async () => {
+    const response = await instance.get(`/comments`);
     return response.data;
 }
 
-export const createChildPosts = async (data: any, idParent: number) => {
-    const response = await instance.post(`/posts/${idParent}/childPosts`, data);
+export const createChildPosts = async (data: any) => {
+    const response = await instance.post(`/comments`, data);
     return response.data;
 }
 
-export const getAllPostsFromAllAssos = async (userId: number, pageNumber: number) => {
+export const getAllPostsFromAllAssos = async (pageNumber: number) => {
     const response = await instance.get(`/posts?itemsPerPage=3&page=${pageNumber}&order[createdAt]=DESC`);
     return response.data;
 }

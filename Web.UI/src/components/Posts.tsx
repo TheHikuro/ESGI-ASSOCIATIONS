@@ -81,7 +81,7 @@ interface PostsProps {
     sender: JSX.Element;
     content: string;
     createdAt?: string;
-    childPosts?: any;
+    comments?: any;
     parentPost?: any
     idAssos?: number;
 }
@@ -102,7 +102,7 @@ export const ChildPosts = ({ comment }: { comment: any }) => {
     )
 }
 
-export const Posts = ({ childPosts, content, sender, createdAt, idPost, idAssos }: PostsProps) => {
+export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }: PostsProps) => {
     const { dispatch, state: { user: { id }, assos: { assosList, needRefreshAssos } } } = useStoreContext()
 
     React.useEffect(() => {
@@ -115,9 +115,9 @@ export const Posts = ({ childPosts, content, sender, createdAt, idPost, idAssos 
             const formatedData = {
                 owner: `api/users/${id}`,
                 content: data,
-                association: `api/associations/${idAssos}`,
+                post: `api/posts/${idPost}`,
             }
-            postChildPostsAction(dispatch, formatedData, idPost)
+            postChildPostsAction(dispatch, formatedData)
             setValue('');
         }
     }
@@ -138,12 +138,15 @@ export const Posts = ({ childPosts, content, sender, createdAt, idPost, idAssos 
                 </div>
             </div>
             <div className='flex flex-col w-full'>
-                {childPosts.map((child: any, index: number) => {
-                    return (
-                        <ChildPosts key={index} comment={child} />
-                    )
-                }
-                )}
+                {comments.map((comment: any, index: number) => {
+                    console.log(comment.post.id);
+
+                    if (comment.post.id === idPost) {
+                        return (
+                            <ChildPosts key={index} comment={comment} />
+                        )
+                    }
+                })}
             </div>
             <div className="w-full rounded-b-md bg-white flex justify-center p-1">
                 <input type="text" placeholder="Répondre..." value={value} className="border focus:outline-0 p-2 w-full rounded-md" onKeyPress={(e) => handlePressEnter(e, value)} onChange={(e) => setValue(e.target.value)} />
