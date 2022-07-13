@@ -23,7 +23,7 @@ class BanController extends AbstractController
         $payload = json_decode($request->getContent(), false);
 
         if(!($user instanceof User))
-            throw new \RuntimeException('Expected association.');
+            throw new \RuntimeException('Expected user.');
         if($user->getIsBanned())
             throw new \RuntimeException('User is already banned.');
 

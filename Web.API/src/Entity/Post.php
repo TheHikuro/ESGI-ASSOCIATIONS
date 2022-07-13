@@ -6,9 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
-use App\Controller\Post\AddChildPost;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -35,7 +33,6 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                                     "association" => ["type" => "string"],
                                     "owner" => ["type" => "string"],
                                     "content" => ["type" => "string"],
-                                    "parentPost" => ["type" => "string"],
                                 ],
                             ],
                         ],
@@ -63,39 +60,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                 ],
             ],
         ],
-        "addChildPost" => [
-            "method" => "post",
-            "path" => "posts/{id}/childPosts",
-            "controller" => AddChildPost::class,
-            "deserialize" => false,
-            "openapi_context" => [
-                "requestBody" => [
-                    "content" => [
-                        "application/ld+json" => [
-                            "schema" => [
-                                "type" => "object",
-                                "required" => true,
-                                "properties" => [
-                                    "association" => ["type" => "string"],
-                                    "owner" => ["type" => "string"],
-                                    "content" => ["type" => "string"]
-                                ],
-                            ]
-                        ]
-                    ],
-                ],
-            ],
-        ],
         "delete",
     ],
 ),
 ApiFilter(
-    ExistsFilter::class,
-    properties: ["parentPost", "childPosts"]
-),
-ApiFilter(
     OrderFilter::class,
-    properties: ['createdAt']
+    properties: ['createdAt', 'updatedAt']
 )]
 class Post
 {
@@ -127,32 +97,28 @@ class Post
     private $owner;
 
     #[ORM\Column(type: 'string', length: 2048)]
+    #[ApiSubresource(maxDepth: 1)]
     #[Groups(["collection:get:post", "item:get:post", "collection:post:post", "item:put:post"])]
     #[SerializedName("content")]
     private $content;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'childPosts')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get:post", "item:get:post", "collection:post:post"])]
-    #[SerializedName("parentPost")]
-    private $parentPost;
-
-    #[ORM\OneToMany(mappedBy: 'parentPost', targetEntity: self::class)]
-    #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get:post", "item:get:post"])]
-    #[SerializedName("childPosts")]
-    private $childPosts;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     #[Groups(["collection:get:post", "item:get:post"])]
     #[SerializedName("updatedAt")]
     private $updatedAt;
 
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ApiSubresource(maxDepth: 1)]
+    #[Groups(["collection:get:post", "item:get:post"])]
+    #[SerializedName("comments")]
+    private $comments;
+
     public function __construct()
     {
         $this->createdAt = new \DatetimeImmutable('now');
         $this->childPosts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -256,6 +222,36 @@ class Post
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getPost() === $this) {
+                $comment->setPost(null);
+            }
+        }
 
         return $this;
     }
