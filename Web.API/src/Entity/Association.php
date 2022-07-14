@@ -10,6 +10,7 @@ use App\Controller\Association\DeleteAvatarController;
 use App\Controller\Association\PostAvatarController;
 use App\Controller\Association\RemoveMemberController;
 use App\Controller\Association\AddAssociationController;
+use App\Controller\Association\ExtractPresencesController;
 use App\Repository\AssociationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,6 +45,30 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                                     "owner" => ["type" => "string"],
                                     "name" => ["type" => "string"],
                                     "description" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        "extractPrecences" => [
+            "method" => "post",
+            "path" => "associations/extract_presences",
+            "controller" => ExtractPresencesController::class,
+            "deserialize" => false,
+            "defaults" => [
+                "_api_receive" => false
+            ],
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "required" => true,
+                                "properties" => [
+                                    "format" => ["type" => "string", "enum" => ["pdf", "csv", "json"]],
                                 ],
                             ],
                         ],
@@ -92,7 +117,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             "method" => "put",
             "path" => "associations/{id}/remove_member/{idMember}",
             "controller" => RemoveMemberController::class,
-            "deserialize" => false,
+            "defaults" => [
+                "_api_receive" => false
+            ],
+            // "deserialize" => false,
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
