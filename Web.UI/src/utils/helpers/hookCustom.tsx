@@ -26,5 +26,3 @@ export const MercureSubscriber = ({ json, update, hub, topics, children }: Mercu
     return <Fragment>{children}</Fragment>
 }
 
-export default MercureSubscriber;
-

@@ -252,12 +252,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
+    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user", "collection:get:post", "item:get:post", "collection:get:comment", "item:get:comment"])]
     #[SerializedName('firstname')]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
+    #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user", "collection:get:post", "item:get:post", "collection:get:comment", "item:get:comment"])]
     #[SerializedName('lastname')]
     private $lastname;
 

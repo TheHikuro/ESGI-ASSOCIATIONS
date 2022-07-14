@@ -1,20 +1,17 @@
 import { Skeleton } from "@mui/material";
 import moment from "moment";
 import React from "react";
-import { createPosts } from "../api/assos.axios";
+import { createPosts, getAllPostsFromAllAssos } from "../api/assos.axios";
 import { Avatar } from "../components/Avatar";
 import { Layout } from "../components/Layout";
 import { FilterWithChip, InputForPosts, Posts } from "../components/Posts";
-import { getUsersActions } from "../utils/context/actions/admin";
 import { useStoreContext } from "../utils/context/StoreContext";
-import { getUserNameById } from "../utils/helpers/assist";
-import MercureSubscriber from "../utils/helpers/hookCustom";
+import { MercureSubscriber } from "../utils/helpers/hookCustom";
 
 const HomePage = () => {
 
-    const { dispatch, state: {
+    const { state: {
         user: { associations, firstname, lastname, id },
-        admin: { userList, needRefreshAdmin },
         loader: { isLoading },
     } } = useStoreContext();
 
@@ -23,19 +20,25 @@ const HomePage = () => {
     const [posts, setPosts] = React.useState({
         id: 0,
         content: "",
-        owner: "",
-        association: { id: 0 },
+        owner: { id: 0, firstname: "", lastname: "" },
+        association: { id: 0, name: '' },
         createdAt: "",
         updatedAt: "",
         comments: [],
-    });
+    })
 
     const [displayData, setDisplayData] = React.useState<any[]>([]);
-    //const [selectedAssos, setSelectedAssos] = React.useState<number[]>([]);
-
     React.useEffect(() => {
-        if (needRefreshAdmin) { getUsersActions(dispatch) }
-    }, [needRefreshAdmin])
+        if (displayData.length === 0 || prevPageNumber !== pageNumber) {
+            getAllPostsFromAllAssos(pageNumber).then(res => {
+                setDisplayData(res);
+            }
+            ).catch(err => {
+                console.log(err);
+            }
+            );
+        }
+    }, [pageNumber]);
 
     const handleScroll = (event: any) => {
         event.target.scrollTop > event.target.scrollHeight - event.target.clientHeight && setPageNumber(pageNumber + 1)
@@ -50,18 +53,16 @@ const HomePage = () => {
     })
 
     React.useEffect(() => {
-        if (posts.owner !== '') setDisplayData([...displayData, {
+        if (posts.owner.firstname !== '') setDisplayData([...displayData, {
             id: posts.id,
             content: posts.content,
             owner: posts.owner,
             association: posts.association,
             createdAt: posts.createdAt,
             updatedAt: posts.updatedAt,
-            comments: posts.comments
+            comments: posts.comments,
         }])
     }, [posts])
-
-    console.log('displayData', displayData);
 
     return (
         <div className="w-full h-full flex">
@@ -69,7 +70,6 @@ const HomePage = () => {
                 <InputForPosts
                     sender={<Avatar initial={firstname + ' ' + lastname} displayName />}
                     action={createPosts}
-                    assodId={1}
                     userId={id}
                     assos={assos}
                 />
@@ -82,19 +82,20 @@ const HomePage = () => {
                             hub={'http://localhost:8000/.well-known/mercure'}
                             json
                         >
-                            <div>
-                                {displayData.map(post => {
-                                    return (
-                                        <Posts
-                                            key={post.id}
-                                            idPost={post.id}
-                                            content={post.content}
-                                            sender={<Avatar initial={getUserNameById(post.owner.id, userList)} subInfo={moment(post.createdAt).format('llll')} displayName />}
-                                            idAssos={post.association.id}
-                                        />
-                                    )
-                                })}
-                            </div>
+                            {displayData.sort((a, b) => {
+                                return moment(b.createdAt).unix() - moment(a.createdAt).unix()
+                            }).map(post => {
+                                return (
+                                    <Posts
+                                        key={post.id}
+                                        idPost={post.id}
+                                        content={post.content}
+                                        sender={<Avatar initial={post.owner.firstname + ' ' + post.owner.lastname} subInfo={moment(post.createdAt).format('llll')} displayName />}
+                                        assosName={post.association.name}
+                                        com={post.comments}
+                                    />
+                                )
+                            })}
                         </MercureSubscriber>
                     }
                 </div>
@@ -104,15 +105,3 @@ const HomePage = () => {
 }
 
 export default HomePage
-
-// postsList.map((post: PostsAssosState) => {
-                        //     return (
-                        //         <Posts
-                        //             content={post.content}
-                        //             sender={<Avatar initial={getUserNameById(post.owner.id, userList)} subInfo={moment(post.createdAt).format('llll')} displayName />}
-                        //             comments={commentsfromapi}
-                        //             idPost={post.id}
-                        //             idAssos={post.association.id}
-                        //         />
-                        //     )
-                        // })

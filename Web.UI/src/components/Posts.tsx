@@ -1,22 +1,23 @@
 import { Chip } from "@mui/material";
 import moment from "moment";
 import React, { Fragment } from "react";
+import { createChildPosts, getCommentsFromPost } from "../api/assos.axios";
 import { getAllAssosActions } from "../utils/context/actions/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { getNameById, getUserNameById } from "../utils/helpers/assist";
-import MercureSubscriber from "../utils/helpers/hookCustom";
+import { MercureSubscriber } from "../utils/helpers/hookCustom";
 import { Avatar } from "./Avatar";
 import { ButtonDropdown } from "./Button";
 
 interface InputPostProps {
     sender: JSX.Element
     action: Function
-    assodId: number
+    assodId?: number
     userId: number
     assos: any
 }
 
-export const InputForPosts = ({ sender, action, assodId, userId, assos }: InputPostProps) => {
+export const InputForPosts = ({ sender, action, userId, assos }: InputPostProps) => {
 
     const [value, setValue] = React.useState('');
 
@@ -79,19 +80,19 @@ interface PostsProps {
     sender: JSX.Element;
     content: string;
     createdAt?: string;
-    comments?: any;
+    com?: any;
     parentPost?: any
     idAssos?: number;
+    assosName?: string;
 }
 
 export const ChildPosts = ({ comment }: { comment: any }) => {
-    const { state: { admin: { userList } } } = useStoreContext()
     return (
         <div className='flex flex-col w-full bg-white'>
             <div className="flex w-full justify-start px-3 py-1">
-                <Avatar initial={getUserNameById(comment.owner.id, userList)} displayName={false} />
+                <Avatar initial={comment.owner.firstname + ' ' + comment.owner.lastname} displayName={false} />
                 <div className="p-2 rounded-md ml-2 shadow-lg bg-slate-100 my-1 flex flex-col">
-                    <span className="text-sm text-slate-900 font-bold">{getUserNameById(comment.owner.id, userList)}</span>
+                    <span className="text-sm text-slate-900 font-bold">{comment.owner.firstname + ' ' + comment.owner.lastname}</span>
                     <span className="text-sm text-slate-800">{moment(comment.createdAt).format('llll')}</span>
                     <span className="">{comment.content}</span>
                 </div>
@@ -100,21 +101,8 @@ export const ChildPosts = ({ comment }: { comment: any }) => {
     )
 }
 
-export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }: PostsProps) => {
-    const { dispatch, state: { user: { id }, assos: { assosList, needRefreshAssos } } } = useStoreContext()
-
-    const [allComments, setAllComments] = React.useState({
-        id: 0,
-        content: "",
-        owner: "",
-        post: { id: 0 },
-        createdAt: "",
-        updatedAt: "",
-    });
-
-    React.useEffect(() => {
-        if (needRefreshAssos) { getAllAssosActions(dispatch) }
-    }, [needRefreshAssos])
+export const Posts = ({ content, sender, createdAt, idPost, assosName, com }: PostsProps) => {
+    const { state: { user: { id } } } = useStoreContext()
 
     const [value, setValue] = React.useState('');
     const handlePressEnter = (e: React.KeyboardEvent<HTMLInputElement>, data: string) => {
@@ -124,17 +112,55 @@ export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }:
                 content: data,
                 post: `api/posts/${idPost}`,
             }
-            //postChildPostsAction(dispatch, formatedData)
+            createChildPosts(formatedData);
             setValue('');
         }
     }
+
+    const [comments, setComments] = React.useState<any>([]);
+    const [onComment, setOnComment] = React.useState({
+        id: 0,
+        content: '',
+        createdAt: '',
+        owner: { id: 0, firstname: '', lastname: '' },
+        post: { id: 0 },
+    });
+
+    React.useEffect(() => {
+        if (com) {
+            com.map((comment: any) => {
+                getCommentsFromPost(comment.id).then((res: any) => {
+                    setComments([...comments, {
+                        id: res.id,
+                        content: res.content,
+                        createdAt: res.createdAt,
+                        owner: res.owner,
+                        post: res.post,
+                    }])
+                })
+            })
+        }
+    }, [com, com.length])
+
+    React.useEffect(() => {
+        if (onComment.owner.firstname !== '') {
+            setComments([...comments, {
+                id: onComment.id,
+                content: onComment.content,
+                createdAt: onComment.createdAt,
+                owner: onComment.owner,
+                post: onComment.post,
+            }])
+        }
+    }, [onComment])
+
     return (
         <Fragment>
             <div className={`flex flex-col w-full p-1 bg-white mt-3 rounded-t-md shadow-lg max-h-96`}>
                 <div className='flex flex-col w-full justify-evenly h-1/6 mb-2'>
                     <div className='flex flex-row justify-between'>
                         {sender}
-                        <Chip label={getNameById(idAssos!, assosList)} size="small" color="primary" variant="outlined" className="w-fit" />
+                        <Chip label={assosName} size="small" color="primary" variant="outlined" className="w-fit" />
                     </div>
                     <div className='flex flex-col text-sm'>
                         {createdAt}
@@ -145,14 +171,20 @@ export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }:
                 </div>
             </div>
             <div className='flex flex-col w-full'>
-                {/* <MercureSubscriber
-                    topics={['http://localhost:3000/api/comments/{id}']}
-                    update={setAllComments}
-                    json
-                    hub={'http://localhost:8000/.well-known/mercure'}
-                >
-
-                </MercureSubscriber> */}
+                <Fragment>
+                    <MercureSubscriber
+                        topics={['http://localhost:3000/api/comments/{id}']}
+                        hub={'http://localhost:8000/.well-known/mercure'}
+                        update={setOnComment}
+                        json
+                    >
+                        {comments.map((comment: any, index: number) => {
+                            return (
+                                <ChildPosts comment={comment} key={index} />
+                            )
+                        })}
+                    </MercureSubscriber>
+                </Fragment>
             </div>
             <div className="w-full rounded-b-md bg-white flex justify-center p-1">
                 <input type="text" placeholder="Répondre..." value={value} className="border focus:outline-0 p-2 w-full rounded-md" onKeyPress={(e) => handlePressEnter(e, value)} onChange={(e) => setValue(e.target.value)} />
@@ -160,13 +192,3 @@ export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }:
         </Fragment>
     )
 }
-
-{/* {comments.map((comment: any, index: number) => {
-                    console.log(comment.post.id);
-
-                    if (comment.post.id === idPost) {
-                        return (
-                            <ChildPosts key={index} comment={comment} />
-                        )
-                    }
-                })} */}

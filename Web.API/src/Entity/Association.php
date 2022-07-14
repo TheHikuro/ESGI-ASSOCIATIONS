@@ -171,7 +171,7 @@ class Association
     private $owner;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association", "item:get:user"])]
+    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association", "item:get:user",  "collection:get:post", "item:get:post"])]
     #[SerializedName('name')]
     private $name;
 
