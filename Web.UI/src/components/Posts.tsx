@@ -2,9 +2,9 @@ import { Chip } from "@mui/material";
 import moment from "moment";
 import React, { Fragment } from "react";
 import { getAllAssosActions } from "../utils/context/actions/assos";
-import { postChildPostsAction } from "../utils/context/actions/posts";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { getNameById, getUserNameById } from "../utils/helpers/assist";
+import MercureSubscriber from "../utils/helpers/hookCustom";
 import { Avatar } from "./Avatar";
 import { ButtonDropdown } from "./Button";
 
@@ -18,8 +18,6 @@ interface InputPostProps {
 
 export const InputForPosts = ({ sender, action, assodId, userId, assos }: InputPostProps) => {
 
-    const { dispatch } = useStoreContext()
-
     const [value, setValue] = React.useState('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +30,7 @@ export const InputForPosts = ({ sender, action, assodId, userId, assos }: InputP
             content: value,
             association: `api/associations/${idAssos}`,
         }
-        action(dispatch, formatedValue);
+        action(formatedValue);
         setValue('');
     }
     return (
@@ -105,6 +103,15 @@ export const ChildPosts = ({ comment }: { comment: any }) => {
 export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }: PostsProps) => {
     const { dispatch, state: { user: { id }, assos: { assosList, needRefreshAssos } } } = useStoreContext()
 
+    const [allComments, setAllComments] = React.useState({
+        id: 0,
+        content: "",
+        owner: "",
+        post: { id: 0 },
+        createdAt: "",
+        updatedAt: "",
+    });
+
     React.useEffect(() => {
         if (needRefreshAssos) { getAllAssosActions(dispatch) }
     }, [needRefreshAssos])
@@ -117,7 +124,7 @@ export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }:
                 content: data,
                 post: `api/posts/${idPost}`,
             }
-            postChildPostsAction(dispatch, formatedData)
+            //postChildPostsAction(dispatch, formatedData)
             setValue('');
         }
     }
@@ -138,15 +145,14 @@ export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }:
                 </div>
             </div>
             <div className='flex flex-col w-full'>
-                {comments.map((comment: any, index: number) => {
-                    console.log(comment.post.id);
+                {/* <MercureSubscriber
+                    topics={['http://localhost:3000/api/comments/{id}']}
+                    update={setAllComments}
+                    json
+                    hub={'http://localhost:8000/.well-known/mercure'}
+                >
 
-                    if (comment.post.id === idPost) {
-                        return (
-                            <ChildPosts key={index} comment={comment} />
-                        )
-                    }
-                })}
+                </MercureSubscriber> */}
             </div>
             <div className="w-full rounded-b-md bg-white flex justify-center p-1">
                 <input type="text" placeholder="Répondre..." value={value} className="border focus:outline-0 p-2 w-full rounded-md" onKeyPress={(e) => handlePressEnter(e, value)} onChange={(e) => setValue(e.target.value)} />
@@ -154,3 +160,13 @@ export const Posts = ({ comments, content, sender, createdAt, idPost, idAssos }:
         </Fragment>
     )
 }
+
+{/* {comments.map((comment: any, index: number) => {
+                    console.log(comment.post.id);
+
+                    if (comment.post.id === idPost) {
+                        return (
+                            <ChildPosts key={index} comment={comment} />
+                        )
+                    }
+                })} */}
