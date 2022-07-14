@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use App\Controller\Event\AddParticipantController;
 use App\Controller\Event\RemoveParticipantController;
 use App\Repository\EventRepository;
@@ -100,6 +103,14 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ],
         "delete",
     ],
+),
+ApiFilter(
+    OrderFilter::class,
+    properties: ["createdAt", "updatedAt", "association.id", "dateStart", "dateEnd"]
+),
+ApiFilter(
+    BooleanFilter::class,
+    properties: ["active", "closeJoin", "archived"]
 )]
 class Event
 {
@@ -130,6 +141,11 @@ class Event
     #[Groups(["collection:get:event", "item:get:event", "item:put:event"])]
     #[SerializedName("closeJoin")]
     private $closeJoin;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(["collection:get:event", "item:get:event"])]
+    #[SerializedName("archived")]
+    private $archived;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(["collection:get:event", "item:get:event", "collection:post:event", "item:put:event"])]
@@ -172,10 +188,11 @@ class Event
 
     public function __construct()
     {
-        $this->active = false;
         $this->createdAt = new \DatetimeImmutable('now');
         $this->participants = new ArrayCollection();
+        $this->active = false;
         $this->closeJoin = false;
+        $this->archived = false;
     }
 
     public function getId(): ?int
@@ -215,6 +232,18 @@ class Event
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    public function isArchived(): ?bool
+    {
+        return $this->archived;
+    }
+
+    public function setArchived(bool $archived): self
+    {
+        $this->archived = $archived;
 
         return $this;
     }

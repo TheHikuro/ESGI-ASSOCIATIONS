@@ -97,6 +97,9 @@
     "fig/link-util": {
         "version": "1.2.0"
     },
+    "fpdf/fpdf": {
+        "version": "1.84.0"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.12"
     },

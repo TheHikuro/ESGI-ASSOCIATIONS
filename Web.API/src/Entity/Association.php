@@ -53,10 +53,13 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],
         ],
         "extractPrecences" => [
-            "method" => "get",
+            "method" => "post",
             "path" => "associations/extract_presences",
             "controller" => ExtractPresencesController::class,
             "deserialize" => false,
+            "defaults" => [
+                "_api_receive" => false
+            ],
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -65,7 +68,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                                 "type" => "object",
                                 "required" => true,
                                 "properties" => [
-                                    "format" => ["type" => "string"],
+                                    "format" => ["type" => "string", "enum" => ["pdf", "csv", "json"]],
                                 ],
                             ],
                         ],
