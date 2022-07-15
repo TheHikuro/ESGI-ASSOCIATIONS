@@ -68,7 +68,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                                 "type" => "object",
                                 "required" => true,
                                 "properties" => [
-                                    "format" => ["type" => "string", "enum" => ["pdf", "csv", "json"]],
+                                    "format" => ["type" => "string", "enum" => ["application/pdf", "text/csv", "application/json"]],
                                 ],
                             ],
                         ],
@@ -111,7 +111,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                         ]
                     ],
                 ],
-            ],  
+            ],
         ],
         "removeMember" => [
             "method" => "put",
@@ -129,7 +129,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                         ]
                     ],
                 ],
-            ],  
+            ],
         ],
         // "patch" => [
         //     "denormalization_context" => ["groups" => ["item:patch:association"]],
@@ -216,13 +216,13 @@ class Association
     /**
      * @Vich\UploadableField(mapping="associations_images", fileNameProperty="avatarPath")
      */
-    #[Type([File::class,null])]
+    #[Type([File::class, null])]
     private $avatar;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $avatarPath;
 
-    #[Type([string::class,null])]
+    #[Type([string::class, null])]
     #[Groups(["collection:get:association", "item:get:association"])]
     #[SerializedName('avatar')]
     private $avatarUrl;

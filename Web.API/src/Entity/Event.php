@@ -8,6 +8,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\Event\ArchiveEventsController;
 use App\Controller\Event\AddParticipantController;
 use App\Controller\Event\RemoveParticipantController;
 use App\Repository\EventRepository;
@@ -40,6 +42,21 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                                     "pointsToWin" => ["type" => "number"],
                                 ],
                             ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+        "archiveEvents" => [
+            "method" => "put",
+            "path" => "events/archive_events",
+            "controller" => ArchiveEventsController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [],
                         ],
                     ],
                 ],
@@ -111,6 +128,10 @@ ApiFilter(
 ApiFilter(
     BooleanFilter::class,
     properties: ["active", "closeJoin", "archived"]
+),
+ApiFilter(
+    SearchFilter::class,
+    properties: ["name", "association.id", "association.owner.id", "id"]
 )]
 class Event
 {
