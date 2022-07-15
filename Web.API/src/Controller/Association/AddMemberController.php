@@ -32,6 +32,7 @@ class AddMemberController extends AbstractController
             throw new \Error('Member is already in association.');
 
         $association->addMember($user);
+        $user->addAssociation($association);
 
         return $association;
     }
