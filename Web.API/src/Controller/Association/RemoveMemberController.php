@@ -34,6 +34,7 @@ class RemoveMemberController extends AbstractController
             throw new \Error('Owner cannot leave association.');
 
         $association->removeMember($user);
+        $user->removeAssociation($association);
 
         return $association;
     }

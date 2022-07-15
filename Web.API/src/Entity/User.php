@@ -308,7 +308,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[SerializedName('section')]
     private $section;
 
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Association::class, orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Association::class)]
     #[ApiSubresource(maxDepth: 1)]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('associations')]
@@ -469,6 +469,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getAssociations(): Collection
     {
         return $this->associations;
+    }
+
+    public function addAssociation(Association $association): self
+    {
+        if (!$this->associations->contains($association))
+            $this->associations[] = $association;
+
+        return $this;
+    }
+
+    public function removeAssociation(Association $association): self
+    {
+        $this->associations->removeElement($association);
+
+        return $this;
     }
 
     public function isActivated(): ?bool

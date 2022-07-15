@@ -117,10 +117,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             "method" => "put",
             "path" => "associations/{id}/remove_member/{idMember}",
             "controller" => RemoveMemberController::class,
-            "defaults" => [
-                "_api_receive" => false
-            ],
-            // "deserialize" => false,
+            "deserialize" => false,
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [

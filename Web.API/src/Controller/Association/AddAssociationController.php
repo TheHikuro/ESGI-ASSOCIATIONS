@@ -18,6 +18,7 @@ class AddAssociationController extends AbstractController
             throw new \RuntimeException('Expected association.');
 
         $association->addMember($association->getOwner());
+        $association->getOwner()->addAssociation($association);
 
         return $association;
     }
