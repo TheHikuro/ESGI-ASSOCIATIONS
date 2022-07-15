@@ -19,7 +19,7 @@ export const ButtonDropdown = ({ assos, action }: { assos: any, action: Function
         if (options.length === 0) {
             setOptions(assos);
         }
-    }, [options])
+    }, [options, assos])
 
     const handleMenuItemClick = (
         event: React.MouseEvent<HTMLLIElement, MouseEvent>,

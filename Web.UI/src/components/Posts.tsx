@@ -117,7 +117,7 @@ export const Posts = ({ content, sender, createdAt, idPost, assosName, com }: Po
         }
     }
 
-    const [comments, setComments] = React.useState<any>([]);
+    const [comments, setComments] = React.useState<any[]>([]);
     const [onComment, setOnComment] = React.useState({
         id: 0,
         content: '',
@@ -128,29 +128,15 @@ export const Posts = ({ content, sender, createdAt, idPost, assosName, com }: Po
 
     React.useEffect(() => {
         if (com) {
-            com.map((comment: any) => {
-                getCommentsFromPost(comment.id).then((res: any) => {
-                    setComments([...comments, {
-                        id: res.id,
-                        content: res.content,
-                        createdAt: res.createdAt,
-                        owner: res.owner,
-                        post: res.post,
-                    }])
-                })
+            getCommentsFromPost(idPost).then((res: any) => {
+                setComments(res);
             })
         }
-    }, [com, com.length])
+    }, [com])
 
     React.useEffect(() => {
-        if (onComment.owner.firstname !== '') {
-            setComments([...comments, {
-                id: onComment.id,
-                content: onComment.content,
-                createdAt: onComment.createdAt,
-                owner: onComment.owner,
-                post: onComment.post,
-            }])
+        if (onComment.post.id === idPost) {
+            setComments([...comments, onComment]);
         }
     }, [onComment])
 
@@ -174,8 +160,8 @@ export const Posts = ({ content, sender, createdAt, idPost, assosName, com }: Po
                 <Fragment>
                     <MercureSubscriber
                         topics={['http://localhost:3000/api/comments/{id}']}
-                        hub={'http://localhost:8000/.well-known/mercure'}
                         update={setOnComment}
+                        hub={'http://localhost:8000/.well-known/mercure'}
                         json
                     >
                         {comments.map((comment: any, index: number) => {

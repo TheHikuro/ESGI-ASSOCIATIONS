@@ -82,7 +82,9 @@ const HomePage = () => {
                             hub={'http://localhost:8000/.well-known/mercure'}
                             json
                         >
-                            {displayData.sort((a, b) => {
+                            {displayData.filter(post => {
+                                return associations.find(association => association.id === post.association.id)
+                            }).sort((a, b) => {
                                 return moment(b.createdAt).unix() - moment(a.createdAt).unix()
                             }).map(post => {
                                 return (

@@ -63,6 +63,6 @@ export const createPosts = async (data: any) => {
 }
 
 export const getCommentsFromPost = async (postId: number) => {
-    const response = await instance.get(`/comments/${postId}`);
+    const response = await instance.get(`/posts/${postId}/comments`);
     return response.data;
 }
