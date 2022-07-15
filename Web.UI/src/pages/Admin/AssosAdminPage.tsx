@@ -12,21 +12,21 @@ import { FormComponents } from "../../components/FormData";
 
 const AssosAdminPage = () => {
 
-    const { dispatch, state: { assos: { assosList, needRefresh } } } = useStoreContext()
+    const { dispatch, state: { assos: { assosList, needRefreshAssos } } } = useStoreContext()
     const { openModal, updateModalTitle, updateModalContent, yesActionModal, yesNoModal, closeModal } = useModalContext()
 
     const [searchValue, setSearchValue] = React.useState('');
     const searchRegex = new RegExp(searchValue, 'i');
 
     React.useEffect(() => {
-        if (needRefresh) { getAllAssosActions(dispatch) }
-    }, [needRefresh])
+        if (needRefreshAssos) { getAllAssosActions(dispatch) }
+    }, [needRefreshAssos])
 
     const assosFromAPi = assosList.map((assos: AssosDetails) => {
         return {
             id: assos.id,
             name: assos.name,
-            owner: assos.owner.firstname,
+            owner: assos.owner.id,
             description: assos.description,
             avatar: assos.avatar,
             createdAt: moment(assos.createdAt).format('DD/MM/YYYY'),
@@ -61,10 +61,11 @@ const AssosAdminPage = () => {
                     <div className="text-sm">{assos.description}</div>
                 </div>
                 <div className="flex flex-col">
-                    <div className="text-sm">Propriétaire : {assos.owner.firstname}</div>
+                    <div className="text-sm">Propriétaire : {assos.owner.id}</div>
                     <div className="text-sm">Créé le : {moment(assos.createdAt).format('DD/MM/YYYY')}</div>
                 </div>
             </div>
+
         </div>)
         openModal()
     }

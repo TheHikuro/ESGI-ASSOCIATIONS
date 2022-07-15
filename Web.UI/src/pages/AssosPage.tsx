@@ -4,18 +4,19 @@ import { Layout } from "../components/Layout";
 import { getAllAssosActions } from "../utils/context/actions/assos";
 import { AssosDetails } from "../utils/context/reducers/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
+import { getUserNameById } from "../utils/helpers/assist";
 
 const AssosPage = () => {
-    const { dispatch, state: { assos: { assosList, needRefresh } } } = useStoreContext();
+    const { dispatch, state: { assos: { assosList, needRefreshAssos }, admin: { userList } } } = useStoreContext();
     useEffect(() => {
-        if (needRefresh) {
+        if (needRefreshAssos) {
             getAllAssosActions(dispatch);
         }
-    }, [needRefresh])
+    }, [needRefreshAssos])
     return (
         <Layout>
             <>
-                <h1 className="flex justify-center font-bold uppercase text-slate-800">Rejoindre une Association ESGI</h1>
+                <h1 className="flex justify-center font-bold uppercase text-slate-50">Rejoindre une Association ESGI</h1>
                 <div className="container my-12 mx-auto px-4 md:px-12">
                     <div className="flex flex-wrap -mx-1 lg:-mx-4">
                         {
@@ -25,7 +26,7 @@ const AssosPage = () => {
                                     desc={asso.description}
                                     key={asso.name}
                                     createdAt={asso.createdAt}
-                                    owner={asso.owner.firstname + ' ' + asso.owner.lastname}
+                                    owner={getUserNameById(asso.owner.id, userList)}
                                 />
                             )
                         }

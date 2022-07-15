@@ -18,6 +18,7 @@ interface IInputProps {
     required?: boolean;
     handlePressEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     _key?: number
+    fullWidth?: boolean;
 }
 
 export const Input = ({ name, type, formcontrol, _key, value }: IInputProps) => {
@@ -38,7 +39,7 @@ export const TextAreaInput = ({ name, type, formcontrol, _key, value }: IInputPr
     )
 }
 
-export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) => {
+export const Dropdown = ({ name, formcontrol, arr, _key, value, fullWidth }: IInputProps) => {
     const [section, setSection] = React.useState(value);
 
     const handleChange = (event: any) => {
@@ -46,7 +47,7 @@ export const Dropdown = ({ name, formcontrol, arr, _key, value }: IInputProps) =
     };
     return (
         <>
-            <Box>
+            <Box className={`${fullWidth ? 'w-full' : ''}`}>
                 <FormControl fullWidth>
                     <InputLabel id="select-section">{name}</InputLabel>
                     <Select

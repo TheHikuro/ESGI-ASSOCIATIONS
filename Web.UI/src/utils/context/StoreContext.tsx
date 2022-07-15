@@ -6,6 +6,7 @@ import loaderReducer, { loaderIS } from "./reducers/loading";
 import { AdminIS, AdminReducer } from "./reducers/admin";
 import { sectionIS, sectionReducer } from "./reducers/sections";
 import { AssosIS, AssosReducer } from "./reducers/assos";
+import { MembersIS, MembersReducer } from "./reducers/members";
 
 const initialState = {
     user: userIS,
@@ -14,6 +15,7 @@ const initialState = {
     admin: AdminIS,
     section: sectionIS,
     assos: AssosIS,
+    members: MembersIS,
 }
 
 const StoreContext = React.createContext({
@@ -37,6 +39,7 @@ const reducer = combinedReducer({
     admin: AdminReducer,
     section: sectionReducer,
     assos: AssosReducer,
+    members: MembersReducer,
 })
 
 export const StoreProvider = ({ children }: { children: React.ReactNode }) => {

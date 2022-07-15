@@ -10,8 +10,8 @@ import { getAllSections } from "../../utils/context/actions/section";
 import { UsersDetails } from "../../utils/context/reducers/admin";
 import { useStoreContext } from "../../utils/context/StoreContext";
 
-const UserAdminPage = () => {
-    const { dispatch, state: { admin: { userList, needRefreshAdmin }, section: { sectionList, needRefreshSection } } } = useStoreContext()
+const UserManagerPage = () => {
+    const { dispatch, state: { admin: { userList, needRefreshAdmin }, section: { sectionList } } } = useStoreContext()
     const { openModal, updateModalTitle, updateModalContent, yesNoModal, yesActionModal, closeModal } = useModalContext()
     const [searchValue, setSearchValue] = React.useState('');
     const searchRegex = new RegExp(searchValue, 'i');
@@ -21,8 +21,8 @@ const UserAdminPage = () => {
     }, [needRefreshAdmin])
 
     React.useEffect(() => {
-        if (needRefreshSection) { getAllSections(dispatch) }
-    }, [needRefreshSection]);
+        if (sectionList?.length === 0) { getAllSections(dispatch) }
+    }, [sectionList]);
 
     const userfromapi = userList && userList.map((user: UsersDetails) => {
         return {
@@ -137,4 +137,4 @@ const UserAdminPage = () => {
     );
 }
 
-export default UserAdminPage;
+export default UserManagerPage;

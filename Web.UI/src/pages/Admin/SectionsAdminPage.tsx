@@ -11,11 +11,11 @@ import { FormComponentCreate, FormComponents } from "../../components/FormData";
 
 const SectionsAdminPage = () => {
 
-    const { dispatch, state: { section: { sectionList, needRefresh } } } = useStoreContext();
+    const { dispatch, state: { section: { sectionList, needRefreshSection } } } = useStoreContext();
     const { openModal, updateModalTitle, updateModalContent, yesNoModal, yesActionModal, closeModal } = useModalContext();
     React.useEffect(() => {
-        if (needRefresh) { getAllSections(dispatch) }
-    }, [needRefresh]);
+        if (needRefreshSection) { getAllSections(dispatch) }
+    }, [needRefreshSection]);
 
     const sectionsFromApi = sectionList.map((section: SectionDetails) => {
         return {

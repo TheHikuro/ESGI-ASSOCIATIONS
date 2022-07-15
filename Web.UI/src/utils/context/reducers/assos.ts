@@ -1,21 +1,32 @@
 import { AssosActionTypes } from "../actions/assos";
-
 export interface EventAssosState {
     id: number,
-    dateInterval: string,
-    active: boolean,
-    description: string,
-    name: string,
-    association: string,
-    createdAt: string
 }
-
 export interface OwnerAssosState {
     id: number,
-    lastname: string,
+}
+export interface MemberAssosState {
+    id: number,
     firstname: string,
-    email: string,
-    avatar: string,
+    lastname: string,
+}
+
+export interface CommentsAssosState {
+    id: number,
+    content: string,
+    createdAt: string,
+    owner: OwnerAssosState,
+    post: PostsAssosState
+}
+
+export interface PostsAssosState {
+    owner: OwnerAssosState,
+    id: number,
+    association: { id: number }
+    comments: Array<{ id: number }>,
+    content: string
+    parentPost: string
+    createdAt: string
 }
 
 export interface PostsState {
@@ -33,17 +44,18 @@ export interface AssosDetails {
     avatar: string | null,
     createdAt: string,
     events: EventAssosState[],
-    posts: PostsState[],
+    members: MemberAssosState[],
+    posts: PostsAssosState[],
 }
 
 export interface AssosState {
     assosList: AssosDetails[],
-    needRefresh: boolean
+    needRefreshAssos: boolean
 }
 
 export const AssosIS: AssosState = {
     assosList: [],
-    needRefresh: true
+    needRefreshAssos: true
 }
 
 export const AssosTypes = {
@@ -57,6 +69,12 @@ export const AssosTypes = {
     CREATE_ASSOS_SUCCESS: 'CREATE_ASSOS_SUCCESS',
     GET_ASSOS_EVENTS_REQUEST: 'GET_ASSOS_EVENTS_REQUEST',
     GET_ASSOS_EVENTS_SUCCESS: 'GET_ASSOS_EVENTS_SUCCESS',
+    DELETE_ASSOS_EVENT_REQUEST: 'DELETE_ASSOS_EVENT_REQUEST',
+    DELETE_ASSOS_EVENT_SUCCESS: 'DELETE_ASSOS_EVENT_SUCCESS',
+    CREATE_ASSOS_EVENT_REQUEST: 'CREATE_ASSOS_EVENT_REQUEST',
+    CREATE_ASSOS_EVENT_SUCCESS: 'CREATE_ASSOS_EVENT_SUCCESS',
+    UPDATE_ASSOS_EVENT_REQUEST: 'UPDATE_ASSOS_EVENT_REQUEST',
+    UPDATE_ASSOS_EVENT_SUCCESS: 'UPDATE_ASSOS_EVENT_SUCCESS',
 }
 
 export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
@@ -69,40 +87,40 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
             return {
                 ...state,
                 assosList: action.payload,
-                needRefresh: false
+                needRefreshAssos: false
             };
         case AssosTypes.DELETE_ASSOS_REQUEST:
             return {
                 ...state,
-                needRefresh: true
+                needRefreshAssos: true
             };
         case AssosTypes.DELETE_ASSOS_SUCCESS:
             return {
                 ...state,
                 assosList: state.assosList.filter(assos => assos.id !== action.payload),
-                needRefresh: true
+                needRefreshAssos: true
             };
         case AssosTypes.UPDATE_ASSOS_REQUEST:
             return {
                 ...state,
-                needRefresh: false
+                needRefreshAssos: false
             };
         case AssosTypes.UPDATE_ASSOS_SUCCESS:
             return {
                 ...state,
                 assosList: [action.payload, ...state.assosList],
-                needRefresh: true
+                needRefreshAssos: true
             };
         case AssosTypes.CREATE_ASSOS_REQUEST:
             return {
                 ...state,
-                needRefresh: false
+                needRefreshAssos: false
             };
         case AssosTypes.CREATE_ASSOS_SUCCESS:
             return {
                 ...state,
                 assosList: [action.payload, ...state.assosList],
-                needRefresh: true
+                needRefreshAssos: true
             };
         case AssosTypes.GET_ASSOS_EVENTS_REQUEST:
             return {
@@ -112,7 +130,41 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
             return {
                 ...state,
                 assosList: action.payload,
-                needRefresh: false
+                needRefreshAssos: false
+            };
+        case AssosTypes.DELETE_ASSOS_EVENT_REQUEST:
+            return {
+                ...state,
+                needRefreshAssos: true
+            };
+        case AssosTypes.DELETE_ASSOS_EVENT_SUCCESS:
+            return {
+                ...state,
+                assosList: action.
+                    payload,
+                needRefreshAssos: false
+            };
+        case AssosTypes.UPDATE_ASSOS_EVENT_REQUEST:
+            return {
+                ...state,
+                needRefreshAssos: false
+            };
+        case AssosTypes.UPDATE_ASSOS_EVENT_SUCCESS:
+            return {
+                ...state,
+                assosList: action.payload,
+                needRefreshAssos: false
+            };
+        case AssosTypes.CREATE_ASSOS_EVENT_REQUEST:
+            return {
+                ...state,
+                needRefreshAssos: false
+            };
+        case AssosTypes.CREATE_ASSOS_EVENT_SUCCESS:
+            return {
+                ...state,
+                assosList: action.payload,
+                needRefreshAssos: false
             };
         default:
             return state;

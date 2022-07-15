@@ -191,12 +191,12 @@ class Association
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'associations')]
     #[ORM\JoinColumn(nullable: false)]
     #[ApiSubresource(maxDepth: 1)]
-    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association"])]
+    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association", "item:get:user"])]
     #[SerializedName('owner')]
     private $owner;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association"])]
+    #[Groups(["collection:get:association", "item:get:association", "collection:post:association", "item:put:association", "item:get:user",  "collection:get:post", "item:get:post"])]
     #[SerializedName('name')]
     private $name;
 
