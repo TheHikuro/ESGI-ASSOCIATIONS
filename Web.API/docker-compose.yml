@@ -27,15 +27,15 @@ services:
 
   php-fpm:
     image: php:8.1.6-apache-buster
-    build: .docker/build/php-fpm
+    build: ../.docker/build/php-fpm
     container_name: esgi-assos_php-fpm
     working_dir: /var/www/
     ports:
       - 3000:80
     volumes:
-      - ./Web.API/:/var/www/
-      - .docker/conf/php-fpm/apache2.conf:/etc/apache2/apache2.conf
-      - .docker/conf/php-fpm/sites-enabled/:/etc/apache2/sites-enabled
+      - ./:/var/www/
+      - ../.docker/conf/php-fpm/apache2.conf:/etc/apache2/apache2.conf
+      - ../.docker/conf/php-fpm/sites-enabled/:/etc/apache2/sites-enabled
 
   mercure:
     image: dunglas/mercure
@@ -59,23 +59,13 @@ services:
     depends_on:
       - php-fpm
     volumes: 
-      - ./Web.API/:/app
+      - ./:/app
 
   mailcatcher:
     image: jderusse/mailcatcher:latest
     container_name: esgi-assos_mailcatcher
     ports:
       - "3025:80"
-  # Frontend service
-  node:
-    image: node:18.2.0
-    container_name: esgi-assos_node
-    working_dir: /var/www/
-    command: /bin/bash -c "yarn && yarn dev"
-    ports:
-      - 8080:8080
-    volumes:
-      - ./Web.UI/:/var/www/
 
 volumes:
   mercure_data:

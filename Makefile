@@ -1,22 +1,44 @@
-envFile = .env.local
-include .docker/conf/${envFile}
+export envFile = .env.local
+projectName = esgi-assos
+envFolder = .docker/conf/envs
+webApi = ./Web.API
+webUi = ./Web.UI
+discordBot = ./Discord.BOT
+webApiDocker = ${webApi}/docker-compose.yml
+webUiDocker = ${webUi}/docker-compose.yml
+discordBotDocker = ${discordBot}/docker-compose.yml
 
 build:
-	docker-compose --env-file="./Web.API/${envFile}" up -d --build
+	make overwrite-env
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" up -d --build
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d --build
+	docker-compose -p ${projectName} -f ${webUiDocker} up -d --build
 	make setup
 
 setup:
-	cp .docker/conf/${envFile} ./Web.API/${envFile}
-	docker-compose --env-file="./Web.API/${envFile}" up -d
-	docker logs esgi-assos_composer --follow
-	docker exec -it esgi-assos_php-fpm php bin/console lexik:jwt:generate-keypair --overwrite -n
-	docker exec -it esgi-assos_php-fpm php bin/console doctrine:migrations:migrate -n
+	make overwrite-env
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${webUiDocker} up -d
+	docker logs ${projectName}_composer --follow
+	docker exec -it ${projectName}_php-fpm php bin/console lexik:jwt:generate-keypair --overwrite -n
+	docker exec -it ${projectName}_php-fpm php bin/console doctrine:migrations:migrate -n
+
+overwrite-env:
+	cp ${envFolder}/Web.API/${envFile} ${webApi}/${envFile}
+	cp ${envFolder}/Discord.BOT/${envFile} ${discordBot}/${envFile}
 
 start:
-	docker-compose --env-file="./Web.API/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${webUiDocker} up -d
 
 stop:
-	docker-compose --env-file="./Web.API/${envFile}" stop
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" stop
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" stop
+	docker-compose -p ${projectName} -f ${webUiDocker} stop
 
 down:
-	docker-compose --env-file="./Web.API/${envFile}" down
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" down --remove-orphans
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" down --remove-orphans
+	docker-compose -p ${projectName} -f ${webUiDocker} down --remove-orphans
