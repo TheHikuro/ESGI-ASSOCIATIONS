@@ -11,5 +11,5 @@ loadCommands(client, `${__dirname}/src/commands`);
 loadEvents(client, `${__dirname}/src/events`);
 
 client.login(process.env.BOT_TOKEN).catch((e) => {
-    console.error(`${COLORS.FgRed}${e}${COLORS.Reset}`);
+    console.error(COLORS.FgRed, e, COLORS.Reset);
 });

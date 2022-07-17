@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\User\BanController;
 use App\Controller\User\ConfirmationEmailController;
 use App\Controller\User\DeleteAvatarController;
+use App\Controller\User\DiscordConnectController;
 use App\Controller\User\GetBannedUsersController;
 use App\Controller\User\PostAvatarController;
+use App\Controller\User\RevokeDiscordConnectController;
 use App\Controller\User\SendGLobalEmailController;
 use App\Controller\User\UnBanController;
 use App\Controller\User\ValidateAccountController;
@@ -156,6 +160,41 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ],   
         ],
+        "discordConnect" => [
+            "method" => "put",
+            "path" => "users/{id}/discord_connect",
+            "controller" => DiscordConnectController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [
+                                "type" => "object",
+                                "properties" => [
+                                    "code" => ["type" => "string"],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],   
+        ],
+        "revokeDiscordConnect" => [
+            "method" => "put",
+            "path" => "users/{id}/revoke_discord_connect",
+            "controller" => RevokeDiscordConnectController::class,
+            "deserialize" => false,
+            "openapi_context" => [
+                "requestBody" => [
+                    "content" => [
+                        "application/ld+json" => [
+                            "schema" => [],
+                        ],
+                    ],
+                ],
+            ],   
+        ],
         "avatar" => [
             "method" => "post",
             "path" => "users/{id}/avatar",
@@ -227,6 +266,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             ],
         ],
     ],
+),
+ApiFilter(
+    SearchFilter::class,
+    properties: ["id", "email", "discordUserId"]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -343,6 +386,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('banReason')]
     private $banReason;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('discordUserId')]
+    private $discordUserId;
 
     public function __construct()
     {
@@ -674,6 +722,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBanReason(?string $banReason): self
     {
         $this->banReason = $banReason;
+
+        return $this;
+    }
+
+    public function getDiscordUserId(): ?string
+    {
+        return $this->discordUserId;
+    }
+
+    public function setDiscordUserId(?string $discordUserId): self
+    {
+        $this->discordUserId = $discordUserId;
 
         return $this;
     }

@@ -1,4 +1,5 @@
 const CONSTANTS = require('../utils/constants');
+const { getUserInfosById } = require('../utils/axiosUtils');
 
 module.exports.run = async (client, message) => {
     if (!(message.content.startsWith(client.prefix) || message.content.startsWith(`<@${client.user.id}>`)) || message.author.bot) return;
@@ -21,12 +22,16 @@ module.exports.run = async (client, message) => {
             return message.channel.send(`${message.author} cette commande ne peut être exécuté que sur serveur.`);
 
     // Need admin permissions on specific commands
-    if (command.infos.needUserToBeAdmin && !message.guild.member(message.author).hasPermission('ADMINISTRATOR'))
+    if (command.infos.needUserToBeAdmin && !message.member.permissions.has('ADMINISTRATOR'))
         return await message.channel.send(`${message.author} seul un administrateur peut exécuter cette commande.`);
 
     // Need user to be sync with website to run this command
-    if(command.infos.needUserToBeSyncWithAPI)
-        return await message.channel.send(`${message.author} tu dois connecter ton compte discord au site de l'ESGI-Gaming pour pouvoir exécuter cette commande.`);
+    if(command.infos.needUserToBeSyncWithAPI) {
+        const connectedUser = await getUserInfosById(client.apiToken, message.author.id);
+
+        if(!connectedUser)
+            return await message.channel.send(`${message.author} tu dois connecter ton compte discord au site de l'ESGI-Gaming pour pouvoir exécuter cette commande.`);
+    }
 
     // Commande arguments permisions
     if (command.infos.args === false) args = null;
@@ -37,8 +42,6 @@ module.exports.run = async (client, message) => {
             return message.channel.send(`${message.author} tu dois attendre **${Math.floor((client.cooldowns.get(command.infos.name).get(message.author.id) - Date.now()) / 1000)} secondes** avant de pouvoir exécuter cette commande.`);
         else
             client.cooldowns.get(command.infos.name).set(message.author.id, Date.now() + command.infos.cooldown * 1000);
-
-    console.log(client.cooldowns);
 
     command.run(client, message, args);
 }

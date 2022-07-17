@@ -14,6 +14,7 @@ build:
 	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d --build
 	docker-compose -p ${projectName} -f ${webUiDocker} up -d --build
 	make setup
+	make renew-jwt
 
 setup:
 	make overwrite-env
@@ -21,8 +22,10 @@ setup:
 	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d
 	docker-compose -p ${projectName} -f ${webUiDocker} up -d
 	docker logs ${projectName}_composer --follow
-	docker exec -it ${projectName}_php-fpm php bin/console lexik:jwt:generate-keypair --overwrite -n
 	docker exec -it ${projectName}_php-fpm php bin/console doctrine:migrations:migrate -n
+
+renew-jwt:
+	docker exec -it ${projectName}_php-fpm php bin/console lexik:jwt:generate-keypair --overwrite -n
 
 overwrite-env:
 	cp ${envFolder}/Web.API/${envFile} ${webApi}/${envFile}
