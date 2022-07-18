@@ -89,11 +89,15 @@ export const Dashboard = ({ children }: any) => {
                                     </>
                                 ) : display.assos ? (
                                     <>
-                                        {associations.map((assos: MyAssosState) => (
-                                            Number(assos.owner.match(/\d*$/)![0]) === id ? (
-                                                <DashboardItem name={assos.name} icon={<AcademicCapIcon className="w-5 h-5" />} onpress={`/Gestion-Associations/${assos.id}`} idAssos={assos.id} />
-                                            ) : null
-                                        ))}
+                                        {associations.map((assos: MyAssosState) => {
+                                            if (typeof assos.owner === 'string') {
+                                                return (
+                                                    Number(assos.owner.match(/\d*$/)![0]) === id ? (
+                                                        <DashboardItem name={assos.name} icon={<AcademicCapIcon className="w-5 h-5" />} onpress={`/Gestion-Associations/${assos.id}`} idAssos={assos.id} />
+                                                    ) : null
+                                                )
+                                            }
+                                        })}
                                     </>
                                 ) : <></>}
 
