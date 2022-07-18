@@ -5,7 +5,7 @@ module.exports = {
                 name: 'help',
                 aliases: ['help', 'h'],
                 category: 'info',
-                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_\`\`\`%shelp assos\`\`\`',
+                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_```%shelp assos```',
                 cooldown: 5,
                 needUserToBeAdmin: false,
                 needUserToBeSyncWithAPI: false,
@@ -13,7 +13,7 @@ module.exports = {
                 args: true
             },
             embed: {
-                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_\`\`\`%shelp assos\`\`\`\n_Liste des commandes:_'
+                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_```%shelp assos```\n_Liste des commandes:_'
             }
         },
         assos: {
@@ -22,7 +22,7 @@ module.exports = {
                 aliases: ['assos', 'associations', 'a'],
                 category: 'associations',
                 desc: '',
-                cooldown: 5,
+                cooldown: 15,
                 needUserToBeAdmin: false,
                 needUserToBeSyncWithAPI: true,
                 onlyOnGuild: false,
@@ -35,7 +35,7 @@ module.exports = {
                 aliases: ['events', 'e'],
                 category: 'associations',
                 desc: '',
-                cooldown: 5,
+                cooldown: 15,
                 needUserToBeAdmin: false,
                 needUserToBeSyncWithAPI: true,
                 onlyOnGuild: false,
@@ -60,15 +60,15 @@ module.exports = {
                 name: 'settings',
                 aliases: ['settings', 's'],
                 category: 'admin',
-                desc: '_**%ssettings** : Affiche la liste des paramètres du serveur.\n**%ssettings category <id>** : Définit la catégorie des associations.\n\nexemple:_\`\`\`%ssettings category 997858642843934770\`\`\`',
+                desc: '_**%ssettings** : Affiche la liste des paramètres du serveur.\n**%ssettings setup** : Met en place les salons de présences sur le serveur.\n\nexemple:_```%ssettings setup```',
                 cooldown: 5,
                 needUserToBeAdmin: true,
-                needUserToBeSyncWithAPI: false,
+                needUserToBeSyncWithAPI: true,
                 onlyOnGuild: true,
                 args: true
             },
             embed: {
-                desc: '_Catégirie des présences : **%s**\nNombre d\'associations : **%s**\nNombre d\'utilisateurs: **%s**_'
+                desc: '_Channel des présences : **%s**_'
             }
         }
     },
@@ -79,6 +79,12 @@ module.exports = {
         messageCreate: {
             name: 'messageCreate'
         },
+        guildCreate: {
+            name: 'guildCreate'
+        },
+        guildDelete: {
+            name: 'guildDelete'
+        }
     },
     client: {
         options: {

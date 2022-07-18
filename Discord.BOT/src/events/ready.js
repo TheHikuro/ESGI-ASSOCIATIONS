@@ -1,7 +1,7 @@
 const { Collection } = require('discord.js');
 const COLORS = require('../utils/textColor');
 const CONSTANTS = require('../utils/constants');
-const { getRenewedToken } = require('../utils/axiosUtils');
+const { getRenewedToken, getAxiosInstanceWithAuth } = require('../utils/axiosUtils');
 
 const renewApiToken = async (client) => {
     const apiToken = await getRenewedToken();
@@ -30,6 +30,24 @@ module.exports.run = async (client) => {
     });
 
     await renewApiToken(client);
+
+    // add new guild to the api
+    const registeredGuilds = await getAxiosInstanceWithAuth(client.apiToken).get('discord/guilds')
+        .catch(() => {
+            throw new Error('Impossible de récupérer les données des guilds');
+        });
+
+    // Compare registered guilds with the current guilds and add diff to the api
+    await client.guilds.cache.forEach(async (guild) => {
+        if(!registeredGuilds.data.find(registeredGuild => registeredGuild.guildId === guild.id)){
+            await getAxiosInstanceWithAuth(client.apiToken).post('discord/guilds', {
+                guildId: guild.id
+            })
+            .catch(() => {
+                console.error('Impossible d\'ajouter la guilde à l\'API');
+            });
+        }
+    });
 
     // Renew api token every 30 minutes
     setInterval(async () => {
