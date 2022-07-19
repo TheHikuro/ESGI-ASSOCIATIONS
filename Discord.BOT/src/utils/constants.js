@@ -5,7 +5,7 @@ module.exports = {
                 name: 'help',
                 aliases: ['help', 'h'],
                 category: 'info',
-                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_```%shelp assos```',
+                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_```%shelp present```',
                 cooldown: 5,
                 needUserToBeAdmin: false,
                 needUserToBeSyncWithAPI: false,
@@ -13,41 +13,15 @@ module.exports = {
                 args: true
             },
             embed: {
-                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_```%shelp assos```\n_Liste des commandes:_'
-            }
-        },
-        assos: {
-            infos: {
-                name: 'assos',
-                aliases: ['assos', 'associations', 'a'],
-                category: 'associations',
-                desc: '',
-                cooldown: 15,
-                needUserToBeAdmin: false,
-                needUserToBeSyncWithAPI: true,
-                onlyOnGuild: false,
-                args: false
-            }
-        },
-        events: {
-            infos: {
-                name: 'events',
-                aliases: ['events', 'e'],
-                category: 'associations',
-                desc: '',
-                cooldown: 15,
-                needUserToBeAdmin: false,
-                needUserToBeSyncWithAPI: true,
-                onlyOnGuild: false,
-                args: false
+                desc: '_**%shelp** : Affiche la liste complète des commandes.\n**%shelp <commandName>** : Affiche la description d\'une commande.\n\nAlias: **%sh**\n\nexemple:_```%shelp present```\n_Liste des commandes:_'
             }
         },
         present: {
             infos: {
                 name: 'present',
                 aliases: ['present', 'p'],
-                category: 'associations',
-                desc: '',
+                category: 'association',
+                desc: '_**%spresent** : Permet d\'ajouter sa présence à un évènement. Cette commande ne peut être exécuté que dans les salons de présences l\'hors d\'évènements.\n\nAlias: **%sp**\n\nexemple:_```%spresent```',
                 cooldown: 5,
                 needUserToBeAdmin: false,
                 needUserToBeSyncWithAPI: true,
@@ -55,12 +29,12 @@ module.exports = {
                 args: false
             }
         },
-        settings: {
+        setup: {
             infos: {
-                name: 'settings',
-                aliases: ['settings', 's'],
+                name: 'setup',
+                aliases: ['setup', 's'],
                 category: 'admin',
-                desc: '_**%ssettings** : Affiche la liste des paramètres du serveur.\n**%ssettings setup** : Met en place les salons de présences sur le serveur.\n\nexemple:_```%ssettings setup```',
+                desc: '_**%ssetup association list** : Affiche la liste des associations disponibles.\n**%ssetup channel list** : Affiche la liste des salons de présences.\n**%ssetup channel add <idChannel> <associationSlug>** : Ajoute un salon de présences.\n**%ssetup channel remove <idChannel>** : Supprime un salon de présences.\n\nAlias: **%ss**\n\nexemple:_```%ssetup add #presence-minecraft minecraft```',
                 cooldown: 5,
                 needUserToBeAdmin: true,
                 needUserToBeSyncWithAPI: true,
@@ -68,7 +42,12 @@ module.exports = {
                 args: true
             },
             embed: {
-                desc: '_Channel des présences : **%s**_'
+                associations: {
+                    desc: '_Liste des associations disponibles :\n**%s**_',
+                },
+                channels: {
+                    desc: '_Liste des salons de présences :\n**%s**_',
+                }
             }
         }
     },
@@ -84,7 +63,10 @@ module.exports = {
         },
         guildDelete: {
             name: 'guildDelete'
-        }
+        },
+        channelDelete: {
+            name: 'channelDelete'
+        },
     },
     client: {
         options: {

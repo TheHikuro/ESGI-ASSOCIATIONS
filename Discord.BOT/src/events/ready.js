@@ -39,14 +39,22 @@ module.exports.run = async (client) => {
 
     // Compare registered guilds with the current guilds and add diff to the api
     await client.guilds.cache.forEach(async (guild) => {
-        if(!registeredGuilds.data.find(registeredGuild => registeredGuild.guildId === guild.id)){
+        const currentGuild = registeredGuilds.data.find(registeredGuild => registeredGuild.guildId === guild.id);
+
+        if(!currentGuild){
             await getAxiosInstanceWithAuth(client.apiToken).post('discord/guilds', {
                 guildId: guild.id
             })
-            .catch(() => {
-                console.error('Impossible d\'ajouter la guilde à l\'API');
-            });
+            .catch(() => { return; });
+            return;
         }
+
+        currentGuild.presencesChannels.forEach(async (channel) => {
+            if(!guild.channels.cache.has(channel.channelId)) {
+                await getAxiosInstanceWithAuth(client.apiToken).delete(`discord/presencesChannels/${channel.channelId}`)
+                .catch(() => { return; });
+            }
+        });
     });
 
     // Renew api token every 30 minutes

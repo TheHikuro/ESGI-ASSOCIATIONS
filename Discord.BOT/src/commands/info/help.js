@@ -3,6 +3,7 @@ const CONSTANTS = require('../../utils/constants');
 
 module.exports.run = async (client, message, args) => {
     const embed = new MessageEmbed()
+        .setColor('#354768')
         .setAuthor({ name: client.user.username, iconURL: client.user.avatarURL() });
 
     // If use help on a command

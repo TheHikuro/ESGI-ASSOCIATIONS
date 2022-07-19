@@ -6,7 +6,7 @@ module.exports.run = async (client, guild) => {
         guildId: guild.id
     })
     .catch(() => {
-        console.error('Impossible d\'ajouter la guilde à l\'API');
+        console.error(`Impossible d'ajouter la guilde ${guild.id} à l'API`);
     });
 }
 

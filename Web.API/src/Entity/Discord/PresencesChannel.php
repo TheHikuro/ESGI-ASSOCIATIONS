@@ -93,7 +93,7 @@ class PresencesChannel
     private $guild;
 
     #[ORM\ManyToOne(targetEntity: Association::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, unique: true)]
     #[ApiSubresource(maxDepth: 1)]
     #[Groups(['collection:get:discord:presencesChannel', 'item:get:discord:presencesChannel', 'collection:post:discord:presencesChannel', 'collection:get:discord:guild', 'item:get:discord:guild'])]
     private $association;

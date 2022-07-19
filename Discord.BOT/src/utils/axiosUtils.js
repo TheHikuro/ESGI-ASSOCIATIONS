@@ -43,15 +43,17 @@ module.exports = {
     getUserInfosById: async (authToken, userId) => {
         const instance = module.exports.getAxiosInstanceWithAuth(authToken);
 
-        const response = await instance.get('/users', {
-            params: {
-                discordUserId: userId
-            }
-        })
-        .catch((e) => {
+        let response
+        try {
+            response = await instance.get('/users', {
+                params: {
+                    discordUserId: userId
+                }
+            })
+        } catch (e) {
             console.log(COLORS.FgRed, e, COLORS.Reset);
             return;
-        })
+        }
     
         if(response.data.length == 0)
             return;
