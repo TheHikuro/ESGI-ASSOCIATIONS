@@ -131,7 +131,7 @@ ApiFilter(
 ),
 ApiFilter(
     SearchFilter::class,
-    properties: ["name", "association.id", "association.owner.id", "id"]
+    properties: ["name", "association.id", "association.owner.id", "id", 'association.members.id']
 )]
 class Event
 {
