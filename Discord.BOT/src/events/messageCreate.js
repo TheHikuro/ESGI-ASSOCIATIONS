@@ -5,6 +5,7 @@ module.exports.run = async (client, message) => {
     if (!(message.content.startsWith(client.prefix) || message.content.startsWith(`<@${client.user.id}>`)) || message.author.bot) return;
 
     let args;
+    let connectedUser = null;
 
     if(message.content.startsWith(client.prefix))
         args = message.content.slice(client.prefix.length).trim().split(/ +/);
@@ -27,10 +28,13 @@ module.exports.run = async (client, message) => {
 
     // Need user to be sync with website to run this command
     if(command.infos.needUserToBeSyncWithAPI) {
-        const connectedUser = await getUserInfosById(client.apiToken, message.author.id);
+        connectedUser = await getUserInfosById(client.apiToken, message.author.id);
 
         if(!connectedUser)
             return await message.channel.send(`${message.author} tu dois connecter ton compte discord au site de l'ESGI-Gaming pour pouvoir exécuter cette commande.`);
+        
+        if(connectedUser.isBanned)
+            return await message.channel.send(`${message.author} tu es banni du site de l'ESGI-Gaming, tu ne peux pas exécuter cette commande.`);
     }
 
     // Commande arguments permisions
@@ -43,7 +47,7 @@ module.exports.run = async (client, message) => {
         else
             client.cooldowns.get(command.infos.name).set(message.author.id, Date.now() + command.infos.cooldown * 1000);
 
-    command.run(client, message, args);
+    command.run(client, message, connectedUser, args);
 }
 
 module.exports.infos = CONSTANTS.events.messageCreate

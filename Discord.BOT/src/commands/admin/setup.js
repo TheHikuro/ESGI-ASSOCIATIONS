@@ -3,7 +3,7 @@ const CONSTANTS = require('../../utils/constants');
 const { getAxiosInstanceWithAuth } = require('../../utils/axiosUtils');
 const { stringFormat } = require('../../utils/tools');
 
-module.exports.run = async (client, message, args) => {
+module.exports.run = async (client, message, _, args) => {
     // Display associations list
     if(args[0] == 'association' && args[1] == 'list') {
         const assosInfos = await getAxiosInstanceWithAuth(client.apiToken).get('associations')

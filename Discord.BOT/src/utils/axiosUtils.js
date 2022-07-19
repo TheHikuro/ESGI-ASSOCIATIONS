@@ -38,24 +38,25 @@ module.exports = {
             return;
         })
 
+        if(!response)
+            return;
+
         return response.data.token;
     },
     getUserInfosById: async (authToken, userId) => {
         const instance = module.exports.getAxiosInstanceWithAuth(authToken);
 
-        let response
-        try {
-            response = await instance.get('/users', {
-                params: {
-                    discordUserId: userId
-                }
-            })
-        } catch (e) {
+        const response = await instance.get('/users', {
+            params: {
+                discordUserId: userId
+            }
+        })
+        .catch((e) => {
             console.log(COLORS.FgRed, e, COLORS.Reset);
             return;
-        }
+        });
     
-        if(response.data.length == 0)
+        if(!response)
             return;
 
         return response.data[0];
