@@ -66,3 +66,13 @@ export const getCommentsFromPost = async (postId: number) => {
     const response = await instance.get(`/posts/${postId}/comments`);
     return response.data;
 }
+
+export const getAllEvent = async (idMember: number) => {
+    const response = await instance.get(`/events?page=1&itemsPerPage=30&active=true&archived=false&association.members.id=${idMember}`);
+    return response.data;
+}
+
+export const joinEvent = async (idEvent: number, idMember: number) => {
+    const response = await instance.put(`/events/${idEvent}/add_participant/${idMember}`);
+    return response.data;
+}
