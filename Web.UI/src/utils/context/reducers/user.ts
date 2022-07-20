@@ -10,7 +10,7 @@ export interface MyAssosState {
 
 export const userIS = {
     id: 0,
-    name: '',
+    username: '',
     firstname: '',
     lastname: '',
     email: '',
