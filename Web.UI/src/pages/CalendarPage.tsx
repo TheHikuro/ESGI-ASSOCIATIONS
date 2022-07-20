@@ -71,18 +71,20 @@ const CalendarPage = () => {
 
     React.useEffect(() => {
         getAllEvent(id).then(res => {
-            res.map((element: any) => {
-                setEvents((prevState: any) => [...prevState, {
-                    id: element.id,
-                    start: new Date(moment(element.dateStart).format('YYYY-MM-DD:HH:mm')),
-                    end: new Date(moment(element.dateEnd).format('YYYY-MM-DD:HH:mm')),
-                    title: element.name,
-                    description: element.description,
-                    association: element.association,
-                    pointsToWin: element.pointsToWin,
-                    participants: element.participants,
-                }])
-            })
+            setEvents(
+                res.map((element: any) => {
+                    return {
+                        id: element.id,
+                        start: new Date(moment.utc((element.dateStart)).format('YYYY-MM-DD hh:mm')),
+                        end: new Date(moment.utc((element.dateEnd)).format('YYYY-MM-DD hh:mm')),
+                        description: element.description,
+                        association: element.association,
+                        title: element.name,
+                        pointsToWin: element.pointsToWin,
+                        participants: element.participants,
+                    }
+                })
+            )
         })
     }, [id])
 
