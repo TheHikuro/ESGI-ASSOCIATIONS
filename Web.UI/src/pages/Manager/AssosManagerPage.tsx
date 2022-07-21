@@ -3,7 +3,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { Table } from "../../components/Table";
 import { useStoreContext } from "../../utils/context/StoreContext";
 import React, { Fragment } from "react";
-import { deleteAssosActions, getAllAssosActions, updateAssosActions } from "../../utils/context/actions/assos";
+import { createAssosActions, deleteAssosActions, getAllAssosActions, updateAssosActions } from "../../utils/context/actions/assos";
 import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon } from "@heroicons/react/outline";
 import { AssosDetails } from "../../utils/context/reducers/assos";
 import moment from "moment";
@@ -18,8 +18,8 @@ const AssosManagerPage = () => {
         members: {
             memberList,
             needRefreshMember
-        } } } = useStoreContext()
-    //const { openModal, updateModalTitle, updateModalContent, yesActionModal, yesNoModal, closeModal } = useModalContext()
+        }, user: { id: userId } } } = useStoreContext()
+    const { openModal, updateModalTitle, updateModalContent, yesActionModal, yesNoModal, closeModal } = useModalContext()
 
     const [searchValue, setSearchValue] = React.useState('');
     const searchRegex = new RegExp(searchValue, 'i');
@@ -56,6 +56,25 @@ const AssosManagerPage = () => {
         }
     ]
 
+    const handleModalCreate = () => {
+        updateModalTitle('Création association')
+
+        updateModalContent(
+            <Fragment>
+                <FormComponents
+                    values={[
+                        { label: 'Nom', type: 'text', formControlName: 'name' },
+                        { label: 'Description', type: 'textarea', formControlName: 'description' },
+                    ]}
+                    id={userId}
+                    submitButtonText="Créer"
+                    action={createAssosActions}
+                />
+            </Fragment>
+        )
+        openModal()
+    }
+
     return (
         <div className="h-screen flex w-full bg-[url('./assets/img/bg-login.jpeg')]">
             <Dashboard>
@@ -64,7 +83,9 @@ const AssosManagerPage = () => {
                     <div className="flex items-center " onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)}>
                         <input type="text" placeholder="Rechercher" className="p-1 bg-slate-300 rounded-lg mr-5 w-52" />
                     </div>
+                    <div className="p-2 mr-2 rounded-md shadow-md bg-slate-200 uppercase text-sm hover:bg-slate-300 hover:text-red-500 text-center hover:cursor-pointer" onClick={() => handleModalCreate()}>Ajouter association</div>
                 </div>
+
                 <Table
                     data={membersfromapi.filter(member => { return searchRegex.test(member.firstName) || searchRegex.test(member.lastName) })}
                     header={columns}

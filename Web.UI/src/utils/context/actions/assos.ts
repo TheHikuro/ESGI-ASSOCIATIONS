@@ -1,4 +1,4 @@
-import { deleteAssos, getAllAssos, getPostsByAssos, updateAssos } from "../../../api/assos.axios";
+import { createAssos, deleteAssos, getAllAssos, getPostsByAssos, updateAssos } from "../../../api/assos.axios";
 import { AssosDetails, AssosTypes } from "../reducers/assos";
 import { startLoader, endLoader } from "./loader";
 
@@ -75,6 +75,25 @@ export const getPostsByAssosActions = async (dispatch: Function, assosId: number
         const response = await getPostsByAssos(assosId);
         dispatch({
             type: AssosTypes.GET_ASSOS_EVENTS_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+export const createAssosActions = async (dispatch: Function, data: AssosDetails, id: number) => {
+    dispatch({
+        type: AssosTypes.CREATE_ASSOS_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await createAssos(data, id);
+        dispatch({
+            type: AssosTypes.CREATE_ASSOS_SUCCESS,
             payload: response,
         });
 

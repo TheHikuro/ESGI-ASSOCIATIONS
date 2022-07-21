@@ -97,3 +97,12 @@ export const exctratPresence = async (data: { format: string }) => {
     link.click();
     window.URL.revokeObjectURL(url);
 }
+
+export const createAssos = async (data: AssosDetails, id: number) => {
+    const postData = {
+        ...data,
+        owner: `/api/users/${id.toString()}}`
+    }
+    const response = await instance.post('/associations', postData);
+    return response.data;
+}
