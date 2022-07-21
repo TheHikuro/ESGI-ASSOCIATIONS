@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import moment from "moment";
-import React from "react";
+import React, { Fragment } from "react";
 import { Avatar } from "./Avatar";
 import { useModalContext } from "./modal";
 
@@ -10,11 +10,34 @@ interface CardProps {
     name: string;
     createdAt: string;
     owner: string;
-    // join: boolean;
+    joined: boolean;
+}
+
+const Joined = ({ joined }: { joined: boolean }) => {
+    return (
+        joined ? (
+            <Fragment>
+                <div className="p-2 shadow-md rounded-full bg-gray-300 flex items-center w-36 justify-center hover:cursor-not-allowed select-none">
+                    <span className="items-center flex justify-center">Déja membre 🎉</span>
+                </div>
+            </Fragment >
+        ) : (
+            <Fragment>
+                <div>
+                    <div className="p-2 shadow-md rounded-full bg-blue-400 hover:bg-blue-500 flex items-center hover:text-white hover:cursor-pointer w-36 justify-center"
+                        onClick={() => { alert('rejoindre') }}>
+                        <span className="">Rejoindre</span>
+                        <ArrowRightIcon className="h-5 w-5" />
+                    </div>
+                </div>
+            </Fragment>
+        )
+
+    )
 }
 
 export const Card = (props: CardProps) => {
-    const { desc, name, createdAt, owner } = props;
+    const { desc, name, createdAt, owner, joined } = props;
     const { openModal, updateModalTitle, updateModalContent, closeModal } = useModalContext()
     const handleOpenModal = (props: CardProps) => {
         updateModalTitle(props.name);
@@ -30,10 +53,7 @@ export const Card = (props: CardProps) => {
                 <p className="text-sm">Par {props.owner}</p>
             </div>
             <div className="flex justify-center">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full items-center flex justify-center">
-                    Rejoindre
-                    <ArrowRightIcon className="ml-2 h-7 w-7" />
-                </button>
+                <Joined joined={joined} />
             </div>
         </>);
         openModal();
@@ -65,14 +85,11 @@ export const Card = (props: CardProps) => {
                         <span className="flex items-center no-underline  text-black">
                             <Avatar initial={owner} displayName />
                         </span>
-                        <div className="p-2 shadow-md rounded-full bg-blue-400 hover:bg-blue-500 flex items-center hover:text-white hover:cursor-pointer">
-                            <span className="mr-2">Rejoindre</span>
-                            <ArrowRightIcon className="h-5 w-5" />
-                        </div>
+                        <Joined joined={joined} />
                     </div>
                 </footer>
             </article>
-        </div>
+        </div >
     )
 }
 

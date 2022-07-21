@@ -81,12 +81,6 @@ export const joinEvent = async (idEvent: number, idMember: number) => {
 
 export const exctratPresence = async (data: { format: string }) => {
     const response = await instance.post(`/associations/extract_presences`, data, {
-        // headers: {
-        //     'Access-Control-Allow-Origin': '*',
-        //     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        //     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, X-Requested-With',
-        //     'Access-Control-Allow-Credentials': true,
-        // },
         responseType: 'blob'
     });
     const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
