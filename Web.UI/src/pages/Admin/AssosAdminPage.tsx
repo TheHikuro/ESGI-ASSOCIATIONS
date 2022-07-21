@@ -4,11 +4,12 @@ import { Table } from "../../components/Table";
 import { useStoreContext } from "../../utils/context/StoreContext";
 import React, { Fragment } from "react";
 import { deleteAssosActions, getAllAssosActions, updateAssosActions } from "../../utils/context/actions/assos";
-import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon } from "@heroicons/react/outline";
+import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon, DownloadIcon } from "@heroicons/react/outline";
 import { AssosDetails } from "../../utils/context/reducers/assos";
 import moment from "moment";
 import { useModalContext } from "../../components/modal";
 import { FormComponents } from "../../components/FormData";
+import { exctratPresence } from "../../api/assos.axios";
 
 const AssosAdminPage = () => {
 
@@ -99,13 +100,26 @@ const AssosAdminPage = () => {
         openModal()
     }
 
+    const handleExtractPDF = () => {
+        const data = {
+            format: 'application/pdf',
+        }
+        exctratPresence(data)
+    }
+
     return (
         <div className="h-screen flex w-full bg-[url('./assets/img/bg-login.jpeg')]">
             <Dashboard>
                 <div className="w-full h-11 flex items-center justify-between">
                     <span className="uppercase font-bold ml-5">Associations</span>
-                    <div className="flex items-center " onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)}>
-                        <input type="text" placeholder="Rechercher" className="p-1 bg-slate-300 rounded-lg mr-5 w-52" />
+                    <div className="flex items-center">
+                        <div className="flex items-center " onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)}>
+                            <input type="text" placeholder="Rechercher" className="p-1 bg-slate-300 rounded-lg mr-3 w-52" />
+                        </div>
+                        <div className="flex items-center w-fit p-1 shadow-md bg-blue-300 hover:bg-blue-500 hover:cursor-pointer group rounded-md mr-3" onClick={handleExtractPDF}>
+                            <span className="mx-2 group-hover:text-white">Extraction présence</span>
+                            <DownloadIcon className="h-5 w-5 mr-2 group-hover:text-white hover:text-blue-500 hover:cursor-pointer" />
+                        </div>
                     </div>
                 </div>
                 <Table
