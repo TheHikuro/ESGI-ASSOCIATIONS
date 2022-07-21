@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import { AssosDetails } from "../utils/context/reducers/assos";
 import { getAxiosInstance } from "./apiUtils";
 
@@ -80,19 +81,19 @@ export const joinEvent = async (idEvent: number, idMember: number) => {
 
 export const exctratPresence = async (data: { format: string }) => {
     const response = await instance.post(`/associations/extract_presences`, data, {
-        headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, X-Requested-With',
-            'Access-Control-Allow-Credentials': true,
-        },
+        // headers: {
+        //     'Access-Control-Allow-Origin': '*',
+        //     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        //     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, X-Requested-With',
+        //     'Access-Control-Allow-Credentials': true,
+        // },
         responseType: 'blob'
     });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'presences.pdf');
-    document.body.appendChild(link);
+    link.download = `Presences OPEN ${moment(new Date()).format('l')}.pdf`;
     link.click();
-    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
 }

@@ -61,6 +61,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 "_api_receive" => false
             ],
             "openapi_context" => [
+                "requestHeaders" => [
+                    "Access-Control-Allow-Origin" => ["*"],
+                ],
                 "requestBody" => [
                     "content" => [
                         "application/ld+json" => [
