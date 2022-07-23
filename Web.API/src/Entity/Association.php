@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\Association\AddMemberController;
 use App\Controller\Association\DeleteAvatarController;
 use App\Controller\Association\PostAvatarController;
@@ -180,6 +182,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             "deserialize" => false,
         ],
     ],
+),
+ApiFilter(
+    SearchFilter::class,
+    properties: ["id", "slug", "owner.id"],
 )]
 class Association
 {
@@ -251,12 +257,18 @@ class Association
     #[SerializedName('posts')]
     private $posts;
 
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[Groups(["collection:get:association", "item:get:association", 'get:id'])]
+    #[SerializedName('slug')]
+    private $slug;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->members = new ArrayCollection();
         $this->createdAt = new \DatetimeImmutable('now');
         $this->posts = new ArrayCollection();
+        $this->slug = strtolower(str_replace(' ', '-', $this->name));
     }
 
     public function getId(): ?int
@@ -284,8 +296,14 @@ class Association
     public function setName(string $name): self
     {
         $this->name = $name;
+        $this->slug = strtolower(str_replace(' ', '-', $this->name));
 
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable

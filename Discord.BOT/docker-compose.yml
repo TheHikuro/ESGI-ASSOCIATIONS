@@ -1,0 +1,11 @@
+version: '3.5'
+
+services:
+  node-discord:
+    image: node:18.2.0
+    container_name: esgi-assos_node-discord
+    env_file: ${envFile}
+    working_dir: /var/www/
+    command: /bin/bash -c "yarn && yarn dev"
+    volumes:
+      - ./:/var/www/

@@ -7,6 +7,7 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\Event\ArchiveEventsController;
@@ -131,7 +132,11 @@ ApiFilter(
 ),
 ApiFilter(
     SearchFilter::class,
-    properties: ["name", "association.id", "association.owner.id", "id", 'association.members.id']
+    properties: ["name", "association.id", "association.slug", "association.owner.id", "id", 'association.members.id'],
+),
+ApiFilter(
+    DateFilter::class,
+    properties: ["dateStart", "dateEnd"],
 )]
 class Event
 {
