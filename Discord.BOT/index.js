@@ -5,7 +5,7 @@ const CONSTANTS = require('./src/utils/constants');
 
 const client = new Client(CONSTANTS.client.options);
 client.prefix = process.env.BOT_PREFIX;
-['commands', 'cooldowns'].forEach((x) => client[x] = new Collection());
+['commands', 'cooldowns', 'lastCheckEvents'].forEach((x) => client[x] = new Collection());
 
 loadCommands(client, `${__dirname}/src/commands`);
 loadEvents(client, `${__dirname}/src/events`);

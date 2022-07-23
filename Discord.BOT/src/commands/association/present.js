@@ -43,7 +43,7 @@ module.exports.run = async (client, message, connectedUser) => {
         .catch((e) => { return; });
     
     if(!addParticipantResult)
-        return await message.channel.send(`${message.author} Une erreur est survenue, veuillez réessayer plus tard.`);
+        return await message.channel.send(`${message.author} Vous devez être un membre de l'association pour participer à l'évènement.`);
 
     return await message.channel.send(`${message.author} Merci de votre participation.`);
 }

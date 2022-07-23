@@ -29,6 +29,11 @@ module.exports.run = async (client) => {
         }
     });
 
+    // Init lastCheckEvents collection
+    client.guilds.cache.forEach(guild => {
+        client.lastCheckEvents.set(guild.id, new Collection());
+    });
+
     await renewApiToken(client);
 
     // add new guild to the api
@@ -61,6 +66,53 @@ module.exports.run = async (client) => {
     setInterval(async () => {
         await renewApiToken(client);
     }, process.env.API_TOKEN_RENEW_DELAY * 1000);
+
+    // Check events every 2 minutes
+    setInterval(async () => {
+        const events = await getAxiosInstanceWithAuth(client.apiToken).get('events', {
+            params: {
+                active: true,
+                archived: false,
+                'dateStart[before]': (new Date()).toUTCString(),
+                'dateEnd[after]': (new Date(new Date().getTime() - 4 * 60 * 1000)).toUTCString()
+            }
+        })
+        .catch((e) => { return; });
+
+        if(!events)
+            console.error(COLORS.FgRed, 'Impossible de récupérer les events actifs', COLORS.Reset);
+
+        // Clean lastCheckEvents collection
+        // client.lastCheckEvents.forEach((lastCheckEvent, guildId) => {
+        // });
+
+        events.data.forEach(async (event) => {
+            const currentChannel = await getAxiosInstanceWithAuth(client.apiToken).get('discord/presencesChannels', {
+                params: {
+                    'association.id': event.association.id
+                }
+            })
+            .catch(() => { return; });
+
+            if(!currentChannel)
+                return;
+            
+            const currentEvent = client.lastCheckEvents.get(currentChannel.data[0].guild.guildId).get(event.id);
+
+            if(!currentEvent){
+                client.lastCheckEvents.get(currentChannel.data[0].guild.guildId).set(event.id, {status: 'STARTED', channelId: currentChannel.data[0].channelId});
+                return await client.guilds.cache.get(currentChannel.data[0].guild.guildId).channels.cache.get(currentChannel.data[0].channelId).send(`📆 L'évènement **${event.name}** a débuté !`);
+            }
+
+            if(currentEvent.status === 'ENDED')
+                return;
+
+            if((new Date()).getTime() > (new Date(event.dateEnd)).getTime()){
+                client.lastCheckEvents.get(currentChannel.data[0].guild.guildId).set(event.id, {status: 'ENDED'});
+                return await client.guilds.cache.get(currentChannel.data[0].guild.guildId).channels.cache.get(currentChannel.data[0].channelId).send(`📆 L'évènement **${event.name}** vient de se terminer !`);
+            }
+        });
+    }, process.env.API_EVENTS_CHECK_DELAY * 100);
 }
 
 module.exports.infos = CONSTANTS.events.ready

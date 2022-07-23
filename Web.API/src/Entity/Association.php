@@ -13,7 +13,6 @@ use App\Controller\Association\PostAvatarController;
 use App\Controller\Association\RemoveMemberController;
 use App\Controller\Association\AddAssociationController;
 use App\Controller\Association\ExtractPresencesController;
-use App\Controller\Association\GetAssociationBySlugController;
 use App\Repository\AssociationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
