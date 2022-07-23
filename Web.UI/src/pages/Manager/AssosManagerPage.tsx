@@ -81,7 +81,6 @@ const AssosManagerPage = () => {
     }
 
     const handleDeleteUserFromAsso = (assoId: string, memberId: number) => {
-        console.log(assoId, memberId)
         updateModalTitle('Bannir utilisateur')
         updateModalContent(<>Voulez vous vraiment supprimer cet utilisateur de votre association ?</>)
         yesNoModal()

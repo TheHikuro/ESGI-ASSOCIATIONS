@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { getMembers, removeMembers } from "../../../api/assos.axios";
+import { getMembers, joinAssos, removeMembers } from "../../../api/assos.axios";
 import { MembersTypes } from "../reducers/members";
 import { startLoader, endLoader } from "./loader";
 
@@ -36,6 +36,25 @@ export const removeMemberAction = (dispatch: Function, idAssos: number, idMember
 
     try {
         const response = removeMembers(idAssos, idMember);
+        dispatch({
+            type: MembersTypes.UPDATE_MEMBER_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+export const joinAssosAction = (dispatch: Function, idAssos: number, idMember: number) => {
+    dispatch({
+        type: MembersTypes.UPDATE_MEMBER_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = joinAssos(idAssos, idMember);
         dispatch({
             type: MembersTypes.UPDATE_MEMBER_SUCCESS,
             payload: response,

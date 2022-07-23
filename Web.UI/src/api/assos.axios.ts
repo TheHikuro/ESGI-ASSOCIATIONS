@@ -30,7 +30,7 @@ export const getMembers = async (assosId: number) => {
 }
 
 export const removeMembers = async (assosId: number, memberId: number) => {
-    const response = await instance.delete(`/associations/${assosId}/members/${memberId}`);
+    const response = await instance.put(`/associations/${assosId}/remove_member/${memberId}`);
     return response.data;
 }
 
@@ -98,5 +98,10 @@ export const createAssos = async (data: AssosDetails, id: number) => {
         owner: `/api/users/${id.toString()}}`
     }
     const response = await instance.post('/associations', postData);
+    return response.data;
+}
+
+export const joinAssos = async (idAssos: number, idMember: number) => {
+    const response = await instance.put(`/associations/${idAssos}/add_member/${idMember}`);
     return response.data;
 }

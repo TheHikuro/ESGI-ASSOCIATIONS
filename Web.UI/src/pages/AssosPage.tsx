@@ -11,11 +11,12 @@ const AssosPage = () => {
     const { dispatch, state: {
         assos: { assosList, needRefreshAssos },
         admin: { userList, needRefreshAdmin },
+        members: { needRefreshMember },
         user: { id }
     } } = useStoreContext();
     useEffect(() => {
         if (needRefreshAssos) getAllAssosActions(dispatch);
-    }, [needRefreshAssos])
+    }, [needRefreshAssos, needRefreshMember])
 
     useEffect(() => {
         if (needRefreshAdmin) getUsersActions(dispatch);
@@ -36,6 +37,7 @@ const AssosPage = () => {
                                     createdAt={asso.createdAt}
                                     owner={getUserNameById(asso.owner.id, userList)}
                                     joined={asso.members.find(member => member.id === id) ? true : false}
+                                    idAssos={asso.id}
                                 />
                             )
                         }

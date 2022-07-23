@@ -1,6 +1,8 @@
 import { ArrowRightIcon } from "@heroicons/react/outline";
 import moment from "moment";
 import React, { Fragment } from "react";
+import { joinAssosAction } from "../utils/context/actions/members";
+import { useStoreContext } from "../utils/context/StoreContext";
 import { Avatar } from "./Avatar";
 import { useModalContext } from "./modal";
 
@@ -11,9 +13,10 @@ interface CardProps {
     createdAt: string;
     owner: string;
     joined: boolean;
+    idAssos: number
 }
 
-const Joined = ({ joined }: { joined: boolean }) => {
+const Joined = ({ joined, action }: { joined: boolean, action: Function }) => {
     return (
         joined ? (
             <Fragment>
@@ -25,7 +28,7 @@ const Joined = ({ joined }: { joined: boolean }) => {
             <Fragment>
                 <div>
                     <div className="p-2 shadow-md rounded-full bg-blue-400 hover:bg-blue-500 flex items-center hover:text-white hover:cursor-pointer w-36 justify-center"
-                        onClick={() => { alert('rejoindre') }}>
+                        onClick={() => action()}>
                         <span className="">Rejoindre</span>
                         <ArrowRightIcon className="h-5 w-5" />
                     </div>
@@ -37,8 +40,9 @@ const Joined = ({ joined }: { joined: boolean }) => {
 }
 
 export const Card = (props: CardProps) => {
-    const { desc, name, createdAt, owner, joined } = props;
+    const { desc, name, createdAt, owner, joined, idAssos } = props;
     const { openModal, updateModalTitle, updateModalContent, closeModal } = useModalContext()
+    const { dispatch, state: { user: { id } } } = useStoreContext()
     const handleOpenModal = (props: CardProps) => {
         updateModalTitle(props.name);
         updateModalContent(<>
@@ -53,10 +57,15 @@ export const Card = (props: CardProps) => {
                 <p className="text-sm">Par {props.owner}</p>
             </div>
             <div className="flex justify-center">
-                <Joined joined={joined} />
+                <Joined joined={joined} action={() => handleJoin()} />
             </div>
         </>);
         openModal();
+    }
+
+    const handleJoin = () => {
+        joinAssosAction(dispatch, idAssos, id)
+        closeModal();
     }
     return (
         <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
@@ -85,7 +94,7 @@ export const Card = (props: CardProps) => {
                         <span className="flex items-center no-underline  text-black">
                             <Avatar initial={owner} displayName />
                         </span>
-                        <Joined joined={joined} />
+                        <Joined joined={joined} action={() => handleJoin()} />
                     </div>
                 </footer>
             </article>
