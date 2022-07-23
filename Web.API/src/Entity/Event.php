@@ -132,7 +132,7 @@ ApiFilter(
 ),
 ApiFilter(
     SearchFilter::class,
-    properties: ["name", "association.id", "association.slug", "association.owner.id", "id"]
+    properties: ["name", "association.id", "association.slug", "association.owner.id", "id", 'association.members.id'],
 ),
 ApiFilter(
     DateFilter::class,

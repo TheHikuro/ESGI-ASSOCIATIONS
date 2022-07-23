@@ -1,3 +1,5 @@
+import axios from "axios";
+import moment from "moment";
 import { AssosDetails } from "../utils/context/reducers/assos";
 import { getAxiosInstance } from "./apiUtils";
 
@@ -65,4 +67,33 @@ export const createPosts = async (data: any) => {
 export const getCommentsFromPost = async (postId: number) => {
     const response = await instance.get(`/posts/${postId}/comments`);
     return response.data;
+}
+
+export const getAllEvent = async (idMember: number) => {
+    const response = await instance.get(`/events?page=1&itemsPerPage=30&active=true&archived=false&association.members.id=${idMember}`);
+    return response.data;
+}
+
+export const joinEvent = async (idEvent: number, idMember: number) => {
+    const response = await instance.put(`/events/${idEvent}/add_participant/${idMember}`);
+    return response.data;
+}
+
+export const exctratPresence = async (data: { format: string }) => {
+    const response = await instance.post(`/associations/extract_presences`, data, {
+        // headers: {
+        //     'Access-Control-Allow-Origin': '*',
+        //     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        //     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, X-Requested-With',
+        //     'Access-Control-Allow-Credentials': true,
+        // },
+        responseType: 'blob'
+    });
+    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Presences OPEN ${moment(new Date()).format('l')}.pdf`;
+    link.click();
+    window.URL.revokeObjectURL(url);
 }
