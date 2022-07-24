@@ -15,7 +15,7 @@ import LoginPage from "../pages/LoginPage";
 import ProfilePage from "../pages/ProfilePage";
 import RegisterPage from "../pages/RegisterPage";
 import { useStoreContext } from "../utils/context/StoreContext";
-import UserManagerPage from "../pages/Manager/UserManagerPage";
+import { EveryRoles } from "../utils/helpers/enums";
 
 interface RequireAuthenticationProps {
     otherwise: string;
@@ -34,9 +34,11 @@ const MyRoutes = () => {
             isAuthenticated,
             activated,
             associationsCount,
-        }
+        },
+        user: { roles },
     } } = useStoreContext();
-
+    const isAdmin = roles.includes(EveryRoles[0].value)
+    const isAssosManager = roles.includes(EveryRoles[1].value)
     return (
         <Routes>
             <Route path="/login" element={<OnlyWhen condition={!isAuthenticated} otherwise="/Home"><LoginPage /></OnlyWhen>} />
@@ -47,13 +49,13 @@ const MyRoutes = () => {
             <Route path="/Profile" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ProfilePage /></OnlyWhen>} />
             <Route path="/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AssosPage /></OnlyWhen>} />
             <Route path="/Calendrier" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><CalendarPage /></OnlyWhen>} />
-            <Route path="/Administration" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Users" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><UserAdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Sections" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Mail" element={<OnlyWhen condition={isAuthenticated} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
-            <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ManagerPage /></OnlyWhen>} />
-            <Route path="/Gestion-Associations/:id" element={<OnlyWhen condition={isAuthenticated} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
+            <Route path="/Administration" element={<OnlyWhen condition={isAdmin} otherwise="/Home"><AdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Users" element={<OnlyWhen condition={isAdmin} otherwise="/Administration"><UserAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Associations" element={<OnlyWhen condition={isAdmin} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Sections" element={<OnlyWhen condition={isAdmin} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Mail" element={<OnlyWhen condition={isAdmin} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAssosManager} otherwise="/Home"><ManagerPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations/:id" element={<OnlyWhen condition={isAssosManager} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
         </Routes>
     )
 }

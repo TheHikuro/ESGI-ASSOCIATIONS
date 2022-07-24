@@ -44,6 +44,11 @@ export const getPosts = async (assosId: number) => {
     return response.data;
 }
 
+export const getMyPosts = async (idUser: number) => {
+    const response = await instance.get(`/users/${idUser}/posts?page=1&itemsPerPage=30&order%5BcreatedAt%5D=desc`);
+    return response.data;
+}
+
 export const getCommentsPosts = async () => {
     const response = await instance.get(`/comments`);
     return response.data;

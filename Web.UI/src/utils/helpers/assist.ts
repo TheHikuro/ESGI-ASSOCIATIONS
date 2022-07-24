@@ -27,4 +27,11 @@ export const getUserNameById = (id: number, members: Array<{ id: number, firstna
     return '';
 }
 
+export const getInitial = (initial: string) => {
+    const initials = initial.match(/\b\w/g) || []
+    return (
+        (initials.shift() || '') + (initials.pop() || '')
+    )
+}
+
 //lodash
