@@ -4,6 +4,8 @@ export interface EventAssosState {
 }
 export interface OwnerAssosState {
     id: number,
+    firstname: string,
+    lastname: string,
 }
 export interface MemberAssosState {
     id: number,
@@ -22,7 +24,7 @@ export interface CommentsAssosState {
 export interface PostsAssosState {
     owner: OwnerAssosState,
     id: number,
-    association: { id: number }
+    association: { id: number, name: string },
     comments: Array<{ id: number }>,
     content: string
     parentPost: string

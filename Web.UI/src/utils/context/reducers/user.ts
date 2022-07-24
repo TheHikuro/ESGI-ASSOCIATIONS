@@ -10,7 +10,7 @@ export interface MyAssosState {
 
 export const userIS = {
     id: 0,
-    name: '',
+    username: '',
     firstname: '',
     lastname: '',
     email: '',
@@ -18,6 +18,8 @@ export const userIS = {
     token: '',
     error: null,
     associations: Array<MyAssosState>(),
+    section: { id: 0, name: '' },
+    discordUserId: '' || null,
 };
 
 // create action types
