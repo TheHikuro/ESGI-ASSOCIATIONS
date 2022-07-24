@@ -12,8 +12,8 @@ import { PostsAssosState } from "../utils/context/reducers/assos";
 import { MyAssosState } from "../utils/context/reducers/user";
 import { useStoreContext } from "../utils/context/StoreContext";
 import LogoDiscord from "../assets/img/logo-discord.svg";
-import { useParams } from "react-router-dom";
-import { linkToDiscord } from "../api/users.axios.api";
+import { linkToDiscord, unLinkDiscord } from "../api/users.axios.api";
+import { useNavigate } from "react-router-dom";
 
 const LayoutAssos = () => {
     const { state: { user: {
@@ -38,6 +38,7 @@ const ProfilePage = () => {
     } } = useStoreContext();
     const { openModal, updateModalContent, updateModalTitle } = useModalContext();
     const [MyPosts, setMyPosts] = React.useState<any[]>([]);
+    const navigate = useNavigate()
 
     React.useEffect(() => {
         if (needRefreshSection) getAllSections(dispatch)
@@ -96,8 +97,14 @@ const ProfilePage = () => {
                 redirectURI: URI
             }
             linkToDiscord(data)
+            navigate('/Profile')
         }
     }, [window.location])
+
+    const revockLinkDiscord = () => {
+        unLinkDiscord()
+        window.location.reload()
+    }
 
     return (
         <div className="w-full h-full flex">
@@ -119,20 +126,19 @@ const ProfilePage = () => {
                                         <p className="flex text-center items-center h-full text-white text-3xl">{username}</p>
                                         <p className="text-white">{firstname + " " + lastname} </p>
                                     </div>
-                                    {discordUserId !== '' ? (
+                                    {discordUserId === null ? (
                                         <a href={`https://discord.com/api/oauth2/authorize?client_id=997589616276283475&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2FProfile&response_type=code&scope=identify`}>
-                                            <div className="mt-2 hover:cursor-pointer hover:shadow-xl -ml-32 p-1 w-96 h-12 rounded-md bg-blue-600 shadow-lg flex justify-center items-center">
+                                            <div className="mt-2 hover:cursor-pointer hover:shadow-xl -ml-32 p-1 w-64 h-12 rounded-md bg-blue-600 shadow-lg flex justify-center items-center">
                                                 <img src={LogoDiscord} alt="Logo Discord" className="h-7 w-7 hover:cursor-pointer" />
                                                 <span className="text-start ml-3 text-sm text-white font-bold">Lier mon compte Discord</span>
                                             </div>
                                         </a>
                                     ) : (
-                                        <a href={`https://discord.com/api/oauth2/authorize?client_id=997589616276283475&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2FProfile&response_type=code&scope=identify`}>
-                                            <div className="mt-2 hover:cursor-pointer hover:shadow-xl -ml-32 p-1 w-96 h-12 rounded-md bg-blue-600 shadow-lg flex justify-center items-center">
-                                                <img src={LogoDiscord} alt="Logo Discord" className="h-7 w-7 hover:cursor-pointer" />
-                                                <span className="text-start ml-3 text-sm text-white font-bold">Delier mon compte Discord</span>
-                                            </div>
-                                        </a>
+                                        <div className="mt-2 hover:cursor-pointer hover:shadow-xl -ml-32 p-1 w-96 h-12 rounded-md bg-red-400 shadow-lg flex justify-center items-center" onClick={revockLinkDiscord}>
+                                            <img src={LogoDiscord} alt="Logo Discord" className="h-7 w-7 hover:cursor-pointer" />
+                                            <span className="text-start ml-3 text-sm text-white font-bold">Delier mon compte Discord</span>
+                                        </div>
+
                                     )}
                                 </div>
                             </div>
