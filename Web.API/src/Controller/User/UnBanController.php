@@ -3,16 +3,18 @@
 namespace App\Controller\User;
 
 use App\Entity\User;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[AsController]
 class UnBanController extends AbstractController
 {
     private $mailer;
 
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(MailerInterface $mailer)
     {
         $this->mailer = $mailer;
     }
@@ -31,13 +33,13 @@ class UnBanController extends AbstractController
         $user->setBanReason(null);
 
         if(isset($payload->notify) && $payload->notify){
-            $message = (new \Swift_Message())
-                ->setSubject('débannissement de ESGI gaming')
-                ->setBody( '<p>Vous n\'êtes plus banni de ESGI gaming</p>', 'text/html')
-                ->setFrom($this->getParameter('swiftmailer.sender_address'))
-                ->setTo($user->getEmail());
-    
-            $this->mailer->send($message);
+            $email = (new TemplatedEmail())
+                ->subject('débannissement de ESGI gaming')
+                ->html('<p>Vous n\'êtes plus banni de ESGI gaming</p>')
+                ->from($this->getParameter('sender_address'))
+                ->to($user->getEmail());
+
+            $this->mailer->send($email);
         }
 
         return $user;
