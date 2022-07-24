@@ -32,7 +32,6 @@ const CalendarPage = () => {
     const localizer = momentLocalizer(moment)
     const { openModal, updateModalContent, updateModalTitle, closeModal } = useModalContext()
     const handleEventClick = (event: { title: string, start: Date, end: Date, pointsToWin: number, id: number, participants: any }) => {
-        console.log(event.participants);
         updateModalTitle(event.title)
         updateModalContent(
             <Fragment>

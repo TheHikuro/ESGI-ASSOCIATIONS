@@ -105,3 +105,18 @@ export const joinAssos = async (idAssos: number, idMember: number) => {
     const response = await instance.put(`/associations/${idAssos}/add_member/${idMember}`);
     return response.data;
 }
+
+export const createEvent = async (data: any) => {
+    const response = await instance.post(`/events`, data);
+    return response.data;
+}
+
+export const getAllEventFromAssos = async (idAssos: number) => {
+    const response = await instance.get(`/associations/${idAssos}/events`);
+    return response.data;
+}
+
+export const ChangeEventStatus = async (idEvent: number, data: any) => {
+    const response = await instance.put(`/events/${idEvent}`, data);
+    return response.data;
+}

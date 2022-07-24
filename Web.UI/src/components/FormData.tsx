@@ -12,7 +12,7 @@ interface IFormDataProps {
     title?: string
     submitButtonText?: string
     id?: number
-    action: Function
+    action?: Function
     actionWithoutDispatch?: Function
     textOnSubmit?: string
 }
@@ -35,7 +35,7 @@ export function FormComponents(props: IFormDataProps) {
             if (JSON.stringify(data[key]) !== JSON.stringify(prevValues[key]))
                 updatedValues[key] = data[key];
 
-        id && action(dispatch, updatedValues, id)
+        id && action && action(dispatch, updatedValues, id)
         closeModal()
     }
 
@@ -100,7 +100,7 @@ export function FormComponentCreate(props: IFormDataProps) {
     const { closeModal } = useModalContext()
 
     const onSubmit: SubmitHandler<IFormData<any>> = async (data: any) => {
-        actionWithoutDispatch ? actionWithoutDispatch(data) : id ? action(dispatch, data, id) : action(dispatch, data)
+        actionWithoutDispatch ? actionWithoutDispatch(data) : id && action ? action(dispatch, data, id) : action && action(dispatch, data)
         closeModal()
     }
 
