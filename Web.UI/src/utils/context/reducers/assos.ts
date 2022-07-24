@@ -75,6 +75,8 @@ export const AssosTypes = {
     CREATE_ASSOS_EVENT_SUCCESS: 'CREATE_ASSOS_EVENT_SUCCESS',
     UPDATE_ASSOS_EVENT_REQUEST: 'UPDATE_ASSOS_EVENT_REQUEST',
     UPDATE_ASSOS_EVENT_SUCCESS: 'UPDATE_ASSOS_EVENT_SUCCESS',
+    DELETE_ASSOS_USER_REQUEST: 'DELETE_ASSOS_USER_REQUEST',
+    DELETE_ASSOS_USER_SUCCESS: 'DELETE_ASSOS_USER_SUCCESS',
 }
 
 export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
@@ -161,6 +163,17 @@ export const AssosReducer = (state = AssosIS, action: AssosActionTypes) => {
                 needRefreshAssos: false
             };
         case AssosTypes.CREATE_ASSOS_EVENT_SUCCESS:
+            return {
+                ...state,
+                assosList: action.payload,
+                needRefreshAssos: false
+            };
+        case AssosTypes.DELETE_ASSOS_USER_REQUEST:
+            return {
+                ...state,
+                needRefreshAssos: true
+            };
+        case AssosTypes.DELETE_ASSOS_USER_SUCCESS:
             return {
                 ...state,
                 assosList: action.payload,

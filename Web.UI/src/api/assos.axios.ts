@@ -30,7 +30,7 @@ export const getMembers = async (assosId: number) => {
 }
 
 export const removeMembers = async (assosId: number, memberId: number) => {
-    const response = await instance.delete(`/associations/${assosId}/members/${memberId}`);
+    const response = await instance.put(`/associations/${assosId}/remove_member/${memberId}`);
     return response.data;
 }
 
@@ -81,12 +81,6 @@ export const joinEvent = async (idEvent: number, idMember: number) => {
 
 export const exctratPresence = async (data: { format: string }) => {
     const response = await instance.post(`/associations/extract_presences`, data, {
-        // headers: {
-        //     'Access-Control-Allow-Origin': '*',
-        //     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        //     'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, X-Requested-With',
-        //     'Access-Control-Allow-Credentials': true,
-        // },
         responseType: 'blob'
     });
     const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -96,4 +90,33 @@ export const exctratPresence = async (data: { format: string }) => {
     link.download = `Presences OPEN ${moment(new Date()).format('l')}.pdf`;
     link.click();
     window.URL.revokeObjectURL(url);
+}
+
+export const createAssos = async (data: AssosDetails, id: number) => {
+    const postData = {
+        ...data,
+        owner: `/api/users/${id.toString()}}`
+    }
+    const response = await instance.post('/associations', postData);
+    return response.data;
+}
+
+export const joinAssos = async (idAssos: number, idMember: number) => {
+    const response = await instance.put(`/associations/${idAssos}/add_member/${idMember}`);
+    return response.data;
+}
+
+export const createEvent = async (data: any) => {
+    const response = await instance.post(`/events`, data);
+    return response.data;
+}
+
+export const getAllEventFromAssos = async (idAssos: number) => {
+    const response = await instance.get(`/associations/${idAssos}/events`);
+    return response.data;
+}
+
+export const ChangeEventStatus = async (idEvent: number, data: any) => {
+    const response = await instance.put(`/events/${idEvent}`, data);
+    return response.data;
 }

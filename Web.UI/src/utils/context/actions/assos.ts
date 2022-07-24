@@ -1,4 +1,4 @@
-import { deleteAssos, getAllAssos, getPostsByAssos, updateAssos } from "../../../api/assos.axios";
+import { createAssos, deleteAssos, getAllAssos, getPostsByAssos, removeMembers, updateAssos } from "../../../api/assos.axios";
 import { AssosDetails, AssosTypes } from "../reducers/assos";
 import { startLoader, endLoader } from "./loader";
 
@@ -82,3 +82,60 @@ export const getPostsByAssosActions = async (dispatch: Function, assosId: number
 
     } catch (error) { console.log(error) }
 }
+
+export const createAssosActions = async (dispatch: Function, data: AssosDetails, id: number) => {
+    dispatch({
+        type: AssosTypes.CREATE_ASSOS_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await createAssos(data, id);
+        dispatch({
+            type: AssosTypes.CREATE_ASSOS_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+export const deleteUserFromAsso = async (dispatch: Function, assoId: number, memberId: number) => {
+    dispatch({
+        type: AssosTypes.DELETE_ASSOS_USER_REQUEST,
+    });
+
+    startLoader(dispatch)
+
+    try {
+        const response = await removeMembers(assoId, memberId);
+        dispatch({
+            type: AssosTypes.DELETE_ASSOS_USER_SUCCESS,
+            payload: response,
+        });
+
+        endLoader(dispatch);
+
+    } catch (error) { console.log(error) }
+}
+
+// export const joinAssos = async (dispatch: Function, assoId: number, userId: number) => {
+//     dispatch({
+//         type: AssosTypes.JOIN_ASSOS_REQUEST,
+//     });
+
+//     startLoader(dispatch)
+
+//     try {
+//         const response = await addMembers(assoId, userId);
+//         dispatch({
+//             type: AssosTypes.JOIN_ASSOS_SUCCESS,
+//             payload: response,
+//         });
+
+//         endLoader(dispatch);
+
+//     } catch (error) { console.log(error) }
+// }

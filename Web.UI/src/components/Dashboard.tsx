@@ -1,10 +1,13 @@
 import { AcademicCapIcon, CameraIcon } from "@heroicons/react/outline"
-import React from "react"
+import React, { Fragment } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { createAssosActions } from "../utils/context/actions/assos"
 import { getMyAssosActions } from "../utils/context/actions/user"
 import { MyAssosState } from "../utils/context/reducers/user"
 import { useStoreContext } from "../utils/context/StoreContext"
 import { whenPatternMatches } from "../utils/helpers/assist"
+import { FormComponentCreate } from "./FormData"
+import { useModalContext } from "./modal"
 
 interface DashboardItemsProps {
     name: string
@@ -30,7 +33,7 @@ export const DashboardItem = ({ name, onpress, icon, idAssos }: DashboardItemsPr
                 assos: true,
             })],
         ])
-    }, [])
+    }, [window.location.pathname])
 
     return (
         <Link to={display.admin ? `/Administration/${name}` : display.assos ? `/Gestion-Associations/${idAssos}` : ''}>
@@ -47,6 +50,7 @@ export const DashboardItem = ({ name, onpress, icon, idAssos }: DashboardItemsPr
 export const Dashboard = ({ children }: any) => {
     const navigate = useNavigate()
     const { dispatch, state: { assos: { assosList, needRefreshAssos }, user: { id, associations } } } = useStoreContext()
+    const { updateModalContent, updateModalTitle, openModal } = useModalContext()
 
     React.useEffect(() => {
         if (needRefreshAssos) {
@@ -69,9 +73,32 @@ export const Dashboard = ({ children }: any) => {
                 admin: false,
                 assos: true,
             })],
+            [/^\/Gestion-Associations.*$/, () => setDisplay({
+                admin: false,
+                assos: true,
+            })]
         ])
-    }, [])
+    }, [window.location.pathname])
 
+
+    const handleModalCreate = () => {
+        updateModalTitle('Création association')
+        updateModalContent(
+            <Fragment>
+                <FormComponentCreate
+                    values={[
+                        { label: 'Nom', type: 'text', formControlName: 'name' },
+                        //{ label: 'Image de couverture', type: 'file', formControlName: 'avatar' },
+                        { label: 'Description', type: 'textarea', formControlName: 'description' },
+                    ]}
+                    id={id}
+                    submitButtonText="Créer"
+                    action={createAssosActions}
+                />
+            </Fragment>
+        )
+        openModal()
+    }
     return (
         <div className="w-full h-screen flex flex-col">
             <div className="w-full h-full px-10 py-10 z-10">
@@ -101,9 +128,11 @@ export const Dashboard = ({ children }: any) => {
                                     </>
                                 ) : <></>}
 
-
                             </div>
                             <div className="h-1/6 w-full flex justify-end flex-col">
+                                {display.assos ? (
+                                    <div className="p-3 mb-2 rounded-md shadow-md bg-slate-200 uppercase text-sm hover:bg-slate-300 hover:text-green-500 text-center hover:cursor-pointer" onClick={() => handleModalCreate()}>Ajouter association</div>
+                                ) : ''}
                                 <div className="p-3 rounded-md shadow-md bg-slate-200 uppercase text-sm hover:bg-slate-300 hover:text-red-500 text-center hover:cursor-pointer" onClick={() => navigate('/Home')}>Retour</div>
                             </div>
                         </div>

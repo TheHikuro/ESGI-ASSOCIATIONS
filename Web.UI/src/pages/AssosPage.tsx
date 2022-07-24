@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
 import { Card } from "../components/Card";
 import { Layout } from "../components/Layout";
+import { getUsersActions } from "../utils/context/actions/admin";
 import { getAllAssosActions } from "../utils/context/actions/assos";
 import { AssosDetails } from "../utils/context/reducers/assos";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { getUserNameById } from "../utils/helpers/assist";
 
 const AssosPage = () => {
-    const { dispatch, state: { assos: { assosList, needRefreshAssos }, admin: { userList } } } = useStoreContext();
+    const { dispatch, state: {
+        assos: { assosList, needRefreshAssos },
+        admin: { userList, needRefreshAdmin },
+        members: { needRefreshMember },
+        user: { id }
+    } } = useStoreContext();
     useEffect(() => {
-        if (needRefreshAssos) {
-            getAllAssosActions(dispatch);
-        }
-    }, [needRefreshAssos])
+        if (needRefreshAssos) getAllAssosActions(dispatch);
+    }, [needRefreshAssos, needRefreshMember])
+
+    useEffect(() => {
+        if (needRefreshAdmin) getUsersActions(dispatch);
+    }, [needRefreshAdmin])
+
     return (
         <Layout>
             <>
@@ -27,6 +36,8 @@ const AssosPage = () => {
                                     key={asso.name}
                                     createdAt={asso.createdAt}
                                     owner={getUserNameById(asso.owner.id, userList)}
+                                    joined={asso.members.find(member => member.id === id) ? true : false}
+                                    idAssos={asso.id}
                                 />
                             )
                         }

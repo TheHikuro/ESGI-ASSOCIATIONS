@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Tue Jul 12 00:40:12 2022
+# Make data base, printed on Fri Jul 22 01:40:47 2022
 
 # Variables
 
@@ -90,11 +90,11 @@ MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/loancleris/Library/Application Support/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
+VSCODE_CODE_CACHE_PATH = /Users/loancleris/Library/Application Support/Code/CachedData/3b889b090b5ad5793f524b5d1d39fda662b96a2a
 # environment
 LOGNAME = loancleris
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 ZSH = /Users/loancleris/.oh-my-zsh
 # environment
@@ -144,7 +144,7 @@ TMPDIR = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/loancleris/Library/Application Support/Code/1.69.0-main.sock
+VSCODE_IPC_HOOK = /Users/loancleris/Library/Application Support/Code/1.69.2-main.sock
 # makefile (from `.docker/conf/.env.local', line 43)
 DB_PASSWORD = esgigaming
 # environment
@@ -158,7 +158,7 @@ MFLAGS = -Rrqp
 # environment
 TERM_PROGRAM_VERSION = 3.4.15
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.33655451.33655458.A9D6676B-CFA8-465E-8E27-4C846D3C2864
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.35820686.35820693.5001E063-4C94-4D30-B5C1-3E52F285AD00
 # environment
 LC_TERMINAL_VERSION = 3.4.15
 # environment
@@ -210,7 +210,7 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 50319
+VSCODE_PID = 26222
 # makefile (from `.docker/conf/.env.local', line 52)
 JWT_PASSPHRASE = insomniak
 # variable set hash-table stats:
@@ -222,9 +222,9 @@ JWT_PASSPHRASE = insomniak
 
 # Directories
 
-# . (device 16777234, inode 28374545): 12 files, no impossibilities.
+# . (device 16777234, inode 28374545): 13 files, no impossibilities.
 
-# 12 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -255,7 +255,7 @@ setup:
 # Not a target:
 .docker/conf/.env.local:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-08 13:34:11
+#  Last modified 2022-07-21 18:52:21
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -332,6 +332,6 @@ down:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4063 / max = 4063 / min = 4063 / avg = 4063
 
-# Finished Make data base on Tue Jul 12 00:40:12 2022
+# Finished Make data base on Fri Jul 22 01:40:47 2022
 
  
