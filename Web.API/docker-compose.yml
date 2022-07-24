@@ -10,6 +10,8 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
+      TZ: Europe/Paris
+      DEBIAN_FRONTEND: noninteractive
     ports:
       - "3306:3306"
       
@@ -30,10 +32,13 @@ services:
     build: ../.docker/build/php-fpm
     container_name: esgi-assos_php-fpm
     working_dir: /var/www/
+    environment:
+      TZ: Europe/Paris
+      DEBIAN_FRONTEND: noninteractive
     ports:
       - 3000:80
     volumes:
-      - ./:/var/www/
+      - ./:/var/www:cached
       - ../.docker/conf/php-fpm/apache2.conf:/etc/apache2/apache2.conf
       - ../.docker/conf/php-fpm/sites-enabled/:/etc/apache2/sites-enabled
 
@@ -59,7 +64,7 @@ services:
     depends_on:
       - php-fpm
     volumes: 
-      - ./:/app
+      - ./:/app:cached
 
   mailcatcher:
     image: jderusse/mailcatcher:latest

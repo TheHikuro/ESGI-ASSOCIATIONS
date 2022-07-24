@@ -5,6 +5,9 @@ services:
     image: node:18.2.0
     container_name: esgi-assos_node-ui
     working_dir: /var/www/
+    environment:
+      TZ: Europe/Paris
+      DEBIAN_FRONTEND: noninteractive
     command: /bin/bash -c "yarn && yarn dev"
     ports:
       - 8080:8080
