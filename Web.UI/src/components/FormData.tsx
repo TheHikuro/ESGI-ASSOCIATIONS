@@ -94,13 +94,13 @@ export function FormComponents(props: IFormDataProps) {
 }
 
 export function FormComponentCreate(props: IFormDataProps) {
-    const { values, title, submitButtonText, action, actionWithoutDispatch, textOnSubmit } = props;
+    const { values, title, submitButtonText, action, actionWithoutDispatch, textOnSubmit, id } = props;
     const { handleSubmit, register } = useForm<IFormData<any>>();
     const { dispatch } = useStoreContext()
     const { closeModal } = useModalContext()
 
     const onSubmit: SubmitHandler<IFormData<any>> = async (data: any) => {
-        actionWithoutDispatch ? actionWithoutDispatch(data) : action(dispatch, data)
+        actionWithoutDispatch ? actionWithoutDispatch(data) : id ? action(dispatch, data, id) : action(dispatch, data)
         closeModal()
     }
 

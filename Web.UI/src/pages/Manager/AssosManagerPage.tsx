@@ -61,25 +61,6 @@ const AssosManagerPage = () => {
         }
     ]
 
-    const handleModalCreate = () => {
-        updateModalTitle('Création association')
-        updateModalContent(
-            <Fragment>
-                <FormComponentCreate
-                    values={[
-                        { label: 'Nom', type: 'text', formControlName: 'name' },
-                        //{ label: 'Image de couverture', type: 'file', formControlName: 'avatar' },
-                        { label: 'Description', type: 'textarea', formControlName: 'description' },
-                    ]}
-                    id={userId}
-                    submitButtonText="Créer"
-                    action={createAssosActions}
-                />
-            </Fragment>
-        )
-        openModal()
-    }
-
     const handleDeleteUserFromAsso = (assoId: string, memberId: number) => {
         updateModalTitle('Bannir utilisateur')
         updateModalContent(<>Voulez vous vraiment supprimer cet utilisateur de votre association ?</>)
@@ -99,7 +80,6 @@ const AssosManagerPage = () => {
                     <div className="flex items-center " onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)}>
                         <input type="text" placeholder="Rechercher" className="p-1 bg-slate-300 rounded-lg mr-5 w-52" />
                     </div>
-                    <div className="p-2 mr-2 rounded-md shadow-md bg-slate-200 uppercase text-sm hover:bg-slate-300 hover:text-red-500 text-center hover:cursor-pointer" onClick={() => handleModalCreate()}>Ajouter association</div>
                 </div>
 
                 <Table
