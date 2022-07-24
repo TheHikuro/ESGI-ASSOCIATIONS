@@ -92,7 +92,7 @@
         "version": "1.1.2"
     },
     "egulias/email-validator": {
-        "version": "3.2"
+        "version": "3.2.1"
     },
     "fig/link-util": {
         "version": "1.2.0"
@@ -196,9 +196,6 @@
     "stella-maris/clock": {
         "version": "0.1.4"
     },
-    "swiftmailer/swiftmailer": {
-        "version": "v6.3.0"
-    },
     "symfony/asset": {
         "version": "v5.4.7"
     },
@@ -295,6 +292,18 @@
     },
     "symfony/http-kernel": {
         "version": "v5.4.9"
+    },
+    "symfony/mailer": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "4.3",
+            "ref": "97a61eabb351d7f6cb7702039bcfe07fe9d7e03c"
+        },
+        "files": [
+            "./config/packages/mailer.yaml"
+        ]
     },
     "symfony/maker-bundle": {
         "version": "1.43",
@@ -399,6 +408,15 @@
     "symfony/security-http": {
         "version": "v5.4.9"
     },
+    "symfony/sendinblue-mailer": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.2",
+            "ref": "ae1cf494ce06b9a4578a8445c610402a1676ee8d"
+        }
+    },
     "symfony/serializer": {
         "version": "v5.4.9"
     },
@@ -410,20 +428,6 @@
     },
     "symfony/string": {
         "version": "v5.4.9"
-    },
-    "symfony/swiftmailer-bundle": {
-        "version": "3.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.5",
-            "ref": "f0b2fccdca2dfd97dc2fd5ad216d5e27c4f895ac"
-        },
-        "files": [
-            "./config/packages/dev/swiftmailer.yaml",
-            "./config/packages/swiftmailer.yaml",
-            "./config/packages/test/swiftmailer.yaml"
-        ]
     },
     "symfony/translation-contracts": {
         "version": "v2.5.1"

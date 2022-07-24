@@ -3,8 +3,10 @@
 namespace App\Controller\User;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[AsController]
 class ConfirmationEmailController extends AbstractController
@@ -12,7 +14,7 @@ class ConfirmationEmailController extends AbstractController
     private $em;
     private $mailer;
 
-    public function __construct(EntityManagerInterface $em, \Swift_Mailer $mailer)
+    public function __construct(EntityManagerInterface $em, MailerInterface $mailer)
     {
         $this->em = $em;
         $this->mailer = $mailer;
@@ -20,6 +22,9 @@ class ConfirmationEmailController extends AbstractController
 
     public function __invoke($id)
     {
+        /**
+         * @var User
+         */
         $user = $this->getUser();
 
         if($user->getId() !== (int)$id)
@@ -30,12 +35,12 @@ class ConfirmationEmailController extends AbstractController
         $user->setConfirmationCode(substr(str_shuffle(str_repeat('0123456789', 6)), 0, 6));
         $this->em->flush();
 
-        $message = (new \Swift_Message())
-            ->setSubject('Email de confirmation ESGI gaming')
-            ->setBody("<p>votre code de confirmation est <strong>{$user->getConfirmationCode()}</strong></p>", 'text/html')
-            ->setFrom($this->getParameter('swiftmailer.sender_address'))
-            ->setTo($user->getEmail());
+        $email = (new TemplatedEmail())
+            ->subject('Email de confirmation ESGI gaming')
+            ->html("<p>votre code de confirmation est <strong>{$user->getConfirmationCode()}</strong></p>")
+            ->from($this->getParameter('sender_address'))
+            ->to($user->getEmail());
         
-        $this->mailer->send($message);
+        $this->mailer->send($email);
     }
 }
