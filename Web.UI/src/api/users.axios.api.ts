@@ -31,3 +31,8 @@ export const getMyAssos = async (idUser: number) => {
     const response = await instance.get(`/users/${idUser}/associations`);
     return response.data;
 }
+
+export const linkToDiscord = async (data: { code: string, redirectURI: string }) => {
+    const response = await instance.put(`/users/me/discord_connect`, data);
+    return response.data;
+}

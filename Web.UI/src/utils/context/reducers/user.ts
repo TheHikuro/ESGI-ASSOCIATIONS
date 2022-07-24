@@ -19,6 +19,7 @@ export const userIS = {
     error: null,
     associations: Array<MyAssosState>(),
     section: { id: 0, name: '' },
+    discordUserId: '',
 };
 
 // create action types

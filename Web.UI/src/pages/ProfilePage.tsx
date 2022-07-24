@@ -11,6 +11,9 @@ import { updateUserActions } from "../utils/context/actions/user";
 import { PostsAssosState } from "../utils/context/reducers/assos";
 import { MyAssosState } from "../utils/context/reducers/user";
 import { useStoreContext } from "../utils/context/StoreContext";
+import LogoDiscord from "../assets/img/logo-discord.svg";
+import { useParams } from "react-router-dom";
+import { linkToDiscord } from "../api/users.axios.api";
 
 const LayoutAssos = () => {
     const { state: { user: {
@@ -30,11 +33,10 @@ const LayoutAssos = () => {
 
 const ProfilePage = () => {
     const { dispatch, state: {
-        user: { id, firstname, lastname, username, section: mySection },
+        user: { id, firstname, lastname, username, section: mySection, discordUserId },
         section: { sectionList, needRefreshSection }
     } } = useStoreContext();
     const { openModal, updateModalContent, updateModalTitle } = useModalContext();
-
     const [MyPosts, setMyPosts] = React.useState<any[]>([]);
 
     React.useEffect(() => {
@@ -76,6 +78,27 @@ const ProfilePage = () => {
         openModal();
     }
 
+    const getUrlCodeDicord = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (!code) {
+            return null
+        }
+        return code;
+    }
+
+    React.useEffect(() => {
+        const code = getUrlCodeDicord();
+        const URI = 'http://localhost:8080/Profile'
+        if (code !== null) {
+            const data = {
+                code: code,
+                redirectURI: URI
+            }
+            linkToDiscord(data)
+        }
+    }, [window.location])
+
     return (
         <div className="w-full h-full flex">
             <Layout large>
@@ -90,9 +113,28 @@ const ProfilePage = () => {
                     </div>
                     <div className="flex w-full justify-end mt-5 ml-4">
                         <div className=" flex justify-between w-11/12">
-                            <div className="w-52 h-10 ml-12 flex flex-col justify-center items-start">
-                                <p className="flex justify-center items-center h-full text-white text-3xl">{username}</p>
-                                <p className="text-white">{firstname + " " + lastname} </p>
+                            <div className="w-96 h-10 ml-12 flex flex-col justify-center">
+                                <div className="flex items-start justify-start w-full">
+                                    <div className="flex flex-col justify-start w-full">
+                                        <p className="flex text-center items-center h-full text-white text-3xl">{username}</p>
+                                        <p className="text-white">{firstname + " " + lastname} </p>
+                                    </div>
+                                    {discordUserId !== '' ? (
+                                        <a href={`https://discord.com/api/oauth2/authorize?client_id=997589616276283475&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2FProfile&response_type=code&scope=identify`}>
+                                            <div className="mt-2 hover:cursor-pointer hover:shadow-xl -ml-32 p-1 w-96 h-12 rounded-md bg-blue-600 shadow-lg flex justify-center items-center">
+                                                <img src={LogoDiscord} alt="Logo Discord" className="h-7 w-7 hover:cursor-pointer" />
+                                                <span className="text-start ml-3 text-sm text-white font-bold">Lier mon compte Discord</span>
+                                            </div>
+                                        </a>
+                                    ) : (
+                                        <a href={`https://discord.com/api/oauth2/authorize?client_id=997589616276283475&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2FProfile&response_type=code&scope=identify`}>
+                                            <div className="mt-2 hover:cursor-pointer hover:shadow-xl -ml-32 p-1 w-96 h-12 rounded-md bg-blue-600 shadow-lg flex justify-center items-center">
+                                                <img src={LogoDiscord} alt="Logo Discord" className="h-7 w-7 hover:cursor-pointer" />
+                                                <span className="text-start ml-3 text-sm text-white font-bold">Delier mon compte Discord</span>
+                                            </div>
+                                        </a>
+                                    )}
+                                </div>
                             </div>
                             <div className="w-44 bg-white rounded-lg shadow-lg hover:shadow-xl flex flex-end mr-4">
                                 <div className="flex justify-center items-center h-full w-full hover:cursor-pointer" onClick={handleEditModal}>
