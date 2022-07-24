@@ -18,6 +18,7 @@ export const userIS = {
     token: '',
     error: null,
     associations: Array<MyAssosState>(),
+    section: { id: 0, name: '' },
 };
 
 // create action types
