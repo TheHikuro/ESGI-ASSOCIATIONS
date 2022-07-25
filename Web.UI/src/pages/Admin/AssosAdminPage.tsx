@@ -42,12 +42,12 @@ const AssosAdminPage = () => {
     })
 
     const columns: GridColDef[] = [
-        { field: "name", headerName: "Nom", width: 200, align: 'left' },
-        { field: "owner", headerName: "Propriétaire", width: 200, align: 'left' },
-        { field: "description", headerName: "Description", width: 300, align: 'left' },
-        { field: "createdAt", headerName: "Créé le", width: 200, align: 'left' },
+        { field: "name", headerName: "Nom", flex: 1, align: 'left' },
+        { field: "owner", headerName: "Propriétaire", flex: 1, align: 'left' },
+        { field: "description", headerName: "Description", flex: 1, align: 'left' },
+        { field: "createdAt", headerName: "Créé le", flex: 1, align: 'left' },
         {
-            field: "actions", headerName: "Actions", width: 200, align: 'right', renderCell: (params: any) => {
+            field: "actions", headerName: "Actions", flex: 1, align: 'right', renderCell: (params: any) => {
                 return params.value
             }
         }

@@ -74,10 +74,10 @@ const AssosManagerPage = () => {
     }, [id, EventsAssos.length])
 
     const columns: GridColDef[] = [
-        { field: "firstName", headerName: "Prenom", width: 200, align: 'left' },
-        { field: "lastName", headerName: "Nom", width: 200, align: 'left' },
+        { field: "firstName", headerName: "Prenom", flex: 1, align: 'left' },
+        { field: "lastName", headerName: "Nom", flex: 1, align: 'left' },
         {
-            field: "actions", headerName: "Actions", width: 200, align: 'right', renderCell: (params: any) => {
+            field: "actions", headerName: "Actions", flex: 1, align: 'right', renderCell: (params: any) => {
                 return params.value
             }
         }

@@ -24,9 +24,13 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
 #[ApiResource(
     normalizationContext: ['groups' => ['item:get:event', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:event", 'get:id']]],
+        "get" => [
+            "normalization_context" => ["groups" => ["collection:get:event", 'get:id']],
+            "security" => "user.isActivated() == true and user.getIsBanned() == false",
+        ],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:event"]],
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.association.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -51,6 +55,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "archiveEvents" => [
             "method" => "put",
             "path" => "events/archive_events",
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => ArchiveEventsController::class,
             "deserialize" => false,
             "openapi_context" => [
@@ -65,9 +70,10 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ],
     ],
     itemOperations: [
-        "get",
+        "get" => ["security" => "(is_granted('ROLE_ADMIN') or object.association.members.contains(user)) and user.isActivated() == true and user.getIsBanned() == false"],
         "put" => [
             "denormalization_context" => ["groups" => ["item:put:event"]],
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.association.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -92,6 +98,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "addParticipant" => [
             "method" => "put",
             "path" => "events/{id}/add_participant/{idParticipant}",
+            "security" => "(is_granted('ROLE_ADMIN') or object.association.members.contains(user)) and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => AddParticipantController::class,
             "deserialize" => false,
             "openapi_context" => [
@@ -107,6 +114,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "removeParticipant" => [
             "method" => "put",
             "path" => "events/{id}/remove_participant/{idParticipant}",
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.association.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => RemoveParticipantController::class,
             "deserialize" => false,
             "openapi_context" => [
@@ -119,7 +127,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                 ],
             ],  
         ],
-        "delete",
+        "delete" => ["security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.association.owner == user) and user.isActivated() == true and user.getIsBanned() == false"],
     ],
 ),
 ApiFilter(

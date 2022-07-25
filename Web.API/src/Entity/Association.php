@@ -30,11 +30,15 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ApiResource(
     normalizationContext: ['groups' => ['item:get:association', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:association", 'get:id']]],
+        "get" => [
+            "normalization_context" => ["groups" => ["collection:get:association", 'get:id']],
+            "security" => "user.isActivated() == true and user.getIsBanned() == false",
+        ],
         "addAssociation" => [
             "method" => "post",
             "denormalization_context" => ["groups" => ["collection:post:association"]],
             "path" => "associations",
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER')) and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => AddAssociationController::class,
             "openapi_context" => [
                 "requestBody" => [
@@ -57,6 +61,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         "extractPrecences" => [
             "method" => "post",
             "path" => "associations/extract_presences",
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => ExtractPresencesController::class,
             "deserialize" => false,
             "defaults" => [
@@ -83,9 +88,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ],
     ],
     itemOperations: [
-        "get",
+        "get" => ["security" => "user.isActivated() == true and user.getIsBanned() == false"],
         "put" => [
             "denormalization_context" => ["groups" => ["item:put:association"]],
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -106,6 +112,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         "addMember" => [
             "method" => "put",
             "path" => "associations/{id}/add_member/{idMember}",
+            "security" => "is_granted('ROLE_USER') and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => AddMemberController::class,
             "deserialize" => false,
             "openapi_context" => [
@@ -121,6 +128,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         "removeMember" => [
             "method" => "put",
             "path" => "associations/{id}/remove_member/{idMember}",
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user or object.members.contains(user)) and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => RemoveMemberController::class,
             "deserialize" => false,
             "openapi_context" => [
@@ -133,28 +141,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 ],
             ],
         ],
-        // "patch" => [
-        //     "denormalization_context" => ["groups" => ["item:patch:association"]],
-        //     "openapi_context" => [
-        //         "requestBody" => [
-        //             "content" => [
-        //                 "application/ld+json" => [
-        //                     "schema" => [
-        //                         "type" => "object",
-        //                         "properties" => [
-        //                             "events" => ["type" => "array", "items" => ["type" => "string"]],
-        //                             "members" => ["type" => "array", "items" => ["type" => "string"]],
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //         ],
-        //     ],
-        // ],
-        "delete",
+        "delete" => ["security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user) and user.isActivated() == true and user.getIsBanned() == false"],
         "avatar" => [
             "method" => "post",
             "path" => "associations/{id}/avatar",
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => PostAvatarController::class,
             "deserialize" => false,
             "openapi_context" => [
@@ -178,6 +169,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         "deleteAvatar" => [
             "method" => "put",
             "path" => "associations/{id}/avatar",
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "controller" => DeleteAvatarController::class,
             "deserialize" => false,
         ],
@@ -240,6 +232,7 @@ class Association
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Event::class, orphanRemoval: true)]
     #[ApiSubresource(maxDepth: 1)]
+    #[ApiResource(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user or object.members.contains(user)")]
     #[Groups(["collection:get:association", "item:get:association"])]
     #[SerializedName('events')]
     private $events;
@@ -247,12 +240,14 @@ class Association
     #[ORM\ManyToMany(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[ApiSubresource(maxDepth: 1)]
+    #[ApiResource(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user or object.members.contains(user)")]
     #[Groups(["collection:get:association", "item:get:association"])]
     #[SerializedName('members')]
     private $members;
 
     #[ORM\OneToMany(mappedBy: 'association', targetEntity: Post::class, orphanRemoval: true)]
     #[ApiSubresource(maxDepth: 1)]
+    #[ApiResource(security: "is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.owner == user or object.members.contains(user)")]
     #[Groups(["collection:get:association", "item:get:association"])]
     #[SerializedName('posts')]
     private $posts;

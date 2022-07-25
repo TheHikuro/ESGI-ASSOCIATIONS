@@ -102,14 +102,14 @@ const UserAdminPage = () => {
     }
 
     const columns: GridColDef[] = [
-        { headerName: 'Prenom', field: 'name', width: 200, align: 'left' },
-        { headerName: 'Nom', field: 'lastname', width: 200, align: 'left' },
-        { headerName: 'Email', field: 'email', width: 200, align: 'left' },
-        { headerName: 'Pseudo', field: 'pseudo', width: 200, align: 'left' },
-        { headerName: 'Section', field: 'sections', width: 100, align: 'left' },
-        { headerName: 'Roles', field: 'role', width: 200, align: 'left' },
+        { headerName: 'Prenom', field: 'name', flex: 1, align: 'left' },
+        { headerName: 'Nom', field: 'lastname', flex: 1, align: 'left' },
+        { headerName: 'Email', field: 'email', flex: 1, align: 'left' },
+        { headerName: 'Pseudo', field: 'pseudo', flex: 1, align: 'left' },
+        { headerName: 'Section', field: 'sections', flex: 1, align: 'left' },
+        { headerName: 'Roles', field: 'role', flex: 1, align: 'left' },
         {
-            headerName: 'Actions', field: 'actions', width: 100, align: 'right', renderCell: (params: any) => {
+            headerName: 'Actions', field: 'actions', flex: 1, align: 'right', renderCell: (params: any) => {
                 return params.value
             }
         },

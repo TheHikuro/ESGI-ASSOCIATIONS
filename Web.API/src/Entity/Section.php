@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "get" => ["normalization_context" => ["groups" => ["collection:get:section", 'get:id']]],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:section"]],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -37,6 +38,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "get",
         "put" => [
             "denormalization_context" => ["groups" => ["item:put:section"]],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -52,7 +54,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                 ],
             ],
         ],
-        "delete",
+        "delete" => ["security" => "is_granted('ROLE_ADMIN')",],
     ],
 )]
 class Section
