@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../utils/constants');
 const { getAxiosInstanceWithAuth } = require('../../utils/axiosUtils');
+const moment = require('moment');
 
 module.exports.run = async (client, message, connectedUser) => {
     const validChannels = await getAxiosInstanceWithAuth(client.apiToken).get('discord/presencesChannels', { params: { guildId: message.guild.id } })
@@ -24,8 +25,8 @@ module.exports.run = async (client, message, connectedUser) => {
             active: true,
             archived: false,
             'association.slug': presencesChannel.data.association.slug,
-            'dateStart[before]': (new Date()).toUTCString(),
-            'dateEnd[after]': (new Date()).toUTCString()
+            'dateStart[before]': moment().format('YYYY-MM-DD HH:mm:ss'),
+            'dateEnd[after]': moment().format('YYYY-MM-DD HH:mm:ss')
         }
     })
     .catch((e) => { return; });

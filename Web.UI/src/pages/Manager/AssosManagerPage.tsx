@@ -99,8 +99,8 @@ const AssosManagerPage = () => {
             association: `api/associations/${id}`,
             name: data.name,
             pointsToWin: Number(data.pointsToWin),
-            dateStart: new Date(data.startDate).toUTCString(),
-            dateEnd: new Date(data.endDate).toUTCString(),
+            dateStart: moment(data.startDate).format('YYYY-MM-DD HH:mm:ss'),
+            dateEnd: moment(data.endDate).format('YYYY-MM-DD HH:mm:ss'),
             id: data.id,
         })
     }
