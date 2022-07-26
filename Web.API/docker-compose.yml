@@ -1,0 +1,77 @@
+version: '3.5'
+
+services:
+  # Backend service
+  mariadb:
+    image: mariadb:10.7.1
+    container_name: esgi-assos_mariadb
+    environment:
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      TZ: Europe/Paris
+      DEBIAN_FRONTEND: noninteractive
+    ports:
+      - "3306:3306"
+      
+  phpmyadmin:
+    image: phpmyadmin:5.1.1
+    container_name: esgi-assos_phpmyadmin
+    depends_on:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 9000:80
+
+  php-fpm:
+    image: php:8.1.6-apache-buster
+    build: ../.docker/build/php-fpm
+    container_name: esgi-assos_php-fpm
+    working_dir: /var/www/
+    environment:
+      TZ: Europe/Paris
+      DEBIAN_FRONTEND: noninteractive
+    ports:
+      - 3000:80
+    volumes:
+      - ./:/var/www:cached
+      - ../.docker/conf/php-fpm/apache2.conf:/etc/apache2/apache2.conf
+      - ../.docker/conf/php-fpm/sites-enabled/:/etc/apache2/sites-enabled
+
+  mercure:
+    image: dunglas/mercure
+    container_name: esgi-assos_mercure
+    environment:
+      SERVER_NAME: ':80'
+      MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
+      MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
+      MERCURE_EXTRA_DIRECTIVES: cors_origins "http://localhost:3000" "http://localhost:8080" "http://5.135.151.36:3000" "http://5.135.151.36:8080"
+    command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
+    ports:
+      - 8000:80
+    volumes:
+      - mercure_data:/data
+      - mercure_config:/config
+
+  composer:
+    image: composer:2
+    container_name: esgi-assos_composer
+    command: /bin/sh -c "composer install"
+    depends_on:
+      - php-fpm
+    volumes: 
+      - ./:/app:cached
+
+  mailcatcher:
+    image: jderusse/mailcatcher:latest
+    container_name: esgi-assos_mailcatcher
+    ports:
+      - "3025:80"
+
+volumes:
+  mercure_data:
+  mercure_config:
