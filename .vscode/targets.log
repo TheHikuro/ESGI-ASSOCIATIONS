@@ -7,24 +7,18 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Fri Jul 22 01:40:47 2022
+# Make data base, printed on Tue Jul 26 12:39:52 2022
 
 # Variables
 
-# makefile (from `.docker/conf/.env.local', line 18)
-APP_SECRET = 4c50a0e3cf4bf33ba7e8ed2144ebaba7
 # automatic
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
-# makefile (from `.docker/conf/.env.local', line 44)
-DB_HOST = mariadb
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
-# makefile (from `.docker/conf/.env.local', line 31)
-CORS_ALLOW_ORIGIN = '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
-# makefile (from `.docker/conf/.env.local', line 51)
-JWT_PUBLIC_KEY = %kernel.project_dir%/config/jwt/public.pem
+# makefile (from `Makefile', line 8)
+webUiDocker = ${webUi}/docker-compose.yml
 # environment
 LC_CTYPE = UTF-8
 # automatic
@@ -33,8 +27,6 @@ LC_CTYPE = UTF-8
 @D = $(patsubst %/,%,$(dir $@))
 # automatic
 @F = $(notdir $@)
-# makefile (from `.docker/conf/.env.local', line 17)
-APP_ENV = dev
 # makefile
 CURDIR := /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
 # makefile
@@ -43,12 +35,10 @@ SHELL = /bin/sh
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
-# makefile (from `.docker/conf/.env.local', line 1)
-MAKEFILE_LIST :=  Makefile .docker/conf/.env.local
-# makefile (from `.docker/conf/.env.local', line 47)
-DATABASE_URL = "mysql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?serverVersion=${DB_SRV_VERSION}"
-# makefile (from `.docker/conf/.env.local', line 60)
-MERCURE_PUBLIC_URL = http://mercure:80/.well-known/mercure
+# makefile (from `Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# makefile (from `Makefile', line 6)
+discordBot = ./Discord.BOT
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
@@ -59,8 +49,6 @@ VSCODE_CWD = /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
 PATH = /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
-# makefile (from `.docker/conf/.env.local', line 50)
-JWT_SECRET_KEY = %kernel.project_dir%/config/jwt/private.pem
 # environment
 LaunchInstanceID = D8323FEB-F152-4A5A-9EFA-80A74CFC4032
 # environment
@@ -71,8 +59,6 @@ ELECTRON_RUN_AS_NODE = 1
 SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.O0mGbMyQ0a/Listeners
 # automatic
 %F = $(notdir $%)
-# makefile (from `.docker/conf/.env.local', line 36)
-MAILER_DSN = smtp://mailcatcher:25
 # environment
 PWD = /Users/loancleris/Desktop/ESGI-ASSOCIATIONS
 # environment
@@ -81,6 +67,8 @@ HOMEBREW_CELLAR = /opt/homebrew/Cellar
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
 MANPATH = /opt/homebrew/share/man::
+# makefile (from `Makefile', line 4)
+webApi = ./Web.API
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -111,10 +99,12 @@ COLORTERM = truecolor
 MAKE = $(MAKE_COMMAND)
 # environment
 LC_TERMINAL = iTerm2
-# makefile (from `.docker/conf/.env.local', line 45)
-DB_SRV_VERSION = mariadb-10.6.4
+# makefile (from `Makefile', line 3)
+envFolder = .docker/conf/envs
 # environment
 SHLVL = 3
+# makefile (from `Makefile', line 9)
+discordBotDocker = ${discordBot}/docker-compose.yml
 # default
 MAKE_VERSION := 3.81
 # environment
@@ -129,12 +119,8 @@ TERM_SESSION_ID = w0t2p0:5376242A-1250-470C-8D69-E8EB4336068D
 LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
-# makefile (from `.docker/conf/.env.local', line 37)
-MAILER_URL = smtp://mailcatcher:25
 # default
 MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
-# makefile (from `.docker/conf/.env.local', line 58)
-MERCURE_URL = http://mercure:80/.well-known/mercure
 # environment
 TERM_PROGRAM = iTerm.app
 # default
@@ -145,8 +131,6 @@ TMPDIR = /var/folders/6s/hsgbg45j3gdfr8w3v0t078nh0000gn/T/
 *F = $(notdir $*)
 # environment
 VSCODE_IPC_HOOK = /Users/loancleris/Library/Application Support/Code/1.69.2-main.sock
-# makefile (from `.docker/conf/.env.local', line 43)
-DB_PASSWORD = esgigaming
 # environment
 MallocNanoZone = 0
 # makefile
@@ -157,22 +141,26 @@ MFLAGS = -Rrqp
 *D = $(patsubst %/,%,$(dir $*))
 # environment
 TERM_PROGRAM_VERSION = 3.4.15
+# makefile (from `Makefile', line 7)
+webApiDocker = ${webApi}/docker-compose.yml
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.35820686.35820693.5001E063-4C94-4D30-B5C1-3E52F285AD00
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.35820686.35820693.19DE1972-3C34-4E8B-A9C0-B9A1F3E50D8D
 # environment
 LC_TERMINAL_VERSION = 3.4.15
 # environment
 HOMEBREW_PREFIX = /opt/homebrew
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
+# makefile (from `Makefile', line 2)
+projectName = esgi-assos
 # automatic
 +F = $(notdir $+)
 # environment
 ITERM_SESSION_ID = w0t2p0:5376242A-1250-470C-8D69-E8EB4336068D
-# makefile (from `.docker/conf/.env.local', line 62)
-MERCURE_JWT_SECRET = eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.vhMwOaN5K68BTIhWokMLOeOJO4EPfT64brd8euJOA4M
 # environment
 HOMEBREW_REPOSITORY = /opt/homebrew
+# makefile (from `Makefile', line 5)
+webUi = ./Web.UI
 # environment
 COLORFGBG = 15;0
 # environment
@@ -185,20 +173,14 @@ MAKEFILES :=
 <F = $(notdir $<)
 # environment
 ITERM_PROFILE = Default
-# makefile (from `.docker/conf/.env.local', line 41)
-DB_USER = insomniak
 # environment
 PAGER = less
 # environment
 LC_ALL = C
-# makefile (from `.docker/conf/.env.local', line 38)
-MAILER_USER = admin@myges.fr
 # environment
 SECURITYSESSIONID = 186ab
 # automatic
 ^F = $(notdir $^)
-# makefile (from `.docker/conf/.env.local', line 42)
-DB_NAME = esgi_gaming
 # default
 SUFFIXES := 
 # environment
@@ -210,11 +192,9 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 26222
-# makefile (from `.docker/conf/.env.local', line 52)
-JWT_PASSPHRASE = insomniak
+VSCODE_PID = 52522
 # variable set hash-table stats:
-# Load=101/1024=10%, Rehash=0, Collisions=7/128=5%
+# Load=91/1024=9%, Rehash=0, Collisions=5/114=4%
 
 # Pattern-specific Variable Values
 
@@ -236,30 +216,24 @@ stop:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 19):
-	docker-compose --env-file="./Web.API/${envFile}" stop
+#  commands to execute (from `Makefile', line 41):
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" stop
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" stop
+	docker-compose -p ${projectName} -f ${webUiDocker} --env-file="${webUi}/${envFile}" stop
 	
 
 setup:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 9):
-	cp .docker/conf/${envFile} ./Web.API/${envFile}
-	docker-compose --env-file="./Web.API/${envFile}" up -d
-	docker logs esgi-assos_composer --follow
-	docker exec -it esgi-assos_php-fpm php bin/console lexik:jwt:generate-keypair --overwrite -n
-	docker exec -it esgi-assos_php-fpm php bin/console doctrine:migrations:migrate -n
+#  commands to execute (from `Makefile', line 20):
+	make overwrite-env
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${webUiDocker} --env-file="${webUi}/${envFile}" up -d
+	docker logs ${projectName}_composer --follow
+	docker exec -it ${projectName}_php-fpm php bin/console doctrine:migrations:migrate -n
 	
-
-# Not a target:
-.docker/conf/.env.local:
-#  Implicit rule search has been done.
-#  Last modified 2022-07-21 18:52:21
-#  File has been updated.
-#  Successfully updated.
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
 # Not a target:
 all:
@@ -279,7 +253,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-14 19:17:38
+#  Last modified 2022-07-25 01:49:56
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -288,21 +262,37 @@ Makefile:
 start:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
-make: *** No rule to make target `all'.  Stop.
-
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 16):
-	docker-compose --env-file="./Web.API/${envFile}" up -d
+#  commands to execute (from `Makefile', line 36):
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d
+	docker-compose -p ${projectName} -f ${webUiDocker} --env-file="${webUi}/${envFile}" up -d
 	
 
 build:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 5):
-	docker-compose --env-file="./Web.API/${envFile}" up -d --build
+#  commands to execute (from `Makefile', line 12):
+	make overwrite-env
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" up -d --build
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" up -d --build
+	docker-compose -p ${projectName} -f ${webUiDocker} --env-file="${webUi}/${envFile}" up -d --build 
 	make setup
+	make renew-jwt
+	
+
+overwrite-env:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 31):
+	cp ${envFolder}/Web.API/${envFile} ${webApi}/${envFile}
+	cp ${envFolder}/Discord.BOT/${envFile} ${discordBot}/${envFile}
+ 
+make: *** No rule to make target `all'.  Stop.
+
+	cp ${envFolder}/Web.UI/${envFile} ${webUi}/${envFile}
 	
 
 # Not a target:
@@ -311,27 +301,37 @@ build:
 #  Modification time never checked.
 #  File has not been updated.
 
+renew-jwt:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 28):
+	docker exec -it ${projectName}_php-fpm php bin/console lexik:jwt:generate-keypair --overwrite -n
+	
+
 down:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  commands to execute (from `Makefile', line 22):
-	docker-compose --env-file="./Web.API/${envFile}" down
+#  commands to execute (from `Makefile', line 46):
+	docker-compose -p ${projectName} -f ${webApiDocker} --env-file="${webApi}/${envFile}" down --remove-orphans
+	docker-compose -p ${projectName} -f ${discordBotDocker} --env-file="${discordBot}/${envFile}" down --remove-orphans
+	docker-compose -p ${projectName} -f ${webUiDocker} --env-file="${webUi}/${envFile}" down --remove-orphans
 	
 
 # files hash-table stats:
-# Load=10/1024=1%, Rehash=0, Collisions=0/23=0%
+# Load=11/1024=1%, Rehash=0, Collisions=0/23=0%
 # VPATH Search Paths
 
 # No `vpath' search paths.
 
 # No general (`VPATH' variable) search path.
 
-# # of strings in strcache: 2
+# # of strings in strcache: 1
 # # of strcache buffers: 1
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
-# strcache free: total = 4063 / max = 4063 / min = 4063 / avg = 4063
+# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri Jul 22 01:40:47 2022
+# Finished Make data base on Tue Jul 26 12:39:52 2022
 
  

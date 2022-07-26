@@ -28,7 +28,9 @@ const Navbar = ({ children, location }: NavbarProps) => {
     const { dispatch, state: { user: { roles } } } = useStoreContext()
 
     React.useEffect(() => {
-        getMyUserActions(dispatch)
+        if (location.pathname !== '/login' && location.pathname !== '/register') {
+            getMyUserActions(dispatch)
+        }
     }, [])
 
     const isAdmin = roles.includes(EveryRoles[0].value)
@@ -49,6 +51,7 @@ const Navbar = ({ children, location }: NavbarProps) => {
         whenPatternMatches(location.pathname, [
             [/^\/Administration\/.*$/, () => setDisplay(false)],
             [/^\/Gestion-Associations\/.*$/, () => setDisplay(false)],
+            [/^\/Gestion-Associations\/?$/, () => setDisplay(false)],
             [/^\/login\/?$/, () => setDisplay(false)],
             [/^\/register\/?$/, () => setDisplay(false)],
             [/^\/FirstPage\/?$/, () => setDisplay(false)],

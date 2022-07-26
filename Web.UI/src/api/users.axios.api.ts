@@ -41,3 +41,13 @@ export const unLinkDiscord = async () => {
     const response = await instance.put(`/users/me/revoke_discord_connect`);
     return response.data;
 }
+
+export const banUser = async (userID: number, payload: { reason: string }) => {
+    const response = await instance.put(`/users/${userID}/ban`, { reason: payload.reason, notify: true });
+    return response.data;
+}
+
+export const unBanUser = async (userID: number) => {
+    const response = await instance.put(`/users/${userID}/unban`, { notify: true });
+    return response.data;
+}

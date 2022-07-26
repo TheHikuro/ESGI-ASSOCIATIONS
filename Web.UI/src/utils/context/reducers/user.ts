@@ -5,7 +5,12 @@ import { UserActionTypes } from "../actions/user";
 export interface MyAssosState {
     id: number,
     name: string,
-    owner: any
+    owner: {
+        id: number,
+        name: string,
+        owner: string,
+        slug: string,
+    } | string
 }
 
 export const userIS = {
@@ -20,6 +25,7 @@ export const userIS = {
     associations: Array<MyAssosState>(),
     section: { id: 0, name: '' },
     discordUserId: '' || null,
+    isActivated: false,
 };
 
 // create action types

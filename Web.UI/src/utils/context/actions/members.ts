@@ -61,6 +61,9 @@ export const joinAssosAction = (dispatch: Function, idAssos: number, idMember: n
         });
 
         endLoader(dispatch);
+        response.then(() => {
+            window.location.reload();
+        })
 
     } catch (error) { console.log(error) }
 }

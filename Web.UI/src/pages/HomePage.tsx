@@ -4,7 +4,7 @@ import React from "react";
 import { createPosts, getAllPostsFromAllAssos } from "../api/assos.axios";
 import { Avatar } from "../components/Avatar";
 import { Layout } from "../components/Layout";
-import { FilterWithChip, InputForPosts, Posts } from "../components/Posts";
+import { InputForPosts, Posts } from "../components/Posts";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { MercureSubscriber } from "../utils/helpers/hookCustom";
 
@@ -12,11 +12,9 @@ const HomePage = () => {
 
     const { state: {
         user: { associations, firstname, lastname, id },
-        loader: { isLoading },
     } } = useStoreContext();
 
     const [pageNumber, setPageNumber] = React.useState(1);
-    const [prevPageNumber, setPrevPageNumber] = React.useState(pageNumber);
     const [posts, setPosts] = React.useState({
         id: 0,
         content: "",
@@ -29,7 +27,7 @@ const HomePage = () => {
 
     const [displayData, setDisplayData] = React.useState<any[]>([]);
     React.useEffect(() => {
-        if (displayData.length === 0 || prevPageNumber !== pageNumber) {
+        if (displayData.length === 0 || pageNumber <= displayData.length) {
             getAllPostsFromAllAssos(pageNumber).then(res => {
                 setDisplayData(res);
             }
@@ -40,9 +38,14 @@ const HomePage = () => {
         }
     }, [pageNumber]);
 
-    const handleScroll = (event: any) => {
-        event.target.scrollTop > event.target.scrollHeight - event.target.clientHeight && setPageNumber(pageNumber + 1)
-        setPrevPageNumber(pageNumber)
+    const handleNextPage = () => {
+        setPageNumber(pageNumber + 1)
+        console.log("Next page", pageNumber);
+    }
+
+    const handlePrevPage = () => {
+        setPageNumber(pageNumber - 1)
+        console.log("Prev page", pageNumber);
     }
 
     const assos = associations.map(association => {
@@ -73,13 +76,12 @@ const HomePage = () => {
                     userId={id}
                     assos={assos}
                 />
-                <FilterWithChip options={associations} />
-                <div className="mt-5 overflow-scroll h-5/6" onScroll={(e) => handleScroll(e)}>
+                <div className="mt-5 overflow-scroll h-5/6">
                     {
                         <MercureSubscriber
                             topics={[`${import.meta.env.VITE_API_HOST_URL}/api/posts/{id}`]}
                             update={setPosts}
-                            hub={`${import.meta.env.VITE_HOST_URL}/.well-known/mercure`}
+                            hub={`${import.meta.env.VITE_MERCURE_HOST_URL}/.well-known/mercure`}
                             json
                         >
                             {displayData.filter(post => {
@@ -100,6 +102,24 @@ const HomePage = () => {
                             })}
                         </MercureSubscriber>
                     }
+                    <div className="flex justify-center w-full items-center mt-10">
+                        <button
+                            type="button"
+                            className={`p-2 rounded-md shadow-md bg-transparent border border-blue-500 w-fit mr-5 hover:bg-slate-100 text-white hover:text-black ${displayData.length === 0 || pageNumber === 1 ? 'cursor-not-allowed' : ''}`}
+                            onClick={handlePrevPage}
+                            disabled={displayData.length === 0 || pageNumber === 1}
+                        >
+                            PrevPage
+                        </button >
+                        <button
+                            type="button"
+                            className={`p-2 rounded-md shadow-md bg-transparent border border-blue-500 w-fit hover:bg-slate-100 text-white hover:text-black ${displayData.length === 0 || pageNumber >= displayData.length ? 'cursor-not-allowed' : ''}`}
+                            onClick={handleNextPage}
+                            disabled={displayData.length === 0 || pageNumber >= displayData.length}
+                        >
+                            NextPage
+                        </button >
+                    </div>
                 </div>
             </Layout>
         </div>

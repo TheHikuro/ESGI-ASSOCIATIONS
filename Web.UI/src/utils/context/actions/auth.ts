@@ -34,6 +34,8 @@ export const authLoginRequest = async (dispatch: Function, navigate: NavigateFun
         navigate("/FirstPage");
     } catch (error) {
         console.log(error);
+        endLoader(dispatch);
+        return error;
     }
 }
 
@@ -54,6 +56,8 @@ export const authRegisterRequest = async (dispatch: Function, navigate: Navigate
         type: authTypes.REGISTER_REQUEST,
     });
 
+    startLoader(dispatch);
+
     try {
         const response = await registerAction(payload);
         console.log("response", response);
@@ -61,8 +65,10 @@ export const authRegisterRequest = async (dispatch: Function, navigate: Navigate
         dispatch({
             type: authTypes.REGISTER_SUCCESS,
         });
+        endLoader(dispatch);
         navigate("/login");
     } catch (error) {
         console.log(error);
+        endLoader(dispatch);
     }
 }

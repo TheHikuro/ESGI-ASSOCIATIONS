@@ -97,7 +97,7 @@ const ProfilePage = () => {
                 redirectURI: URI
             }
             linkToDiscord(data)
-            navigate('/Profile')
+            //navigate('/Profile')
         }
     }, [window.location])
 

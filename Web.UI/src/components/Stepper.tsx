@@ -8,9 +8,11 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { CodeInputs, SoloInput } from './Input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { checkEmail, confirmTokenSentByEmail } from '../api/login.axios.api';
-import { AxiosError } from 'axios';
+import { getAllAssosActions } from '../utils/context/actions/assos';
+import { useStoreContext } from '../utils/context/StoreContext';
+import { joinAssosAction } from '../utils/context/actions/members';
 
 export default function VerticalLinearStepper(user_values: { e_mail: string, userId: number }) {
 
@@ -18,6 +20,7 @@ export default function VerticalLinearStepper(user_values: { e_mail: string, use
     const [error, setError] = React.useState('');
     const [values, setValues]: any = React.useState({ email: user_values.e_mail, confirmToken: '' })
     const [disabled, setDisabled] = React.useState(true);
+    const { dispatch, state: { assos: { assosList, needRefreshAssos }, user: { id } } } = useStoreContext()
 
     React.useEffect(() => {
         const fields: string[] = Object.keys(values);
@@ -29,6 +32,10 @@ export default function VerticalLinearStepper(user_values: { e_mail: string, use
         }
         setDisabled(false);
     }, [values, activeStep])
+
+    React.useEffect(() => {
+        if (needRefreshAssos) getAllAssosActions(dispatch);
+    }, [needRefreshAssos])
 
     const handleNext = () => { setActiveStep(prevActiveStep => prevActiveStep + 1) }
     const handleBack = () => { setActiveStep((prevActiveStep) => prevActiveStep - 1) };
@@ -71,13 +78,17 @@ export default function VerticalLinearStepper(user_values: { e_mail: string, use
 
     }
 
+    const handleJoinAssos = async (idAssos: number, idMember: number) => {
+        joinAssosAction(dispatch, idAssos, idMember);
+        //window.location.reload();
+    }
+
     const steps = [
         {
             label: "Verification d'email",
             description: <>
                 <div className='flex items-center'>
-                    <SoloInput name='Email' type='email' onChange={handleChange('email')} value={values.email} handlePressEnter={handlePressEnter} />
-                    <Button className='h-12' variant='contained' color='primary' onClick={() => handleClear('email')}> Clear </Button>
+                    <SoloInput name='Email' type='email' onChange={handleChange('email')} value={values.email} handlePressEnter={handlePressEnter} disabled />
                 </div>
                 {error && <Typography variant='caption' color='error'>{error}</Typography>}
             </>,
@@ -95,7 +106,14 @@ export default function VerticalLinearStepper(user_values: { e_mail: string, use
             label: 'Rejoindre une association',
             description: <>
                 <div className='flex h-80 relative bg-slate-400 rounded-md overflow-scroll flex-col p-5'>
-
+                    {assosList.map((assos: any) => {
+                        return (
+                            <div key={assos.id} className='flex items-center justify-between p-2 w-full'>
+                                <Typography variant='h6'>{assos.name}</Typography>
+                                <Button className='h-12' variant='contained' color='primary' onClick={() => handleJoinAssos(assos.id, id)}> Rejoindre </Button>
+                            </div>
+                        )
+                    })}
                 </div>
             </>,
         },
@@ -133,26 +151,23 @@ export default function VerticalLinearStepper(user_values: { e_mail: string, use
                                         </div>
                                     </>
 
-                                ) : (
-                                    <>
-                                        <div>
-                                            <Button
-                                                variant="contained"
-                                                onClick={index === 0 ? sendEmail : handleNext} // remettre send mail
-                                                sx={{ mt: 1, mr: 1 }}
-                                                disabled={disabled}
-                                            >
-                                                {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                                            </Button><Button
-                                                disabled={index !== steps.length - 2}
-                                                onClick={handleBack}
-                                                sx={{ mt: 1, mr: 1 }}
-                                            >
-                                                Back
-                                            </Button>
-                                        </div>
-                                    </>
-                                )}
+                                ) : ''}
+                                {activeStep === 0 ? (
+                                    (
+                                        <>
+                                            <div>
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={index === 0 ? sendEmail : handleNext} // remettre send mail
+                                                    sx={{ mt: 1, mr: 1 }}
+                                                    disabled={disabled}
+                                                >
+                                                    Continue
+                                                </Button>
+                                            </div>
+                                        </>
+                                    )) : ''
+                                }
                             </Box>
                         </StepContent>
                     </Step>

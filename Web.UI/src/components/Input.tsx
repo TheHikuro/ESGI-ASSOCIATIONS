@@ -19,6 +19,7 @@ interface IInputProps {
     handlePressEnter?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     _key?: number
     fullWidth?: boolean;
+    disabled?: boolean;
 }
 
 export const Input = ({ name, type, formcontrol, _key, value }: IInputProps) => {
@@ -27,9 +28,9 @@ export const Input = ({ name, type, formcontrol, _key, value }: IInputProps) => 
     )
 }
 
-export const SoloInput = ({ name, type, onChange, value, required, handlePressEnter }: IInputProps) => {
+export const SoloInput = ({ name, type, onChange, value, required, handlePressEnter, disabled }: IInputProps) => {
     return (
-        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' onKeyPress={handlePressEnter} value={value} onChange={onChange} required={required} />
+        <input type={type} placeholder={name} className='p-3 bg-slate-200 my-2 mr-2 text-black rounded-md hover:bg-slate-300 focus:outline-none focus:shadow-outline w-full' onKeyPress={handlePressEnter} value={value} onChange={onChange} required={required} disabled={disabled} />
     )
 }
 

@@ -125,3 +125,8 @@ export const ChangeEventStatus = async (idEvent: number, data: any) => {
     const response = await instance.put(`/events/${idEvent}`, data);
     return response.data;
 }
+
+export const getOwnerByAssos = async (idUser: number) => {
+    const response = await instance.get(`/users/${idUser}/associations?page=1&itemsPerPage=30&owner.id=${idUser}`);
+    return response.data;
+}
