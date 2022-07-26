@@ -16,6 +16,7 @@ import ProfilePage from "../pages/ProfilePage";
 import RegisterPage from "../pages/RegisterPage";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { EveryRoles } from "../utils/helpers/enums";
+import { getOwnerByAssos } from "../api/assos.axios";
 
 interface RequireAuthenticationProps {
     otherwise: string;
@@ -35,10 +36,22 @@ const MyRoutes = () => {
             activated,
             associationsCount,
         },
-        user: { roles },
+        user: { roles, id },
     } } = useStoreContext();
     const isAdmin = roles.includes(EveryRoles[0].value)
     const isAssosManager = roles.includes(EveryRoles[1].value)
+    const [assos, setAssos]: any[] = React.useState([])
+
+    React.useEffect(() => {
+        getOwnerByAssos(id).then(res => {
+            setAssos(res.map((association: any) => {
+                return {
+                    id: association.id,
+                    owner: association.owner.id,
+                }
+            }))
+        })
+    }, [id])
     return (
         <Routes>
             <Route path="/login" element={<OnlyWhen condition={!isAuthenticated} otherwise="/Home"><LoginPage /></OnlyWhen>} />
@@ -54,7 +67,7 @@ const MyRoutes = () => {
             <Route path="/Administration/Associations" element={<OnlyWhen condition={isAdmin} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />
             <Route path="/Administration/Sections" element={<OnlyWhen condition={isAdmin} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
             <Route path="/Administration/Mail" element={<OnlyWhen condition={isAdmin} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
-            <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAssosManager} otherwise="/Home"><ManagerPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations" element={<OnlyWhen condition={isAssosManager} otherwise="/Home"><ManagerPage assos={assos} /></OnlyWhen>} />
             <Route path="/Gestion-Associations/:id" element={<OnlyWhen condition={isAssosManager} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
         </Routes>
     )

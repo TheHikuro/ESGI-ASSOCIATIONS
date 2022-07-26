@@ -49,6 +49,7 @@ const Navbar = ({ children, location }: NavbarProps) => {
         whenPatternMatches(location.pathname, [
             [/^\/Administration\/.*$/, () => setDisplay(false)],
             [/^\/Gestion-Associations\/.*$/, () => setDisplay(false)],
+            [/^\/Gestion-Associations\/?$/, () => setDisplay(false)],
             [/^\/login\/?$/, () => setDisplay(false)],
             [/^\/register\/?$/, () => setDisplay(false)],
             [/^\/FirstPage\/?$/, () => setDisplay(false)],

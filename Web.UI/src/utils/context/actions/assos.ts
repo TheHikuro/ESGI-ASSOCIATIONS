@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { createAssos, deleteAssos, getAllAssos, getPostsByAssos, removeMembers, updateAssos } from "../../../api/assos.axios";
 import { AssosDetails, AssosTypes } from "../reducers/assos";
 import { startLoader, endLoader } from "./loader";
@@ -98,8 +99,7 @@ export const createAssosActions = async (dispatch: Function, data: AssosDetails,
         });
 
         endLoader(dispatch);
-
-    } catch (error) { console.log(error) }
+    } catch (error) { console.log(error), endLoader(dispatch); }
 }
 
 export const deleteUserFromAsso = async (dispatch: Function, assoId: number, memberId: number) => {
@@ -118,7 +118,7 @@ export const deleteUserFromAsso = async (dispatch: Function, assoId: number, mem
 
         endLoader(dispatch);
 
-    } catch (error) { console.log(error) }
+    } catch (error) { console.log(error), endLoader(dispatch); }
 }
 
 // export const joinAssos = async (dispatch: Function, assoId: number, userId: number) => {

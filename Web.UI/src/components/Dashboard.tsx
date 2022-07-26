@@ -80,7 +80,6 @@ export const Dashboard = ({ children }: any) => {
         ])
     }, [window.location.pathname])
 
-
     const handleModalCreate = () => {
         updateModalTitle('Création association')
         updateModalContent(

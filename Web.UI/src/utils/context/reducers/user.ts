@@ -5,7 +5,12 @@ import { UserActionTypes } from "../actions/user";
 export interface MyAssosState {
     id: number,
     name: string,
-    owner: any
+    owner: {
+        id: number,
+        name: string,
+        owner: string,
+        slug: string,
+    } | string
 }
 
 export const userIS = {
