@@ -49,7 +49,7 @@ services:
       SERVER_NAME: ':80'
       MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
       MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
-      MERCURE_EXTRA_DIRECTIVES: cors_origins "http://localhost:3000" "http://localhost:8080"
+      MERCURE_EXTRA_DIRECTIVES: cors_origins "http://localhost:3000" "http://localhost:8080" "http://5.135.151.36:3000" "http://5.135.151.36:8080"
     command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
     ports:
       - 8000:80

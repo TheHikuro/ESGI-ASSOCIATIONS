@@ -90,7 +90,7 @@ const ProfilePage = () => {
 
     React.useEffect(() => {
         const code = getUrlCodeDicord();
-        const URI = 'http://localhost:8080/Profile'
+        const URI = `${import.meta.env.VITE_HOST_URL}/Profile`
         if (code !== null) {
             const data = {
                 code: code,
@@ -127,7 +127,7 @@ const ProfilePage = () => {
                                         <p className="text-white">{firstname + " " + lastname} </p>
                                     </div>
                                     {discordUserId === null ? (
-                                        <a href={`https://discord.com/api/oauth2/authorize?client_id=997589616276283475&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2FProfile&response_type=code&scope=identify`}>
+                                        <a href={encodeURI(`https://discord.com/api/oauth2/authorize?client_id=997589616276283475&redirect_uri=${import.meta.env.VITE_HOST_URL}/Profile&response_type=code&scope=identify`)}>
                                             <div className="mt-2 hover:cursor-pointer hover:shadow-xl -ml-32 p-1 w-64 h-12 rounded-md bg-blue-600 shadow-lg flex justify-center items-center">
                                                 <img src={LogoDiscord} alt="Logo Discord" className="h-7 w-7 hover:cursor-pointer" />
                                                 <span className="text-start ml-3 text-sm text-white font-bold">Lier mon compte Discord</span>

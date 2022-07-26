@@ -58,7 +58,7 @@ class ExtractPresencesController extends AbstractController
         header("Content-Type: $payload->format; application/x-download; charset=UTF-8;");
         header("Content-Disposition: attachment; filename='$this->fileName';");
         header('Content-Length: ' . fstat($FileStream)['size']);
-        header('Access-Control-Allow-Origin: http://localhost:8080');
+        header('Access-Control-Allow-Origin: ' . $this->getParameter('web_host_url'));
         rewind($FileStream);
         fseek($FileStream, 0);
         fpassthru($FileStream);
