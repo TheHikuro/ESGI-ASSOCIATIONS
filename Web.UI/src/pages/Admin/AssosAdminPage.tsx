@@ -125,7 +125,7 @@ const AssosAdminPage = () => {
                 <Table
                     data={assosFromAPi.filter((item: any) => searchRegex.test((item.name)))}
                     header={columns}
-                    pageSize={5}
+                    pageSize={20}
                     rowsPerPageOptions={[5, 10, 20, 50]}
                     disableSelectionOnClick
                     headerCustom

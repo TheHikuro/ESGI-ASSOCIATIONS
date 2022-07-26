@@ -80,7 +80,7 @@ export default function VerticalLinearStepper(user_values: { e_mail: string, use
 
     const handleJoinAssos = async (idAssos: number, idMember: number) => {
         joinAssosAction(dispatch, idAssos, idMember);
-        window.location.reload();
+        //window.location.reload();
     }
 
     const steps = [

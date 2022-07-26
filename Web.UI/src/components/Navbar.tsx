@@ -28,7 +28,9 @@ const Navbar = ({ children, location }: NavbarProps) => {
     const { dispatch, state: { user: { roles } } } = useStoreContext()
 
     React.useEffect(() => {
-        getMyUserActions(dispatch)
+        if (location.pathname !== '/login' && location.pathname !== '/register') {
+            getMyUserActions(dispatch)
+        }
     }, [])
 
     const isAdmin = roles.includes(EveryRoles[0].value)

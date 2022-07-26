@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AdminPage from "../pages/Admin/AdminPage";
 import AssosAdminPage from "../pages/Admin/AssosAdminPage";
 import MailerAdminPage from "../pages/Admin/MailerAdminPage";
@@ -35,38 +35,41 @@ const MyRoutes = ({ user }: any) => {
         auth: {
             isAuthenticated,
         },
-        user: { id, isActivated },
+        user: { id },
     } } = useStoreContext();
     const [assos, setAssos]: any[] = React.useState([])
+    const location = useLocation();
 
     React.useEffect(() => {
-        getOwnerByAssos(id).then(res => {
-            setAssos(res.map((association: any) => {
-                return {
-                    id: association.id,
-                    owner: association.owner.id,
-                }
-            }))
-        })
-    }, [id])
+        if (location.pathname !== '/login' && location.pathname !== '/register') {
+            getOwnerByAssos(id).then(res => {
+                setAssos(res.map((association: any) => {
+                    return {
+                        id: association.id,
+                        owner: association.owner.id,
+                    }
+                }))
+            })
+        }
+    }, [id, location.pathname, assos.length])
 
     return (
         <Routes>
             <Route path="/login" element={<OnlyWhen condition={!isAuthenticated} otherwise="/FirstPage"><LoginPage /></OnlyWhen>} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path='*' element={<Navigate to='/login' />} />
-            <Route path="/FirstPage" element={<OnlyWhen condition={!isActivated} otherwise="/Home"><FirstConnectionPage /></OnlyWhen>} />
-            <Route path="/Home" element={<OnlyWhen condition={isAuthenticated && isActivated} otherwise="/login"><HomePage /></OnlyWhen>} />
-            <Route path="/Profile" element={<OnlyWhen condition={isAuthenticated && isActivated} otherwise="/Home"><ProfilePage /></OnlyWhen>} />
-            <Route path="/Associations" element={<OnlyWhen condition={isAuthenticated && isActivated} otherwise="/Home"><AssosPage /></OnlyWhen>} />
-            <Route path="/Calendrier" element={<OnlyWhen condition={isAuthenticated && isActivated} otherwise="/Home"><CalendarPage /></OnlyWhen>} />
-            <Route path="/Administration" element={<OnlyWhen condition={user.isAdmin && isActivated} otherwise="/Home"><AdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Users" element={<OnlyWhen condition={user.isAdmin && isActivated} otherwise="/Administration"><UserAdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Associations" element={<OnlyWhen condition={user.isAdmin && isActivated} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Sections" element={<OnlyWhen condition={user.isAdmin && isActivated} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
-            <Route path="/Administration/Mail" element={<OnlyWhen condition={user.isAdmin && isActivated} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
-            <Route path="/Gestion-Associations" element={<OnlyWhen condition={user.isAssosManager && isActivated} otherwise="/Home"><ManagerPage assos={assos} /></OnlyWhen>} />
-            <Route path="/Gestion-Associations/:id" element={<OnlyWhen condition={user.isAssosManager && isActivated} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
+            <Route path="/FirstPage" element={<OnlyWhen condition={!user.isActivated} otherwise="/Home"><FirstConnectionPage /></OnlyWhen>} />
+            <Route path="/Home" element={<OnlyWhen condition={isAuthenticated && user.isActivated} otherwise="/login"><HomePage /></OnlyWhen>} />
+            <Route path="/Profile" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><ProfilePage /></OnlyWhen>} />
+            <Route path="/Associations" element={<OnlyWhen condition={isAuthenticated} otherwise="/Home"><AssosPage /></OnlyWhen>} />
+            <Route path="/Calendrier" element={<OnlyWhen condition={isAuthenticated && user.isActivated} otherwise="/Home"><CalendarPage /></OnlyWhen>} />
+            <Route path="/Administration" element={<OnlyWhen condition={user.isAdmin && user.isActivated} otherwise="/Home"><AdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Users" element={<OnlyWhen condition={user.isAdmin && user.isActivated} otherwise="/Administration"><UserAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Associations" element={<OnlyWhen condition={user.isAdmin && user.isActivated} otherwise="/Administration"><AssosAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Sections" element={<OnlyWhen condition={user.isAdmin && user.isActivated} otherwise="/Administration"><SectionsAdminPage /></OnlyWhen>} />
+            <Route path="/Administration/Mail" element={<OnlyWhen condition={user.isAdmin && user.isActivated} otherwise="/Administration"><MailerAdminPage /></OnlyWhen>} />
+            <Route path="/Gestion-Associations" element={<OnlyWhen condition={user.isAssosManager && user.isActivated} otherwise="/Home"><ManagerPage assos={assos} userId={user.id} /></OnlyWhen>} />
+            <Route path="/Gestion-Associations/:id" element={<OnlyWhen condition={user.isAssosManager && user.isActivated} otherwise="/Gestion-Associations"><AssosManagerPage /></OnlyWhen>} />
         </Routes>
     )
 }

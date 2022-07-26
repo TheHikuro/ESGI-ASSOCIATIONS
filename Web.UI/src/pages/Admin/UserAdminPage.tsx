@@ -160,7 +160,7 @@ const UserAdminPage = () => {
                 <Table
                     data={Object.values(userfromapi).filter((item: any) => searchRegex.test((item.lastname)) || searchRegex.test((item.email)) || searchRegex.test((item.lastname)))}
                     header={columns}
-                    pageSize={5}
+                    pageSize={20}
                     rowsPerPageOptions={[5, 10, 20, 50]}
                     disableSelectionOnClick
                     headerCustom

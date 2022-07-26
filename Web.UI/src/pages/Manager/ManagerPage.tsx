@@ -1,15 +1,13 @@
 import { Dashboard } from "../../components/Dashboard";
-import React, { Fragment, useEffect } from 'react'
+import React from 'react'
 import { useLocation, useNavigate } from "react-router-dom";
 import { useStoreContext } from "../../utils/context/StoreContext";
 import { getOwnerByAssos } from "../../api/assos.axios";
-import { MyAssosState } from "../../utils/context/reducers/user";
 
-const ManagerPage = ({ assos }: any) => {
-    const { state: { user: { id: userId } } } = useStoreContext()
+const ManagerPage = ({ assos, userId }: any) => {
     const navigate = useNavigate()
     const location = useLocation()
-
+    console.log(assos)
     React.useEffect(() => {
         if (location.pathname === "/Gestion-Associations") {
             if (assos.length !== 0) {
