@@ -159,9 +159,9 @@ export const Posts = ({ content, sender, createdAt, idPost, assosName, com }: Po
             <div className='flex flex-col w-full'>
                 <Fragment>
                     <MercureSubscriber
-                        topics={['http://localhost:3000/api/comments/{id}']}
+                        topics={[`${import.meta.env.VITE_API_HOST_URL}/api/comments/{id}`]}
                         update={setOnComment}
-                        hub={'http://localhost:8000/.well-known/mercure'}
+                        hub={`${import.meta.env.VITE_HOST_URL}/.well-known/mercure`}
                         json
                     >
                         {comments.map((comment: any, index: number) => {

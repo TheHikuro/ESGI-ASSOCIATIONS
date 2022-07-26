@@ -77,9 +77,9 @@ const HomePage = () => {
                 <div className="mt-5 overflow-scroll h-5/6" onScroll={(e) => handleScroll(e)}>
                     {
                         <MercureSubscriber
-                            topics={['http://localhost:3000/api/posts/{id}']}
+                            topics={[`${import.meta.env.VITE_API_HOST_URL}/api/posts/{id}`]}
                             update={setPosts}
-                            hub={'http://localhost:8000/.well-known/mercure'}
+                            hub={`${import.meta.env.VITE_HOST_URL}/.well-known/mercure`}
                             json
                         >
                             {displayData.filter(post => {
