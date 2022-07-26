@@ -32,7 +32,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     collectionOperations: [
         "get" => [
             "normalization_context" => ["groups" => ["collection:get:association", 'get:id']],
-            "security" => "user.isActivated() == true and user.getIsBanned() == false",
+            "security" => "user.getIsBanned() == false",
         ],
         "addAssociation" => [
             "method" => "post",
