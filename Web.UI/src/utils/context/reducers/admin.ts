@@ -12,6 +12,7 @@ export interface UsersDetails {
     updatedAt: string;
     avatar: string;
     activated: boolean;
+    isBanned: boolean;
 }
 
 export interface UsersState {

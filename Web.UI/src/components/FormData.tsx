@@ -14,6 +14,7 @@ interface IFormDataProps {
     id?: number
     action?: Function
     actionWithoutDispatch?: Function
+    actionWithoutDispatchWithId?: Function
     textOnSubmit?: string
 }
 
@@ -94,13 +95,14 @@ export function FormComponents(props: IFormDataProps) {
 }
 
 export function FormComponentCreate(props: IFormDataProps) {
-    const { values, title, submitButtonText, action, actionWithoutDispatch, textOnSubmit, id } = props;
+    const { values, title, submitButtonText, action, actionWithoutDispatch, textOnSubmit, id, actionWithoutDispatchWithId } = props;
     const { handleSubmit, register } = useForm<IFormData<any>>();
     const { dispatch } = useStoreContext()
     const { closeModal } = useModalContext()
 
     const onSubmit: SubmitHandler<IFormData<any>> = async (data: any) => {
         actionWithoutDispatch ? actionWithoutDispatch(data) : id && action ? action(dispatch, data, id) : action && action(dispatch, data)
+        actionWithoutDispatchWithId && actionWithoutDispatchWithId(id, data)
         closeModal()
     }
 

@@ -1,8 +1,9 @@
-import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon } from "@heroicons/react/outline";
+import { PencilIcon, TrashIcon, DotsCircleHorizontalIcon, UserAddIcon, ShieldExclamationIcon, LockOpenIcon, LockClosedIcon } from "@heroicons/react/outline";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { Fragment } from "react";
+import { banUser, unBanUser } from "../../api/users.axios.api";
 import { Dashboard } from "../../components/Dashboard";
-import { FormComponents } from "../../components/FormData";
+import { FormComponentCreate, FormComponents } from "../../components/FormData";
 import { useModalContext } from "../../components/modal";
 import { Table } from "../../components/Table";
 import { deleteAdminUsersActions, getUsersActions, updateAdminUsersActions } from "../../utils/context/actions/admin";
@@ -33,10 +34,13 @@ const UserAdminPage = () => {
             email: user.email,
             role: user.roles,
             sections: user.section.name,
+            isBanned: user.isBanned,
             actions: (
                 <>
                     <PencilIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer mr-2" onClick={() => handleModalUpdate(user)} />
                     <TrashIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" onClick={() => handleDeleteModal(user.id)} />
+                    {!user.isBanned ? <LockOpenIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer mr-2" onClick={() => handleModalBanUser(user)} /> :
+                        <LockClosedIcon className="h-5 w-5 hover:text-red-500 hover:cursor-pointer mr-2" onClick={() => handleModalUnBanUser(user)} />}
                     <DotsCircleHorizontalIcon className="h-5 w-5 hover:text-blue-500 hover:cursor-pointer" onClick={() => handleModalInfo(user)} />
                 </>
             )
@@ -58,6 +62,35 @@ const UserAdminPage = () => {
                 </div>
             </>
         )
+        openModal()
+    }
+
+    const handleModalBanUser = (data: UsersDetails) => {
+        updateModalTitle(`Bannir ${data.firstname} ${data.lastname}`)
+        updateModalContent(
+            <>
+                <FormComponentCreate
+                    values={[
+                        { formControlName: 'reason', type: 'textarea', label: 'Raison du ban' },
+                    ]}
+                    actionWithoutDispatchWithId={banUser}
+                    id={data.id}
+                    submitButtonText="Bannir"
+                />
+            </>
+        )
+        openModal()
+    }
+    const handleUnban = (id: number) => { unBanUser(id), closeModal() }
+    const handleModalUnBanUser = (data: UsersDetails) => {
+        updateModalTitle(`Annuler le bannissement ${data.firstname} ${data.lastname}`)
+        updateModalContent(
+            <>
+                <span>Vous êtes sur le points d'annuler le bannissement de {data.firstname + ' ' + data.lastname}</span>
+            </>
+        )
+        yesNoModal()
+        yesActionModal(() => handleUnban(data.id))
         openModal()
     }
 

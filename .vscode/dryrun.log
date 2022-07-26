@@ -1,6 +1,10 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/loancleris/Desktop/ESGI-ASSOCIATIONS'
-docker-compose --env-file="./Web.API/.env.local" up -d --build
+make overwrite-env
+docker-compose -p esgi-assos -f ./Web.API/docker-compose.yml --env-file="./Web.API/.env.local" up -d --build
+docker-compose -p esgi-assos -f ./Discord.BOT/docker-compose.yml --env-file="./Discord.BOT/.env.local" up -d --build
+docker-compose -p esgi-assos -f ./Web.UI/docker-compose.yml --env-file="./Web.UI/.env.local" up -d --build 
 make setup
+make renew-jwt
 make: Leaving directory `/Users/loancleris/Desktop/ESGI-ASSOCIATIONS'
  

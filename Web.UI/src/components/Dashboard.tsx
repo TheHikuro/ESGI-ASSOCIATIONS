@@ -1,4 +1,4 @@
-import { AcademicCapIcon, CameraIcon } from "@heroicons/react/outline"
+import { AcademicCapIcon, MailIcon, UserGroupIcon, UserIcon } from "@heroicons/react/outline"
 import React, { Fragment } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { createAssosActions } from "../utils/context/actions/assos"
@@ -108,10 +108,10 @@ export const Dashboard = ({ children }: any) => {
                                 <h1 className="block uppercase tracking-wide text-gray-700 text-xl font-bold mb-2">Dashboard</h1>
                                 {display.admin ? (
                                     <>
-                                        <DashboardItem name='Users' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/Users' />
-                                        <DashboardItem name='Associations' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/Associations' />
-                                        <DashboardItem name='Sections' icon={<CameraIcon className="w-5 h-5" />} onpress='/Administration/Sections' />
-                                        <DashboardItem name='Mail' icon={<CameraIcon className="w-5 h-5" />} onpress='/Administration/Mail' />
+                                        <DashboardItem name='Users' icon={<UserIcon className="w-5 h-5" />} onpress='/Administration/Users' />
+                                        <DashboardItem name='Associations' icon={<UserGroupIcon className="w-5 h-5" />} onpress='/Administration/Associations' />
+                                        <DashboardItem name='Sections' icon={<AcademicCapIcon className="w-5 h-5" />} onpress='/Administration/Sections' />
+                                        <DashboardItem name='Mail' icon={<MailIcon className="w-5 h-5" />} onpress='/Administration/Mail' />
                                     </>
                                 ) : display.assos ? (
                                     <>
