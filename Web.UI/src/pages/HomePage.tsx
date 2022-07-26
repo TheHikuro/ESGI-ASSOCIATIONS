@@ -4,7 +4,7 @@ import React from "react";
 import { createPosts, getAllPostsFromAllAssos } from "../api/assos.axios";
 import { Avatar } from "../components/Avatar";
 import { Layout } from "../components/Layout";
-import { FilterWithChip, InputForPosts, Posts } from "../components/Posts";
+import { InputForPosts, Posts } from "../components/Posts";
 import { useStoreContext } from "../utils/context/StoreContext";
 import { MercureSubscriber } from "../utils/helpers/hookCustom";
 
@@ -12,7 +12,6 @@ const HomePage = () => {
 
     const { state: {
         user: { associations, firstname, lastname, id },
-        loader: { isLoading },
     } } = useStoreContext();
 
     const [pageNumber, setPageNumber] = React.useState(1);
@@ -73,7 +72,6 @@ const HomePage = () => {
                     userId={id}
                     assos={assos}
                 />
-                <FilterWithChip options={associations} />
                 <div className="mt-5 overflow-scroll h-5/6" onScroll={(e) => handleScroll(e)}>
                     {
                         <MercureSubscriber

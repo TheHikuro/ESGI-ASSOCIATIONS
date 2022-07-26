@@ -16,8 +16,11 @@ const LoginPage = () => {
     const { dispatch } = useStoreContext();
 
     const onSubmit: SubmitHandler<ILoginForm> = async (data: any) => {
-        authLoginRequest(dispatch, navigate, data);
+        const result = await authLoginRequest(dispatch, navigate, data)
+        if (result instanceof Error) setError('Email ou mot de passe incorrect')
     };
+
+    console.log(error);
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -42,6 +45,7 @@ const LoginPage = () => {
                         <Input type="password" formcontrol={register('password')} name='Password' />
                     </div>
                 </div>
+                <span>{error}</span>
                 <div className="flex items-center justify-center">
                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">GO</button>
                 </div>
