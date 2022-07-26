@@ -20,10 +20,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     collectionOperations: [
         "get" => [
             "normalization_context" => ["groups" => ["collection:get:discord:presencesChannel", 'get:id']],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/presencesChannels",
         ],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:discord:presencesChannel"]],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/presencesChannels",
             "openapi_context" => [
                 "requestBody" => [
@@ -47,10 +49,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     itemOperations: [
         "get" => [
             "normalization_context" => ["groups" => ["item:get:discord:presencesChannel", 'get:id']],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/presencesChannels/{channelId}",
         ],
         "put" => [
             "denormalization_context" => ["groups" => ["item:put:discord:presencesChannel"]],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/presencesChannels/{channelId}",
             "openapi_context" => [
                 "requestBody" => [
@@ -68,6 +72,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
             ],
         ],
         "delete" => [
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/presencesChannels/{channelId}",
         ],
     ]

@@ -22,6 +22,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "get" => ["normalization_context" => ["groups" => ["collection:get:post", 'get:id']]],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:post"]],
+            "security" => "user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -42,9 +43,10 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         ],
     ],
     itemOperations: [
-        "get",
+        "get" => ["security" => "user.isActivated() == true and user.getIsBanned() == false"],
         "put" => [
             "denormalization_context" => ["groups" => ["item:put:post"]],
+            "security" => "(is_granted('ROLE_ADMIN') or object.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -60,7 +62,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                 ],
             ],
         ],
-        "delete",
+        "delete" => ["security" => "(is_granted('ROLE_ADMIN') or object.owner == user) and user.isActivated() == true and user.getIsBanned() == false"],
     ],
 ),
 ApiFilter(

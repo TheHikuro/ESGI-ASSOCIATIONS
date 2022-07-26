@@ -15,9 +15,13 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     mercure: true,
     normalizationContext: ['groups' => ['item:get:comment', 'get:id']],
     collectionOperations: [
-        "get" => ["normalization_context" => ["groups" => ["collection:get:comment", 'get:id']]],
+        "get" => [
+            "normalization_context" => ["groups" => ["collection:get:comment", 'get:id']],
+            "security" => "user.isActivated() == true and user.getIsBanned() == false",
+        ],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:comment"]],
+            "security" => "user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -41,6 +45,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "get",
         "put" => [
             "denormalization_context" => ["groups" => ["item:put:comment"]],
+            "security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.getPost().getAssociation().owner == user or object.owner == user) and user.isActivated() == true and user.getIsBanned() == false",
             "openapi_context" => [
                 "requestBody" => [
                     "content" => [
@@ -56,7 +61,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
                 ],
             ],
         ],
-        "delete",
+        "delete" => ["security" => "(is_granted('ROLE_ADMIN') or is_granted('ROLE_ASSOS_MANAGER') and object.getPost().getAssociation().owner == user or object.owner == user) and user.isActivated() == true and user.getIsBanned() == false"],
     ],
 )]
 class Comment

@@ -31,9 +31,9 @@ const SectionsAdminPage = () => {
     })
 
     const columns: GridColDef[] = [
-        { headerName: "ID", field: "id", width: 100, align: 'left' },
-        { headerName: "Nom", field: "name", width: 200, align: 'left' },
-        { headerName: "Actions", field: "actions", width: 200, align: 'right', renderCell: (data) => { return data.value } }
+        { headerName: "ID", field: "id", flex: 1, align: 'left' },
+        { headerName: "Nom", field: "name", flex: 1, align: 'left' },
+        { headerName: "Actions", field: "actions", flex: 1, align: 'right', renderCell: (data) => { return data.value } }
     ];
 
     const handleEditSection = (section: SectionDetails) => {

@@ -20,10 +20,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     collectionOperations: [
         "get" => [
             "normalization_context" => ["groups" => ["collection:get:discord:guild", 'get:id']],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/guilds",
         ],
         "post" => [
             "denormalization_context" => ["groups" => ["collection:post:discord:guild"]],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/guilds",
             "openapi_context" => [
                 "requestBody" => [
@@ -45,9 +47,11 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
     itemOperations: [
         "get" => [
             "normalization_context" => ["groups" => ["item:get:discord:guild", 'get:id']],
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/guilds/{guildId}",
         ],
         "delete" => [
+            "security" => "is_granted('ROLE_ADMIN') and user.isActivated() == true and user.getIsBanned() == false",
             "path" => "discord/guilds/{guildId}",
         ],
     ]
