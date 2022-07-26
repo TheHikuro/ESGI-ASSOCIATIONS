@@ -81,7 +81,7 @@ const HomePage = () => {
                         <MercureSubscriber
                             topics={[`${import.meta.env.VITE_API_HOST_URL}/api/posts/{id}`]}
                             update={setPosts}
-                            hub={`${import.meta.env.VITE_HOST_URL}/.well-known/mercure`}
+                            hub={`${import.meta.env.VITE_MERCURE_HOST_URL}/.well-known/mercure`}
                             json
                         >
                             {displayData.filter(post => {

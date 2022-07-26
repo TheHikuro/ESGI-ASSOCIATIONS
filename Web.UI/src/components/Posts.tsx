@@ -161,7 +161,7 @@ export const Posts = ({ content, sender, createdAt, idPost, assosName, com }: Po
                     <MercureSubscriber
                         topics={[`${import.meta.env.VITE_API_HOST_URL}/api/comments/{id}`]}
                         update={setOnComment}
-                        hub={`${import.meta.env.VITE_HOST_URL}/.well-known/mercure`}
+                        hub={`${import.meta.env.VITE_MERCURE_HOST_URL}/.well-known/mercure`}
                         json
                     >
                         {comments.map((comment: any, index: number) => {

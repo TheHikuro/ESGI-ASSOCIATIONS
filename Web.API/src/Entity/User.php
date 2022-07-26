@@ -243,7 +243,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             "defaults" => [
                 "_api_receive" => false
             ],
-            "security" => "is_granted('ROLE_ADMIN') or object == user",
             "controller" => ConfirmationEmailController::class,
             "openapi_context" => [
                 "requestBody" => [
@@ -262,7 +261,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             "defaults" => [
                 "_api_receive" => false
             ],
-            "security" => "is_granted('ROLE_ADMIN') or object == user",
             "controller" => ValidateAccountController::class,
             "openapi_context" => [
                 "requestBody" => [
@@ -296,13 +294,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[ApiProperty(security: "(is_granted('ROLE_ADMIN') or object == user) and user.isActivated() == true and user.getIsBanned() == false")]
     #[Groups(["collection:get:user", "item:get:user", "collection:post:user", "item:put:user"])]
     #[SerializedName('email')]
     private $email;
 
     #[ORM\Column(type: 'json')]
-    #[ApiProperty(security: "(is_granted('ROLE_ADMIN') or object == user) and user.isActivated() == true and user.getIsBanned() == false")]
     #[Groups(["collection:get:user", "item:get:user", "item:put:user"])]
     #[SerializedName('roles')]
     private $roles = [];
@@ -335,25 +331,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatarPath;
 
     #[Type([string::class,null])]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('avatar')]
     private $avatarUrl;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user", "item:put:user"])]
     #[SerializedName('description')]
     private $description;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('createdAt')]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('updatedAt')]
     private $updatedAt;
@@ -373,19 +365,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Association::class)]
     #[ApiSubresource(maxDepth: 1)]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('associations')]
     private $associations;
 
     #[ORM\Column(type: 'boolean')]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
-    #[Groups(["collection:get:user", "item:get:user"])]
-    #[SerializedName('isActivated')]
     private $isActivated;
 
     #[ORM\Column(type: 'boolean')]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('haveRecoverToken')]
     private $haveRecoverToken;
@@ -396,25 +383,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Post::class)]
     #[ApiSubresource(maxDepth: 1)]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('posts')]
     private $posts;
 
     #[ORM\Column(type: 'boolean')]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('isBanned')]
     private $isBanned;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('banReason')]
     private $banReason;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[ApiProperty(security: "is_granted('ROLE_ADMIN') or object == user")]
     #[Groups(["collection:get:user", "item:get:user"])]
     #[SerializedName('discordUserId')]
     private $discordUserId;
@@ -561,6 +544,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[Groups(["collection:get:user", "item:get:user"])]
+    #[SerializedName('isActivated')]
     public function isActivated(): ?bool
     {
         return $this->isActivated;
